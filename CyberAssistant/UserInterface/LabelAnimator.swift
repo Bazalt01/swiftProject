@@ -16,16 +16,14 @@ class LabelAnimator {
     private var timer: Timer?
     private(set) var stepObserverBlocks = [LabelAnimatorToken : () -> Void]()
     
+    // MARK: - Inits
+    
     init(stepDuration: CGFloat) {
         self.timer = Timer.scheduledTimer(timeInterval: TimeInterval(stepDuration), target: self, selector: #selector(handledTime(sender:)), userInfo: nil, repeats: true)
     }
     
-    @objc private func handledTime(sender: Timer) {
-        for block in stepObserverBlocks.values {
-            block()
-        }
-    }
-    
+    // MARK: - Public
+        
     func start() {
         if let timer = self.timer {
             timer.fire()
@@ -47,5 +45,13 @@ class LabelAnimator {
     
     func removeStepObserver(token: LabelAnimatorToken) {
         stepObserverBlocks[token] = nil
+    }
+    
+    // MARK: - Private
+    
+    @objc private func handledTime(sender: Timer) {
+        for block in stepObserverBlocks.values {
+            block()
+        }
     }
 }

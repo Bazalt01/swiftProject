@@ -13,6 +13,8 @@ class BaseCellViewModel: CellViewModel {
     var layoutModel = CellLayoutModel(size: CGSize.zero)
     var isCalculatingSize: Bool = false
     
+    // MARK: - Inits
+    
     required init(cellClass: BaseCollectionViewCell.Type) {
         self.cellClass = cellClass
     }

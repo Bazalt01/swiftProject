@@ -34,16 +34,7 @@ class TemplateCell: CollectionViewCellWithActions {
         }
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        templateLabel.text = nil
-        exampleLabel.text = nil
-        for disposable in disposables {
-            disposable.dispose()
-        }
-        disposables = []
-        viewModel = nil
-    }
+    // MARK: - Inits
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -57,6 +48,19 @@ class TemplateCell: CollectionViewCellWithActions {
         configureAppearance()
     }
     
+    // MARK: - Public
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        templateLabel.text = nil
+        exampleLabel.text = nil
+        for disposable in disposables {
+            disposable.dispose()
+        }
+        disposables = []
+        viewModel = nil
+    }
+    
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         let fittingSize = configuredFittingSize(size: size)
         var totalSize = CGSize(width: size.width, height: contentView.layoutMargins.verticalInset)
@@ -67,6 +71,8 @@ class TemplateCell: CollectionViewCellWithActions {
         }
         return totalSize
     }
+    
+    // MARK: - Private
     
     private func install(viewModel: TemplateCellModel) {
         templateLabel.attributedText = viewModel.templateAttrText

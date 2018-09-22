@@ -28,6 +28,8 @@ class CellActionViewModel {
     
     let selecteObserver = PublishSubject<Bool>()
     
+    // MARK: - Inits
+    
     init(type: CellActionType, selectedIcon: UIImage?, deselectedIcon: UIImage?, actionBlock: @escaping () -> Void) {
         self.type = type
         self.selectedIcon = selectedIcon

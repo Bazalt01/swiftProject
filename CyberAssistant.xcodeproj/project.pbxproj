@@ -23,6 +23,7 @@
 		EA57F02A212422FD00309919 /* TemplateCollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57F029212422FD00309919 /* TemplateCollectionDelegate.swift */; };
 		EA57F06521245E2600309919 /* UIStructExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57F06421245E2600309919 /* UIStructExtention.swift */; };
 		EA62B7AA211C3A0F007F5C16 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA62B7A9211C3A0F007F5C16 /* MainViewModel.swift */; };
+		EA69D5C02156342A00F29DDD /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA69D5BF2156342A00F29DDD /* BackgroundWorker.swift */; };
 		EA6C9EAB21441C4D00CCC2F3 /* AnimatableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6C9EAA21441C4D00CCC2F3 /* AnimatableLabel.swift */; };
 		EA6C9EAD21441EF000CCC2F3 /* LabelAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6C9EAC21441EF000CCC2F3 /* LabelAnimator.swift */; };
 		EA6C9EAF21457E1B00CCC2F3 /* CircleTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6C9EAE21457E1B00CCC2F3 /* CircleTimeView.swift */; };
@@ -104,6 +105,7 @@
 		EA57F029212422FD00309919 /* TemplateCollectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateCollectionDelegate.swift; sourceTree = "<group>"; };
 		EA57F06421245E2600309919 /* UIStructExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStructExtention.swift; sourceTree = "<group>"; };
 		EA62B7A9211C3A0F007F5C16 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		EA69D5BF2156342A00F29DDD /* BackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
 		EA6C9EAA21441C4D00CCC2F3 /* AnimatableLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatableLabel.swift; sourceTree = "<group>"; };
 		EA6C9EAC21441EF000CCC2F3 /* LabelAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelAnimator.swift; sourceTree = "<group>"; };
 		EA6C9EAE21457E1B00CCC2F3 /* CircleTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleTimeView.swift; sourceTree = "<group>"; };
@@ -408,6 +410,7 @@
 			isa = PBXGroup;
 			children = (
 				EA471C972125997700452B5C /* RealmDatabase.swift */,
+				EA69D5BF2156342A00F29DDD /* BackgroundWorker.swift */,
 				EAE9EE2521272573000A2220 /* Models */,
 			);
 			path = Reaml;
@@ -573,6 +576,7 @@
 				EABA345F211F0D1300B2040B /* SpeechModel.swift in Sources */,
 				EA02094921541BC100DE9717 /* RxSwift+Utils.swift in Sources */,
 				EA17CF99212DCD13002757E5 /* AuthManager.swift in Sources */,
+				EA69D5C02156342A00F29DDD /* BackgroundWorker.swift in Sources */,
 				EAC78040213318CB000237D7 /* TemplateRouter.swift in Sources */,
 				EA6C9EAF21457E1B00CCC2F3 /* CircleTimeView.swift in Sources */,
 				EA17CF97212DCC44002757E5 /* DatabaseManager.swift in Sources */,

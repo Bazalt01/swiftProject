@@ -13,6 +13,12 @@ class AnimatableLabel: UILabel {
     private var targetText: NSAttributedString?
     var token: LabelAnimatorToken?
     
+    deinit {
+        removeObserver()
+    }
+
+    // MARK: - Public
+    
     func setText(attributedText: NSAttributedString, animator: LabelAnimator?) {
         self.attributedText = nil
         self.animator = animator
@@ -28,6 +34,24 @@ class AnimatableLabel: UILabel {
             self.attributedText = attributedText
         }
     }
+    
+    func shouldAnimate() -> Bool {
+        guard let text = targetText else {
+            return false
+        }
+        guard text.length > 0 else {
+            return false
+        }
+        return true
+    }
+    
+    func removeObserver() {
+        if let anim = animator, let animToken = token {
+            anim.removeStepObserver(token: animToken)
+        }
+    }
+
+    // MARK: - Private
     
     private func animate() {
         if let text = self.attributedText, let targText = self.targetText {
@@ -49,25 +73,5 @@ class AnimatableLabel: UILabel {
         let blockCursor = NSAttributedString(string: "#", attributes: [NSAttributedStringKey.backgroundColor : textColor!])
         attrText.append(blockCursor)
         self.attributedText = attrText
-    }
-    
-    func shouldAnimate() -> Bool {
-        guard let text = targetText else {
-            return false
-        }
-        guard text.length > 0 else {
-            return false
-        }
-        return true
-    }
-    
-    deinit {
-        removeObserver()
-    }
-    
-    func removeObserver() {
-        if let anim = animator, let animToken = token {
-            anim.removeStepObserver(token: animToken)
-        }
-    }
+    }    
 }

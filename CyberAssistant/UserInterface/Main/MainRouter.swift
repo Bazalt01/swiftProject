@@ -11,6 +11,8 @@ import UIKit
 class MainRouter {
     var routeHandler: RouterHandler?
     
+    // MARK: - Public
+    
     func openTemplatesController() {
         if let rh = routeHandler {
             let tc = ViewControllerAssembly.configuredTemplateViewController()

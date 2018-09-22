@@ -14,6 +14,8 @@ class TemplateViewModel {
     private(set) var dataSource: TemplateCollectionDataSource
     private(set) var collectionViewDelegate: TemplateCollectionDelegate
     
+    // MARK: - Inits
+    
     init(templateManager: TemplateManager,
          dataSource: TemplateCollectionDataSource,
          collectionViewDelegate: TemplateCollectionDelegate,
@@ -22,12 +24,22 @@ class TemplateViewModel {
         self.dataSource = dataSource
         self.collectionViewDelegate = collectionViewDelegate
         self.router = router
+        
+        templateManager.configure()
     }
     
+    // MARK: - Public
+    
     func configure() {
-        dataSource.configureAndSetCellViewModel(templateModels: self.templateManager.models, batchUpdates: nil)
         configureSubsciptions()
+        dataSource.configureAndSetCellViewModel(templateModels: self.templateManager.models, batchUpdates: nil)
     }
+    
+    func createNewTemplate() {
+        router.openTemplateEditorController(template: nil)
+    }
+    
+    // MARK: - Private
     
     private func configureSubsciptions() {
         collectionViewDelegate.didSelectTemplateObserver.subscribe(onNext: { [weak self](cellViewModel) in
@@ -68,10 +80,6 @@ class TemplateViewModel {
             batchUpdates.append(batchUpdate)
         }
         return batchUpdates
-    }
-    
-    func createNewTemplate() {
-        router.openTemplateEditorController(template: nil)
     }
     
     private func openTemplateForEditing(template: TemplateModel) {

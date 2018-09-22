@@ -38,13 +38,7 @@ class TemplateEditRuleCell: BaseCollectionViewCell {
         }
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        ruleLabel.text = nil
-        exampleLabel.text = nil
-        resultLabel.text = nil
-        viewModel = nil
-    }
+    // MARK: - Inits
     
     convenience init() {
         self.init(frame: .zero)
@@ -60,6 +54,16 @@ class TemplateEditRuleCell: BaseCollectionViewCell {
         super.init(coder: aDecoder)
         configureViews()
         configureAppearance()
+    }
+    
+    // MARK: - Public
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        ruleLabel.text = nil
+        exampleLabel.text = nil
+        resultLabel.text = nil
+        viewModel = nil
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -91,13 +95,6 @@ class TemplateEditRuleCell: BaseCollectionViewCell {
         stackView.addArrangedSubview(resultLabel)
     }
     
-    private func configureStackView() {
-        stackView.axis = .vertical
-        stackView.alignment = .leading
-        stackView.distribution = .fill
-        stackView.spacing = LayoutConstants.spacing
-    }
-    
     func configuredRuleTextView() {
         ruleLabel.numberOfLines = 0
     }
@@ -116,4 +113,13 @@ class TemplateEditRuleCell: BaseCollectionViewCell {
         Appearance.applyFor(baseLabel: resultLabel)
         contentView.backgroundColor = AppearanceColor.viewBackground
     }
+
+    // MARK: - Private
+    
+    private func configureStackView() {
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.distribution = .fill
+        stackView.spacing = LayoutConstants.spacing
+    }    
 }

@@ -9,6 +9,9 @@
 import UIKit
 
 extension UICollectionReusableView {
+    
+    // MARK: - Public
+    
     class func ca_reuseIdentifier() -> String {
         return NSStringFromClass(self)
     }

@@ -16,8 +16,9 @@ struct TemplateRule {
     private(set) var result: String
 }
 
-class TemplateManager {
-    var models: [TemplateModel]
+class TemplateManager: BackgroundWorker {
+    var models = [TemplateModel]()
+    private var database: Database?
     let templateRules = [TemplateRule(rule: "(number)[n] - random value from 0 to n",
                                       example: "There are [10] apples.",
                                       result: "There are 8 apples."),
@@ -29,26 +30,34 @@ class TemplateManager {
                          TemplateRule(rule: "(Any type)[a,b,c,d,...,n] - Will choose just one from sequence",
                                       example: "Dima can eat 10 [apples,kiwis,peaches] per minite.",
                                       result: "Dima can eat 10 kiwis per minite.")]
-    var templateModelsObserver: PublishSubject<FetchResult?>
-    var result: Results<RealmTemplate>?
+    let templateModelsObserver = PublishSubject<FetchResult?>()
     
-    init() {
-        let observer = PublishSubject<FetchResult?>()
-        let sort = SortModel.init(key: "value", ascending: true)
-        self.models = DatabaseManager.database.objects(objectType: RealmTemplate.self, predicate: nil, sortModes: [sort], observer: observer) as! [TemplateModel]
-        self.templateModelsObserver = observer
-    }
+    // MARK: - Public
     
     func configure() {
+        let sort = SortModel.init(key: "value", ascending: true)
+        let observer = self.templateModelsObserver
+        observer.subscribe(onNext: { [weak self](fetchResult) in
+            if let result = fetchResult {
+                self?.models = result.models as! [TemplateModel]
+            }
+        })
+        
+        self.start({ [weak self] in
+            let database = DatabaseManager.createDatabase()
+            database.configure()
+            database.objects(objectType: RealmTemplate.self, predicate: nil, sortModes: [sort], observer: observer, responseQueue: DispatchQueue.main)
+            self?.database = database
+        })
     }
     
-    func createTemplate(string: String) -> TemplateModel {
-        let template = RealmTemplate(value: string, muted: false)
-        
-        DatabaseManager.database.insert(model: template) { (error) in
+    func createTemplate(string: String, completion: @escaping (_ template: TemplateModel) -> Void) {
+            let template = RealmTemplate(value: string, muted: false)
+            
+            DatabaseManager.database.insert(model: template) { (error) in
+            
+            completion(template)
         }
-        
-        return template
     }
     
     func saveTemplate(save: @escaping() -> Void) {

@@ -10,16 +10,16 @@ import UIKit
 
 class BaseNavigationController: UINavigationController {
 
+    // MARK: - Life Circle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureAppearance()
     }
+
+    // MARK: - Private
     
     private func configureAppearance() {
         Appearance.applyFor(navigationBar: navigationBar)
-    }
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
     }
 }

@@ -20,6 +20,8 @@ class WelcomeViewController: BaseViewController {
     private var centerYConstraint: Constraint?
     private var bottomConstraint: Constraint?
     
+    // MARK: - Inits
+    
     init(viewModel: WelcomeViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -42,6 +44,8 @@ class WelcomeViewController: BaseViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Private
     
     private func configureViews() {
         enterView.currentOption = .SignIn

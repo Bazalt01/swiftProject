@@ -11,6 +11,8 @@ import UIKit
 class CellLayoutModel {
     private(set) var size: CGSize
     
+    // MARK: - Inits
+    
     init(size: CGSize) {
         self.size = size
     }

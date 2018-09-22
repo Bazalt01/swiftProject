@@ -21,6 +21,9 @@ fileprivate enum TemplateType {
 }
 
 class TemplateFormatter {
+    
+    // MARK: - Public
+    
     class func format(template: String) -> NSAttributedString {
         return format(attrTemplate: NSAttributedString(string: template))
     }
@@ -78,6 +81,8 @@ class TemplateFormatter {
         }
         return result
     }
+    
+    // MARK: - Private
     
     private class func detectType(value: String) -> TemplateType {
         if value.contains(",") {

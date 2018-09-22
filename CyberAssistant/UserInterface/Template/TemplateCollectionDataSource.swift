@@ -10,6 +10,9 @@ import UIKit
 import RxSwift
 
 class TemplateCollectionDataSource: BaseDataSource {
+    
+    // MARK: - Inits
+    
     override init() {
         super.init()
         self.cellClasses = [TemplateCell.self]
@@ -17,6 +20,8 @@ class TemplateCollectionDataSource: BaseDataSource {
     
     let deleteTemplateObserver = PublishSubject<TemplateModel>()
     let muteTemplateObserver = PublishSubject<TemplateModel>()
+    
+    // MARK: - Public
     
     func configureAndSetCellViewModel(templateModels: [TemplateModel], batchUpdates: [BatchUpdate]?) {
         var viewModels = [TemplateCellModel]()

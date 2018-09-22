@@ -25,6 +25,8 @@ class CollectionViewCellWithActions: BaseCollectionViewCell {
     }
     private var actionViews = [UIView]()
     
+    // MARK: - Public
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         actionViewModels = nil
@@ -36,6 +38,22 @@ class CollectionViewCellWithActions: BaseCollectionViewCell {
         super.layoutSubviews()
         layoutActionViews()
     }
+    
+    func hideActions() {
+        guard let point = startPanPoint else {
+            return
+        }
+        let shiftLimit: CGFloat = CGFloat(actionViews.count) * AppearanceSize.cellActionWidth
+        let currentPoint = CGPoint(x: point.x + shiftLimit, y: point.y)
+        UIView.animate(withDuration: kSwipeAnimationDuration, animations: {
+            self.moveActionView(startPoint: point, currentPoint: currentPoint)
+        }) { (finish) in
+            self.startContentViewPosition = 0.0
+            self.startPanPoint = nil
+        }
+    }
+
+    // MARK: - Private
     
     private func configureActions() {
         for view in actionViews {
@@ -104,20 +122,6 @@ class CollectionViewCellWithActions: BaseCollectionViewCell {
             break
         default:
             break
-        }
-    }
-    
-    func hideActions() {
-        guard let point = startPanPoint else {
-            return
-        }
-        let shiftLimit: CGFloat = CGFloat(actionViews.count) * AppearanceSize.cellActionWidth
-        let currentPoint = CGPoint(x: point.x + shiftLimit, y: point.y)
-        UIView.animate(withDuration: kSwipeAnimationDuration, animations: {
-            self.moveActionView(startPoint: point, currentPoint: currentPoint)
-        }) { (finish) in
-            self.startContentViewPosition = 0.0
-            self.startPanPoint = nil
         }
     }
     

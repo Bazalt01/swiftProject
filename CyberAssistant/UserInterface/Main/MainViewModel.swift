@@ -49,7 +49,7 @@ class MainViewModel: SpeechManagerDelegate {
     func configure() {
         speechManager.delegate = self
         configureSubscriptions()
-        updateModels(models: templateManager.models)                
+        updateModels(models: templateManager.models)
     }
     
     func updateDelayTyme(time: Int) {

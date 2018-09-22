@@ -47,6 +47,8 @@ class EnterView: UIView {
     var signUpObserver = PublishSubject<AuthResult>()
     var errorObserver = PublishSubject<Error>()
     
+    // MARK: - Inits
+    
     init() {
         self.viewModel = EnterViewModel()
         super.init(frame: CGRect.zero)
@@ -59,6 +61,22 @@ class EnterView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Public
+    
+    func clearFields() {
+        loginTextField.text = nil
+        clearPasswords()
+    }
+    
+    func clearPasswords() {
+        passwordTextField.text = nil
+        if currentOption == .SignUp {
+            repeatPasswordTextField.text = nil
+        }
+    }
+
+    // MARK: - Private
+
     private func configureViews() {
         configureStackView()
         self.addSubview(stackView)
@@ -155,7 +173,7 @@ class EnterView: UIView {
         passwordTextField.placeholder = "Password"
     }
     
-    private func configureRepeatPasswordTextField() {        
+    private func configureRepeatPasswordTextField() {
         repeatPasswordTextField.isSecureTextEntry = true
         repeatPasswordTextField.delegate = self
         repeatPasswordTextField.placeholder = "Repeat Password"
@@ -181,7 +199,7 @@ class EnterView: UIView {
     
     private func signButtonPress() {
         self.clearPasswords()
-        self.currentOption = self.currentOption == .SignIn ? .SignUp : .SignIn        
+        self.currentOption = self.currentOption == .SignIn ? .SignUp : .SignIn
     }
     
     private func updateTitle() {
@@ -230,17 +248,6 @@ class EnterView: UIView {
         }
     }
     
-    func clearFields() {
-        loginTextField.text = nil
-        clearPasswords()
-    }
-    
-    func clearPasswords() {
-        passwordTextField.text = nil
-        if currentOption == .SignUp {
-            repeatPasswordTextField.text = nil
-        }
-    }
     
     private func configureAppearance() {
         self.backgroundColor = AppearanceColor.viewBackground

@@ -25,8 +25,11 @@ enum ExecuteOption {
 
 class RealmDatabase {
     var realm: Realm?
+    var user: SyncUser?
     let baseClasses = [RealmAccount.self, RealmTemplate.self]
     var subscribedObjects = [NotificationToken : Results<Object>]()
+    
+    // MARK: - Public
     
     func currentUser(success:@escaping (SyncUser) -> Void, failure:@escaping (Error) -> Void) {
         guard let currentUser = SyncUser.current else {
@@ -44,20 +47,31 @@ class RealmDatabase {
         success(currentUser)
     }
     
-    private func configure(user: SyncUser) {
+    // MARK: - Private
+    
+    private func configureRealm(user: SyncUser) -> Realm {
         var config = user.configuration(realmURL: Configuration.REALM_URL, fullSynchronization: true, enableSSLValidation: false, urlPrefix: nil)
         config.objectTypes = self.baseClasses
-        self.realm = try! Realm(configuration: config)
+        return try! Realm(configuration: config)
     }
     
-    fileprivate func processChanges(update: RealmObserveUpdate, observer:PublishSubject<FetchResult?>, objects: Results<Object>) {
+    fileprivate func processChanges(update: RealmObserveUpdate, objects: Results<Object>, queue: DispatchQueue) -> FetchResult {
         var changes = [FetchResultChanges]()
         fillFetchResultChangess(changes: &changes, option: .delete, indexs: update.deletions)
         fillFetchResultChangess(changes: &changes, option: .insert, indexs: update.insertions)
         fillFetchResultChangess(changes: &changes, option: .update, indexs: update.modifications)
-        let models = converResultToArray(objects: objects)
-        let result = FetchResult(models: models, changes: changes)
-        observer.onNext(result)
+        let models = transferedObjects(objects: objects, queue: queue)
+        return FetchResult(models: models, changes: changes)
+    }
+    
+    fileprivate func processInitial(objects: Results<Object>, queue: DispatchQueue) -> FetchResult {
+        var changes = [FetchResultChanges]()
+        let indexs = objects.enumerated().map { (offset, element) -> Int in
+            return offset
+        }
+        fillFetchResultChangess(changes: &changes, option: .insert, indexs: indexs)
+        let models = transferedObjects(objects: objects, queue: queue)
+        return FetchResult(models: models, changes: changes)
     }
     
     fileprivate func fillFetchResultChangess(changes: inout [FetchResultChanges], option: BatchOption, indexs: [Int]) {
@@ -65,6 +79,32 @@ class RealmDatabase {
             let result = FetchResultChanges(option: option, indexes: indexs)
             changes.append(result)
         }
+    }
+    
+    fileprivate func transferedObjects(objects: Results<Object>, queue: DispatchQueue) -> [BaseModel] {
+        var result = [RealmModel]()
+        var objectRefs = [ThreadSafeReference<Object>]()
+        for object in objects {
+            objectRefs.append(ThreadSafeReference(to: object))
+        }
+        
+        queue.sync { [weak self] in
+            guard let sself = self else {
+                return
+            }
+            guard let user = sself.user else {
+                return
+            }
+            let realm = sself.configureRealm(user: user)
+            
+            for objectRef in objectRefs {
+                guard let object = realm.resolve(objectRef) else {
+                    return
+                }
+                result.append(object as! RealmModel)
+            }
+        }
+        return result
     }
     
     fileprivate func converResultToArray(objects: Results<Object>) -> [BaseModel] {
@@ -106,8 +146,52 @@ class RealmDatabase {
 }
 
 extension RealmDatabase: Database {
-
-    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes: [SortModel]?, observer: PublishSubject<FetchResult?>?) -> [BaseModel] {
+    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes: [SortModel]?, observer: PublishSubject<FetchResult?>, responseQueue: DispatchQueue) {
+        guard let rm = realm else {
+            return
+        }
+        
+        var objects = rm.objects(objectType as! Object.Type)
+        if let predic = predicate {
+            objects = objects.filter(predic)
+        }
+        
+        if let sortMs = sortModes {
+            for sortModel in sortMs {
+                objects = objects.sorted(byKeyPath: sortModel.key, ascending: sortModel.ascending)
+            }
+        }
+        
+        let token = objects.observe { [weak self](changes: RealmCollectionChange) in
+            switch changes {
+            case .initial(let initialObjects):
+                let result = self?.processInitial(objects: initialObjects, queue: responseQueue)
+                responseQueue.async {
+                    observer.onNext(result)
+                }
+                break
+            case .update(let changedObjects, let deletions, let insertions, let modifications):
+                let update = RealmObserveUpdate(deletions: deletions, insertions: insertions, modifications: modifications)
+                let result = self?.processChanges(update: update, objects: changedObjects, queue: responseQueue)
+                responseQueue.async {
+                    observer.onNext(result)
+                }
+                break
+            case .error( _):
+                responseQueue.async {
+                    observer.onNext(nil)
+                }
+                break
+            }
+        }
+        subscribedObjects[token] = objects
+    }
+    
+    func object(objectType: BaseModel.Type, predicate: NSPredicate?, observer: PublishSubject<FetchResult?>, responseQueue: DispatchQueue) {
+        objects(objectType: objectType, predicate: predicate, sortModes: nil, observer: observer, responseQueue: responseQueue)
+    }
+    
+    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes:[SortModel]?) -> [BaseModel] {
         guard let rm = realm else {
             return []
         }
@@ -122,33 +206,18 @@ extension RealmDatabase: Database {
                 objects = objects.sorted(byKeyPath: sortModel.key, ascending: sortModel.ascending)
             }
         }
-        if let obs = observer {
-            let token = objects.observe { [weak self](changes: RealmCollectionChange) in
-                switch changes {
-                case .initial:
-                    break
-                case .update(let changedObjects, let deletions, let insertions, let modifications):
-                    let update = RealmObserveUpdate(deletions: deletions, insertions: insertions, modifications: modifications)
-                    self?.processChanges(update: update, observer: obs, objects: changedObjects)
-                    break
-                case .error(let _):
-                    obs.onNext(nil)
-                    break
-                }
-            }
-            subscribedObjects[token] = objects
-        }
         
         return converResultToArray(objects: objects)
     }
     
-    func object(objectType: BaseModel.Type, predicate: NSPredicate?, observer: PublishSubject<FetchResult?>?) -> BaseModel? {
-        return objects(objectType: objectType, predicate: predicate, sortModes: nil, observer: observer).first
+    func object(objectType: BaseModel.Type, predicate: NSPredicate?) -> BaseModel? {
+        return objects(objectType: objectType, predicate: predicate, sortModes: nil).first
     }
     
     func configure() {
         currentUser(success: { [weak self](user) in
-            self?.configure(user: user)
+            self?.user = user
+            self?.realm = self?.configureRealm(user: user)
         }) { (error) in
             print(error.localizedDescription)
         }

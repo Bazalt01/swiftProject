@@ -13,6 +13,8 @@ class TemplateViewController: BaseCollectionViewController {
     private var viewModel: TemplateViewModel
     private let addButton = UIButton()
     
+    // MARK: - Inits
+    
     init(viewModel: TemplateViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -21,6 +23,8 @@ class TemplateViewController: BaseCollectionViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Public
     
     override func viewDidLoad() {
         super.viewDidLoad()

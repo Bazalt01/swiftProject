@@ -11,6 +11,8 @@ import UIKit
 class TemplateEditRouter {
     var routeHandler: RouterHandler?
     
+    // MARK: - Public
+    
     func openAlertController(message: String) {
         if let rh = routeHandler {
             let ac = UIAlertController(title: "Attention", message: message, preferredStyle: .alert)

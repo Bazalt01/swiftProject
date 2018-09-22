@@ -12,10 +12,14 @@ import RealmSwift
 class AuthManager {
     private(set) var authorizedAccount: AccountModel?
     
+    // MARK: - Inits
+    
     init() {
         let predicate = NSPredicate(format: "authorized == 1")
-        self.authorizedAccount = DatabaseManager.database.object(objectType: RealmAccount.self, predicate: predicate, observer: nil) as? AccountModel
+        self.authorizedAccount = DatabaseManager.database.object(objectType: RealmAccount.self, predicate: predicate) as? AccountModel
     }
+    
+    // MARK: - Public
     
     func signIn(result: AuthResult, success: @escaping() -> Void, failure: @escaping(_ error: Error) -> Void) {
         if var account = localAccount(result: result) {
@@ -44,18 +48,20 @@ class AuthManager {
         })
     }
     
+    func canSignInWithLocalUser() -> Bool {
+        return authorizedAccount != nil
+    }
+
+    // MARK: - Private
+    
     private func localAccount(result: AuthResult) -> AccountModel? {
-        let accounts = DatabaseManager.database.objects(objectType: RealmAccount.self, predicate: nil, sortModes: nil, observer: nil) as! [RealmAccount]
+        let accounts = DatabaseManager.database.objects(objectType: RealmAccount.self, predicate: nil, sortModes: nil) as! [RealmAccount]
         for account in accounts {
             if account.login == result.login && account.password == result.password {
                 return account
             }
         }
         return nil
-    }
-
-    func canSignInWithLocalUser() -> Bool {
-        return authorizedAccount != nil
     }
 }
 

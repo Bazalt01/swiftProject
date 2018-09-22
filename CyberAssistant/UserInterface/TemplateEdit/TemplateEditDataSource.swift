@@ -16,10 +16,14 @@ class TemplateEditDataSource: BaseDataSource {
     }
     private var templateEditCellModel: TemplateEditCellModel?
     
+    // MARK: - Inits
+    
     override init() {
         super.init()
         self.cellClasses = [TemplateEditCell.self]
     }
+    
+    // MARK: - Public
     
     func configureAndSetCellViewModel(template: String) {
         templateEditCellModel = TemplateEditCellModel()

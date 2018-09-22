@@ -32,8 +32,12 @@ struct FetchResultChanges {
 
 protocol Database {
     func configure()
-    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes:[SortModel]?, observer: PublishSubject<FetchResult?>?) -> [BaseModel]
-    func object(objectType: BaseModel.Type, predicate: NSPredicate?, observer: PublishSubject<FetchResult?>?) -> BaseModel?
+    
+    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes:[SortModel]?, observer: PublishSubject<FetchResult?>, responseQueue: DispatchQueue)
+    func object(objectType: BaseModel.Type, predicate: NSPredicate?, observer: PublishSubject<FetchResult?>, responseQueue: DispatchQueue)
+    
+    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes:[SortModel]?) -> [BaseModel]
+    func object(objectType: BaseModel.Type, predicate: NSPredicate?) -> BaseModel?
     func update(processing: ((_ error: Error?) -> Void)?)
     func insert(model: BaseModel, processing: ((_ error: Error?) -> Void)?)
     func delete(model: BaseModel, processing: ((_ error: Error?) -> Void)?)
@@ -43,4 +47,8 @@ class DatabaseManager {
     static let database: Database = {
         return RealmDatabase()
     }()
+    
+    class func createDatabase() -> Database {
+        return RealmDatabase()
+    }
 }

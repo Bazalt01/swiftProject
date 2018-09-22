@@ -24,6 +24,8 @@ class TemplateEditRuleCellModel: BaseCellViewModel {
         }
     }
     
+    // MARK: - Inits
+    
     required init(rule: TemplateRule, labelAnimator: LabelAnimator?) {
         self.templateRule = rule
         self.rule = TemplateFormatter.format(template: rule.rule)
@@ -32,6 +34,7 @@ class TemplateEditRuleCellModel: BaseCellViewModel {
         self.animator = labelAnimator
         super.init(cellClass: TemplateEditRuleCell.self)
     }
+    
     required init(cellClass: BaseCollectionViewCell.Type) {
         assert(false)
         self.templateRule = TemplateRule(rule: "", example: "", result: "")

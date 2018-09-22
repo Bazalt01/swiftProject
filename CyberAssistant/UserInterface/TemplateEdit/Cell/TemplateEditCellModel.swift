@@ -12,6 +12,8 @@ import RxSwift
 class TemplateEditCellModel: BaseCellViewModel {
     private(set) var templateAttrText: NSAttributedString
     
+    // MARK: - Inits
+    
     convenience init() {
         self.init(cellClass: TemplateEditCell.self)
         self.templateAttrText = NSAttributedString()
@@ -20,6 +22,8 @@ class TemplateEditCellModel: BaseCellViewModel {
         self.templateAttrText = NSAttributedString()
         super.init(cellClass: cellClass)
     }
+    
+    // MARK: - Public
     
     func update(template: NSAttributedString) {
         if template.isEqual(to: templateAttrText) {

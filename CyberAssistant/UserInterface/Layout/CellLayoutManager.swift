@@ -13,9 +13,13 @@ typealias CellClass = String
 class BaseCellLayoutManager {
     private var cellsByClass: [CellClass: BaseCollectionViewCell]
     
+    // MARK: - Inits
+    
     init(cellsByClass: [CellClass: BaseCollectionViewCell]) {
         self.cellsByClass = cellsByClass
     }
+    
+    // MARK: - Public
     
     func updateLayoutModel(cellViewModel: inout CellViewModel, size: CGSize) {
         let className = NSStringFromClass(cellViewModel.cellClass.self)

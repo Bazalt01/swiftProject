@@ -34,6 +34,8 @@ class TemplateCellModel: BaseCellViewModel {
     let pressActionObserver = PublishSubject<Void>()
     let mutedChangedObserver = PublishSubject<Bool>()
     
+    // MARK: - Inits
+    
     init(template: TemplateModel) {
         self.template = template
         template.generateTemplate()
@@ -50,6 +52,8 @@ class TemplateCellModel: BaseCellViewModel {
     required init(cellClass: BaseCollectionViewCell.Type) {
         super.init(cellClass: cellClass)
     }
+    
+    // MARK: - Private
     
     private func configuredDeleteActionViewModel() -> CellActionViewModel {
         let icon = UIImage.image(imageName: "ic_trash", renderingMode: .alwaysTemplate)

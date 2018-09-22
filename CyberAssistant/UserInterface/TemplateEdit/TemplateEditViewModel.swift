@@ -20,6 +20,8 @@ class TemplateEditViewModel: BaseCollectionViewModel {
     private(set) var collectionViewDelegate: TemplateEditCollectionDelegate
     private var labelAnimator = LabelAnimator(stepDuration: 0.05)
     
+    // MARK: - Inits
+    
     init(templateManager: TemplateManager, template: TemplateModel?, router: TemplateEditRouter) {
         self.templateManager = templateManager
         self.template = template
@@ -35,6 +37,8 @@ class TemplateEditViewModel: BaseCollectionViewModel {
     deinit {
         labelAnimator.stop()
     }
+    
+    // MARK: - Public
     
     func configure() {
         let templateValue = template != nil ? template!.value : ""

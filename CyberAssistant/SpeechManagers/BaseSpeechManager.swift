@@ -24,9 +24,13 @@ class BaseSpeechManager : NSObject, SpeechManager, AVSpeechSynthesizerDelegate {
         }
     }
     
+    // MARK: - Inits
+    
     required init(configurator: SpeechConfigurator) {
         self.configurator = configurator
     }
+    
+    // MARK: - Public
     
     func syntesize(text: String) {
         let language = configurator.language.rawValue
@@ -34,6 +38,8 @@ class BaseSpeechManager : NSObject, SpeechManager, AVSpeechSynthesizerDelegate {
         syntesizer.delegate = self
         syntesizer.speak(utterance)
     }
+    
+    // MARK: - Private
     
     private func configuredUtterance(text: String, language: String) -> AVSpeechUtterance {
         let utterance = AVSpeechUtterance(string: text)

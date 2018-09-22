@@ -9,6 +9,9 @@
 import Foundation
 
 class TemplateCollectionDelegate: BaseCollectionViewDelegate {
+    
+    // MARK: - Inits
+    
     init(dataSource: BaseDataSource) {
         let lm = BaseCellLayoutManager(cellsByClass: [TemplateCell.className(): TemplateCell()])
         super.init(cellLayoutManager: lm, dataSource: dataSource)

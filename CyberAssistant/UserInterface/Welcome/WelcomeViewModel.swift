@@ -12,10 +12,14 @@ class WelcomeViewModel {
     private var authManager: AuthManager
     private var router: WelcomeRouter
     
+    // MARK: - Inits
+    
     init(authManager: AuthManager, router: WelcomeRouter) {
         self.authManager = authManager
         self.router = router
     }
+    
+    // MARK: - Public
     
     func signIn(result: AuthResult, success: @escaping() -> Void, failure: @escaping() -> Void) {
         authManager.signIn(result: result, success: { [weak self] () in

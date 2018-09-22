@@ -29,6 +29,8 @@ class TemplateEditCell: BaseCollectionViewCell {
         }
     }
     
+    // MARK: - Inits
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureViews()
@@ -41,6 +43,8 @@ class TemplateEditCell: BaseCollectionViewCell {
         configureSubsciptions()
         configureAppearance()
     }
+    
+    // MARK: - Public
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         guard let _ = localViewModel else {

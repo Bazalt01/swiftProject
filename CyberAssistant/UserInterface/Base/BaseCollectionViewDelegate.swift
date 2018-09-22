@@ -15,10 +15,14 @@ class BaseCollectionViewDelegate: NSObject {
     private(set) var cellLayoutManager: BaseCellLayoutManager
     private var dataSource: BaseDataSource
     
+    // MARK: - Inits
+    
     init(cellLayoutManager: BaseCellLayoutManager, dataSource: BaseDataSource) {
         self.cellLayoutManager = cellLayoutManager
         self.dataSource = dataSource
     }
+    
+    // MARK: - Private
     
     fileprivate func maxVisibleContentSize(collectionView: UICollectionView) -> CGSize {
         var size = collectionView.bounds.size

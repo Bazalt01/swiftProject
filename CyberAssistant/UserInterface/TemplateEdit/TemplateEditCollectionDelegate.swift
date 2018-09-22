@@ -9,11 +9,16 @@
 import UIKit
 
 class TemplateEditCollectionDelegate: BaseCollectionViewDelegate {
+    
+    // MARK: - Inits
+    
     init(dataSource: BaseDataSource) {
         let lm = BaseCellLayoutManager(cellsByClass: [TemplateEditCell.className(): TemplateEditCell(),
                                                       TemplateEditRuleCell.className(): TemplateEditRuleCell()])
         super.init(cellLayoutManager: lm, dataSource: dataSource)
     }
+    
+    // MARK: - Public
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         scrollView.endEditing(true)

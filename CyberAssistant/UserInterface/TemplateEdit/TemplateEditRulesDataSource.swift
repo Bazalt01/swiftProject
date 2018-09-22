@@ -10,10 +10,14 @@ import Foundation
 
 class TemplateEditRulesDataSource: BaseDataSource {
     
+    // MARK: - Inits
+    
     override init() {
         super.init()
         self.cellClasses = [TemplateEditRuleCell.self]
     }
+    
+    // MARK: - Public
     
     func configureAndSetCellViewModel(rules: [TemplateRule], labelAnimator: LabelAnimator?) {
         var viewModels = [TemplateEditRuleCellModel]()

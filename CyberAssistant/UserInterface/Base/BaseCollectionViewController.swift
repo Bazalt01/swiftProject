@@ -10,7 +10,9 @@ import UIKit
 
 class BaseCollectionViewController: BaseViewController {
     var collectionView: UICollectionView?
-        
+    
+    // MARK: - Life Circle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -21,25 +23,19 @@ class BaseCollectionViewController: BaseViewController {
         configureAppearance()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateCollectionContentInset()
+    }
+
+    // MARK: - Public
+    
     func configureViews() {
         collectionView = configuredCollectionView()
         view.addSubview(collectionView!)
         collectionView!.snp.makeConstraints { (make) in
             make.edges.equalTo(view)
-        }        
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        updateCollectionContentInset()
-    }
-    
-    private func configuredCollectionView() -> UICollectionView {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.minimumLineSpacing = 0.0
-        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
-        collectionView.alwaysBounceVertical = true
-        return collectionView
+        }
     }
     
     func updateCollectionContentInset() {
@@ -51,7 +47,7 @@ class BaseCollectionViewController: BaseViewController {
             cv.contentInset = inset
         }
     }
-        
+    
     override func viewSafeAreaInsetsDidChange() {
         if let cv = collectionView {
             var inset = view.layoutMargins
@@ -70,4 +66,15 @@ class BaseCollectionViewController: BaseViewController {
             cv.backgroundColor = UIColor.clear
         }
     }
+    
+    // MARK: - Private
+    
+    private func configuredCollectionView() -> UICollectionView {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.minimumLineSpacing = 0.0
+        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
+        collectionView.alwaysBounceVertical = true
+        return collectionView
+    }
+    
 }

@@ -11,6 +11,8 @@ import UIKit
 class TemplateRouter {
     var routeHandler: RouterHandler?
     
+    // MARK: - Public
+    
     func openTemplateEditorController(template: TemplateModel?) {
         if let rh = routeHandler {
             let tc = ViewControllerAssembly.configuredTemplateEditViewController(template: template)

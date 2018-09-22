@@ -13,5 +13,7 @@ protocol CellViewModel {
     var layoutModel: CellLayoutModel { get set }
     var isCalculatingSize: Bool { get set }
     
+    // MARK: - Inits
+    
     init(cellClass: BaseCollectionViewCell.Type)
 }

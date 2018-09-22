@@ -14,11 +14,8 @@ let kSwipeAnimationDuration = 0.25;
 class BaseCollectionViewCell: UICollectionViewCell, CollectionViewCell {    
     var viewModel: CellViewModel?
     var viewModelForSize: CellViewModel?    
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()        
-        viewModel = nil
-    }
+
+    // MARK: - Inits
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -26,6 +23,13 @@ class BaseCollectionViewCell: UICollectionViewCell, CollectionViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+    
+    // MARK: - Public
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()        
+        viewModel = nil
     }
     
     func configuredFittingSize(size: CGSize) -> CGSize {

@@ -40,6 +40,8 @@ class BaseDataSource: NSObject {
     
     var cellViewModels = Array<CellViewModel>()
     
+    // MARK: - Public
+    
     func registerReusableViewsWithCollectionView(collectionView: UICollectionView) {
         for cellClass in cellClasses {
             collectionView.register(cellClass, forCellWithReuseIdentifier: cellClass.ca_reuseIdentifier())
@@ -57,12 +59,6 @@ class BaseDataSource: NSObject {
     func modelAtIndexPath(indexPath: IndexPath) -> CellViewModel? {
         assert(sections.count > 0)
         return sections[indexPath.section][indexPath.item]
-    }
-    
-    private func notifyUpdate() {
-        if let cv = collectionView {
-            cv.reloadData()
-        }
     }
     
     func notifyUpdate(batchUpdates: [BatchUpdate]?, completion: (() -> Void)?) {
@@ -83,6 +79,15 @@ class BaseDataSource: NSObject {
             }
         }
     }
+    
+    // MARK: - Private
+    
+    private func notifyUpdate() {
+        if let cv = collectionView {
+            cv.reloadData()
+        }
+    }
+    
     
     private func performBatchUpdates(collectionView: UICollectionView, batchUpdates: [BatchUpdate]) {
         for batch in batchUpdates {

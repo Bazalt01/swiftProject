@@ -15,6 +15,8 @@ class ButtonWithBlock: UIButton {
         }
     }
     
+    // MARK: - Private
+    
     private func configureAction() {
         if actionBlock == nil {
             self.removeTarget(self, action: #selector(handlePress(sender:)), for: .touchUpInside)
