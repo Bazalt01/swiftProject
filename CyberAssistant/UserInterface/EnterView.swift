@@ -79,7 +79,7 @@ class EnterView: UIView {
 
     private func configureViews() {
         configureStackView()
-        self.addSubview(stackView)
+        addSubview(stackView)
         stackView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }

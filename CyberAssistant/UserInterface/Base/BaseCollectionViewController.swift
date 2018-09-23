@@ -22,11 +22,6 @@ class BaseCollectionViewController: BaseViewController {
         configureSubsciptions()
         configureAppearance()
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        updateCollectionContentInset()
-    }
 
     // MARK: - Public
     
@@ -35,26 +30,6 @@ class BaseCollectionViewController: BaseViewController {
         view.addSubview(collectionView!)
         collectionView!.snp.makeConstraints { (make) in
             make.edges.equalTo(view)
-        }
-    }
-    
-    func updateCollectionContentInset() {
-        if let cv = collectionView {
-            var inset = UIEdgeInsets(edge: 0.0)
-            if #available(iOS 11.0, *) {
-                inset.appendInsets(insets: view.safeAreaInsets)
-            }
-            cv.contentInset = inset
-        }
-    }
-    
-    override func viewSafeAreaInsetsDidChange() {
-        if let cv = collectionView {
-            var inset = view.layoutMargins
-            if #available(iOS 11.0, *) {
-                inset = view.safeAreaInsets
-            }
-            cv.contentInset = inset
         }
     }
     

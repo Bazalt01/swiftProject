@@ -144,7 +144,7 @@ class CircleTimeView: UIView {
         stackView.addArrangedSubview(timeLabel)
         stackView.addArrangedSubview(playButton)
         playButton.snp.makeConstraints { (make) in
-            make.size.equalTo(CGSize(size: AppearanceSize.playButtonHeight))
+            make.size.equalTo(CGSize(size: AppearanceSize.playButtonSize))
         }
         
         addSubview(timeRegulator)
@@ -172,7 +172,7 @@ class CircleTimeView: UIView {
     }
     
     private func configurePlayStopShapesLayer() {
-        let frame = CGRect(origin: .zero, size: CGSize(size: AppearanceSize.playButtonHeight))
+        let frame = CGRect(origin: .zero, size: CGSize(size: AppearanceSize.playButtonSize))
         configurePlayPath(frame: frame)
         configureStopPath(frame: frame)
         buttonShapeLayer.frame = frame
@@ -210,7 +210,7 @@ class CircleTimeView: UIView {
     }
     
     private func configureTimeRegulator() {
-        let rect = CGRect(origin: .zero, size: CGSize(size: AppearanceSize.timeRegulator))
+        let rect = CGRect(origin: .zero, size: CGSize(size: AppearanceSize.timeRegulatorSize))
         let path = UIBezierPath(ovalIn: rect)
         timeRegulatorLayer.frame = rect
         timeRegulatorLayer.path = path.cgPath

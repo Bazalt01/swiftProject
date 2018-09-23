@@ -15,19 +15,21 @@ struct AppearanceFont {
     static let textField = UIFont.systemFont(ofSize: 17)
     static let textView = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.light)
     static let titleLabel = UIFont.systemFont(ofSize: 17)
+    static let attentionLabel = UIFont.systemFont(ofSize: 24)
     static let timeLabel = UIFont.systemFont(ofSize: 56, weight: UIFont.Weight.light)
     static let baseLabel = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.light)
 }
 
 struct AppearanceSize {
     static let buttonHeight: CGFloat = 44.0
-    static let playButtonHeight: CGFloat = 32.0
+    static let playButtonSize: CGFloat = 32.0
     static let labelHeight: CGFloat = 44.0
     static let textFieldHeight: CGFloat = 44.0
     static let textViewHeight: CGFloat = 44.0
     static let separatorHeight: CGFloat = 20.0
     static let cellActionWidth: CGFloat = 70.0
-    static let timeRegulator: CGFloat = 20.0
+    static let timeRegulatorSize: CGFloat = 20.0
+    static let circleTimeViewSize: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 240.0 : 160.0
 }
 
 private let purple = UIColor(hue: 257.0/360.0, saturation: 0.6, brightness: 1.0, alpha: 1.0)
@@ -66,7 +68,10 @@ struct AppearanceColor {
     static let titleLabelBackground = ashBlack
     
     static let baseLabel = cyberGreen
-    static let baseLabelBackground = ashBlack        
+    static let baseLabelBackground = ashBlack
+    
+    static let empty = ashLight
+    static let emptyBackground = ashBlack
     
     static let viewBackground = ashBlack
     static let collectionBackground = ashBlack        
@@ -153,6 +158,17 @@ struct Appearance {
         label.font = AppearanceFont.baseLabel
         label.textColor = AppearanceColor.baseLabel
         label.backgroundColor = AppearanceColor.baseLabelBackground
+    }
+    
+    static func applyFor(emptyLabel label: UILabel) {
+        label.font = AppearanceFont.attentionLabel
+        label.textColor = AppearanceColor.empty
+        label.backgroundColor = AppearanceColor.emptyBackground
+    }
+    
+    static func applyFor(emptyImage image: UIImageView) {        
+        image.tintColor = AppearanceColor.empty
+        image.backgroundColor = AppearanceColor.emptyBackground
     }
     
     static func applyFor(muteLabel label: UILabel) {

@@ -7,12 +7,15 @@
 //
 
 import Foundation
+import RxSwift
 
 class TemplateViewModel {
     private var router: TemplateRouter
     private var templateManager: TemplateManager
     private(set) var dataSource: TemplateCollectionDataSource
-    private(set) var collectionViewDelegate: TemplateCollectionDelegate
+    private(set) var collectionViewDelegate: TemplateCollectionDelegate        
+    
+    let hasTemplatesObserver = PublishSubject<Bool>()
     
     // MARK: - Inits
     
@@ -32,7 +35,9 @@ class TemplateViewModel {
     
     func configure() {
         configureSubsciptions()
+        let models = self.templateManager.models
         dataSource.configureAndSetCellViewModel(templateModels: self.templateManager.models, batchUpdates: nil)
+        hasTemplatesObserver.onNext(models.count > 0)
     }
     
     func createNewTemplate() {
@@ -71,6 +76,7 @@ class TemplateViewModel {
         }
         let batchUpdates = configureBatchUpdates(fetchResultChanges: result.changes)
         dataSource.configureAndSetCellViewModel(templateModels: result.models as! [TemplateModel], batchUpdates: batchUpdates)
+        hasTemplatesObserver.onNext(result.models.count > 0)
     }
     
     private func configureBatchUpdates(fetchResultChanges: [FetchResultChanges]) -> [BatchUpdate] {

@@ -14,10 +14,10 @@ extension UIEdgeInsets {
     }
     
     mutating func appendInsets(insets: UIEdgeInsets) {
-        self.top += insets.bottom
+        self.top += insets.top
         self.bottom += insets.bottom
-        self.left += insets.bottom
-        self.right += insets.bottom
+        self.left += insets.left
+        self.right += insets.right
     }
     
     var horizontalInset: CGFloat {

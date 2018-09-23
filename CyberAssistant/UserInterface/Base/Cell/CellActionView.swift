@@ -38,7 +38,7 @@ class CellActionView: UIView {
     // MARK: - Private
     
     private func configureViews() {
-        self.addSubview(actionButton)
+        addSubview(actionButton)
         actionButton.snp.makeConstraints { (make) in
             make.edges.equalTo(self)
         }

@@ -69,7 +69,7 @@ class CollectionViewCellWithActions: BaseCollectionViewCell {
         
         for actionVM in acts {
             let view = CellActionView(viewModel: actionVM)
-            self.addSubview(view)
+            addSubview(view)
             actionViews.append(view)
         }
     }

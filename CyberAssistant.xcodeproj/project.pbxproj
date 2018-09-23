@@ -24,6 +24,7 @@
 		EA57F06521245E2600309919 /* UIStructExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57F06421245E2600309919 /* UIStructExtention.swift */; };
 		EA62B7AA211C3A0F007F5C16 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA62B7A9211C3A0F007F5C16 /* MainViewModel.swift */; };
 		EA69D5C02156342A00F29DDD /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA69D5BF2156342A00F29DDD /* BackgroundWorker.swift */; };
+		EA69D5C22157E26600F29DDD /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA69D5C12157E26600F29DDD /* EmptyView.swift */; };
 		EA6C9EAB21441C4D00CCC2F3 /* AnimatableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6C9EAA21441C4D00CCC2F3 /* AnimatableLabel.swift */; };
 		EA6C9EAD21441EF000CCC2F3 /* LabelAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6C9EAC21441EF000CCC2F3 /* LabelAnimator.swift */; };
 		EA6C9EAF21457E1B00CCC2F3 /* CircleTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6C9EAE21457E1B00CCC2F3 /* CircleTimeView.swift */; };
@@ -106,6 +107,7 @@
 		EA57F06421245E2600309919 /* UIStructExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStructExtention.swift; sourceTree = "<group>"; };
 		EA62B7A9211C3A0F007F5C16 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		EA69D5BF2156342A00F29DDD /* BackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
+		EA69D5C12157E26600F29DDD /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		EA6C9EAA21441C4D00CCC2F3 /* AnimatableLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatableLabel.swift; sourceTree = "<group>"; };
 		EA6C9EAC21441EF000CCC2F3 /* LabelAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelAnimator.swift; sourceTree = "<group>"; };
 		EA6C9EAE21457E1B00CCC2F3 /* CircleTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleTimeView.swift; sourceTree = "<group>"; };
@@ -270,6 +272,8 @@
 				EA6C9EAC21441EF000CCC2F3 /* LabelAnimator.swift */,
 				EA8983E421406BEC00F90A1C /* AttentionView.swift */,
 				EA6C9EAE21457E1B00CCC2F3 /* CircleTimeView.swift */,
+				EA69D5C12157E26600F29DDD /* EmptyView.swift */,
+				EAE9EE2D212803D4000A2220 /* EnterView.swift */,
 				EABA347B212165FD00B2040B /* Layout */,
 				EAE9EE282127ED0D000A2220 /* Welcome */,
 				EAB0699A211A9EC300EF6913 /* Main */,
@@ -432,7 +436,6 @@
 				EAE9EE292127ED1C000A2220 /* WelcomeViewController.swift */,
 				EAE9EE2B2127ED2A000A2220 /* WelcomeViewModel.swift */,
 				EAC7801F21319DA8000237D7 /* WelcomeRouter.swift */,
-				EAE9EE2D212803D4000A2220 /* EnterView.swift */,
 			);
 			path = Welcome;
 			sourceTree = "<group>";
@@ -567,6 +570,7 @@
 				EABA345A211F04F200B2040B /* ViewControllerAssembly.swift in Sources */,
 				EA57F02A212422FD00309919 /* TemplateCollectionDelegate.swift in Sources */,
 				EAC7801C21313DEF000237D7 /* RealmModel.swift in Sources */,
+				EA69D5C22157E26600F29DDD /* EmptyView.swift in Sources */,
 				EAC780362132DB1C000237D7 /* TemplateEditCell.swift in Sources */,
 				EABA346C212066CB00B2040B /* TemplateCell.swift in Sources */,
 				EA57F026212400B500309919 /* BaseCollectionViewModel.swift in Sources */,

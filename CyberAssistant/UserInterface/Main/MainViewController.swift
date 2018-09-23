@@ -64,7 +64,7 @@ class MainViewController: BaseViewController {
         view.addSubview(circleTimeView)
         circleTimeView.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
-            make.size.equalTo(CGSize(width: 160, height: 160))
+            make.size.equalTo(CGSize(size: AppearanceSize.circleTimeViewSize))
         }
 
         let stackView = configuredStackView()

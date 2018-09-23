@@ -100,7 +100,7 @@ class TemplateEditViewController: BaseCollectionViewController {
         
         if keyboardRect.minY >= view.frame.height {
             UIView.animate(withDuration: animationDuration) {
-                self.updateCollectionContentInset()
+                cv.contentInset = UIEdgeInsets.zero
             }
         }
         else {

@@ -43,6 +43,10 @@ class AuthManager {
         let account = RealmAccount(login: result.login, password: result.password, name: nil)
         account.authorized = true
         DatabaseManager.database.insert(model: account, processing: { [weak self](error) in
+            if let err = error {
+                failure(err)
+                return
+            }
             self?.authorizedAccount = account
             success()
         })
