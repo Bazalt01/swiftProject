@@ -16,16 +16,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         DatabaseManager.database.configure()
-        let authManager = AuthManager()
         
+        let assembly = Assembly.shared
         if let window = application.windows.first {
-            let vc = ViewControllerAssembly.configuredMainViewController()
+            let vc = assembly.configuredMainViewController()
             let navigationController = BaseNavigationController(rootViewController: vc)
             window.rootViewController = navigationController
             window.makeKeyAndVisible()
             
-            if authManager.authorizedAccount == nil {
-                let wc = ViewControllerAssembly.configuredWelcomeViewController(authManager: authManager)
+            if assembly.authManager.authorizedAccount.value == nil {
+                let wc = assembly.configuredWelcomeViewController()
                 navigationController.present(wc, animated: false, completion: nil)
             }
         }        

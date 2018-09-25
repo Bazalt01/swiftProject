@@ -15,14 +15,14 @@ class MainRouter {
     
     func openTemplatesController() {
         if let rh = routeHandler {
-            let tc = ViewControllerAssembly.configuredTemplateViewController()
+            let tc = Assembly.shared.configuredTemplateViewController()
             rh.pushToViewController?(viewController: tc)
         }
     }
     
     func openNewTemplateController() {
         if let rh = routeHandler {
-            let tc = ViewControllerAssembly.configuredTemplateEditViewController(template: nil)
+            let tc = Assembly.shared.configuredTemplateEditViewController(template: nil)
             rh.pushToViewController?(viewController: tc)
         }
     }

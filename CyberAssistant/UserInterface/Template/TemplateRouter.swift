@@ -15,7 +15,7 @@ class TemplateRouter {
     
     func openTemplateEditorController(template: TemplateModel?) {
         if let rh = routeHandler {
-            let tc = ViewControllerAssembly.configuredTemplateEditViewController(template: template)
+            let tc = Assembly.shared.configuredTemplateEditViewController(template: template)
             rh.pushToViewController?(viewController: tc)
         }
     }

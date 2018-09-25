@@ -8,11 +8,17 @@
 
 import Foundation
 
-class ViewControllerAssembly {
-    class func configuredMainViewController() -> MainViewController {
+class Assembly {
+    static let shared: Assembly = {
+        return Assembly()
+    }()
+
+    let authManager = AuthManager()
+    
+    func configuredMainViewController() -> MainViewController {
         let conf = SpeechConfigurator(language: .Russian)
         let sm = BaseSpeechManager(configurator: conf)
-        let tm = TemplateManager()
+        let tm = TemplateManager(authManager: authManager)
         let router = MainRouter()
         let vm = MainViewModel(speechManager: sm, templateManager: tm, router: router)
         let vc = MainViewController(viewModel: vm)
@@ -20,8 +26,8 @@ class ViewControllerAssembly {
         return vc
     }
     
-    class func configuredTemplateViewController() -> TemplateViewController {
-        let tm = TemplateManager()
+    func configuredTemplateViewController() -> TemplateViewController {
+        let tm = TemplateManager(authManager: authManager)
         let ds = TemplateCollectionDataSource()
         let cd = TemplateCollectionDelegate(dataSource: ds)
         let router = TemplateRouter()
@@ -31,16 +37,16 @@ class ViewControllerAssembly {
         return vc
     }
     
-    class func configuredTemplateEditViewController(template: TemplateModel?) -> TemplateEditViewController {
-        let tm = TemplateManager()
+    func configuredTemplateEditViewController(template: TemplateModel?) -> TemplateEditViewController {
+        let tm = TemplateManager(authManager: authManager)
         let router = TemplateEditRouter()
-        let vm = TemplateEditViewModel(templateManager: tm, template: template, router: router)
+        let vm = TemplateEditViewModel(templateManager: tm, authManager: authManager, template: template, router: router)
         let vc = TemplateEditViewController(viewModel: vm)
         router.routeHandler = vc
         return vc
     }
     
-    class func configuredWelcomeViewController(authManager: AuthManager) -> WelcomeViewController {
+    func configuredWelcomeViewController() -> WelcomeViewController {
         let router = WelcomeRouter()
         let vm = WelcomeViewModel(authManager: authManager, router: router)
         let vc = WelcomeViewController(viewModel: vm)

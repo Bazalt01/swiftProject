@@ -17,6 +17,7 @@ struct TemplateRule {
 }
 
 class TemplateManager: BackgroundWorker {
+    private var authManager: AuthManager
     var models = [TemplateModel]()
     private var database: Database?
     let templateRules = [TemplateRule(rule: "(number)[n] - random value from 0 to n",
@@ -32,30 +33,28 @@ class TemplateManager: BackgroundWorker {
                                       result: "Dima can eat 10 kiwis per minute.")]
     let templateModelsObserver = PublishSubject<FetchResult?>()
     
+    // MARK: - Inits
+    
+    init(authManager: AuthManager) {
+        self.authManager = authManager
+    }
+    
     // MARK: - Public
     
     func configure() {
-        let sort = SortModel.init(key: "value", ascending: true)
-        let observer = self.templateModelsObserver
-        observer.subscribe(onNext: { [weak self](fetchResult) in
-            if let result = fetchResult {
-                self?.models = result.models as! [TemplateModel]
+        guard let account = self.authManager.authorizedAccount.value else {
+            _ = self.authManager.authorizedAccount.asObservable().subscribe { [weak self](newAccount) in
+                guard let acc = newAccount.element! else { return }
+                self?.loadContent(account: acc)
             }
-        })
-        
-        self.start({ [weak self] in
-            let database = DatabaseManager.createDatabase()
-            database.configure()
-            database.objects(objectType: RealmTemplate.self, predicate: nil, sortModes: [sort], observer: observer, responseQueue: DispatchQueue.main)
-            self?.database = database
-        })
+            return
+        }
+        loadContent(account: account)
     }
     
     func createTemplate(string: String, completion: @escaping (_ template: TemplateModel) -> Void) {
-            let template = RealmTemplate(value: string, muted: false)
-            
+        let template = RealmTemplate(value: string, muted: false, author: authManager.authorizedAccount.value!)
             DatabaseManager.database.insert(model: template) { (error) in
-            
             completion(template)
         }
     }
@@ -69,5 +68,26 @@ class TemplateManager: BackgroundWorker {
     func deleteTemplate(template: TemplateModel) {
         DatabaseManager.database.delete(model: template) { (error) in
         }
+    }
+    
+    // MARK: - Private
+    
+    private func loadContent(account: AccountModel) {
+        let sort = SortModel.init(key: "value", ascending: true)
+        let observer = self.templateModelsObserver
+        observer.subscribe(onNext: { [weak self](fetchResult) in
+            if let result = fetchResult {
+                self?.models = result.models as! [TemplateModel]
+            }
+        })
+        
+        let predicate = NSPredicate(format: "\(TemplateInternalAuthorPathKey) = %@", account.login as CVarArg)
+        self.start({ [weak self] in
+            let database = DatabaseManager.createDatabase()
+            database.configure()
+            
+            database.objects(objectType: RealmTemplate.self, predicate: predicate, sortModes: [sort], observer: observer, responseQueue: DispatchQueue.main)
+            self?.database = database
+        })
     }
 }

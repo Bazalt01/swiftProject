@@ -8,10 +8,11 @@
 
 import Foundation
 import RealmSwift
-import CommonCrypto
+import RxSwift
+import RxCocoa
 
-class AuthManager {
-    private(set) var authorizedAccount: AccountModel?
+class AuthManager {    
+    private(set) var authorizedAccount = BehaviorRelay<AccountModel?>(value: nil)
     
     // MARK: - Inits
     
@@ -19,7 +20,8 @@ class AuthManager {
         guard let authResult = KeychainManager.currentAuthResult() else { return }
         
         let predicate = NSPredicate(format: "login = %@ AND password = %@", authResult.login, authResult.password)
-        self.authorizedAccount = DatabaseManager.database.object(objectType: RealmAccount.self, predicate: predicate) as? AccountModel
+        let account = DatabaseManager.database.object(objectType: RealmAccount.self, predicate: predicate) as? AccountModel
+        authorizedAccount.accept(account)
     }
     
     // MARK: - Public
@@ -29,8 +31,7 @@ class AuthManager {
             failure(ErrorManager.error(code: .accountIsNotExist))
             return            
         }
-        
-        authorizedAccount = account
+        authorizedAccount.accept(account)
         let updatedAuthResult = AuthResult(login: account.login, password: account.password)
         KeychainManager.saveAuthResult(result: updatedAuthResult)
         success()
@@ -55,13 +56,13 @@ class AuthManager {
             }
             let updatedAuthResult = AuthResult(login: account.login, password: account.password)
             KeychainManager.saveAuthResult(result: updatedAuthResult)
-            self?.authorizedAccount = account
+            self?.authorizedAccount.accept(account)
             success()
         })
     }
     
     func canSignInWithLocalUser() -> Bool {
-        return authorizedAccount != nil
+        return authorizedAccount.value != nil
     }
 
     // MARK: - Private
@@ -79,26 +80,3 @@ class AuthManager {
         return nil
     }
 }
-
-//https://stackoverflow.com/questions/25388747/sha256-in-swift
-
-fileprivate class CryptoConverter {
-    class func SHA256(_ data: Data) -> Data? {
-        guard let res = NSMutableData(length: Int(CC_SHA256_DIGEST_LENGTH)) else { return nil }
-        CC_SHA256((data as NSData).bytes, CC_LONG(data.count), res.mutableBytes.assumingMemoryBound(to: UInt8.self))
-        return res as Data
-    }
-    
-    class func convertSHA256(string: String) -> String? {
-        let targetString = string + RealmConfiguration.solt
-        guard
-            let data = targetString.data(using: String.Encoding.utf8),
-            let shaData = SHA256(data)
-            else {
-                return nil
-        }
-        let rc = shaData.base64EncodedString(options: [])
-        return rc
-    }
-}
-

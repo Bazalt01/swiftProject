@@ -25,6 +25,7 @@
 		EA62B7AA211C3A0F007F5C16 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA62B7A9211C3A0F007F5C16 /* MainViewModel.swift */; };
 		EA69D5C02156342A00F29DDD /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA69D5BF2156342A00F29DDD /* BackgroundWorker.swift */; };
 		EA69D5C22157E26600F29DDD /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA69D5C12157E26600F29DDD /* EmptyView.swift */; };
+		EA69D5C8215A76A100F29DDD /* CryptoConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA69D5C7215A76A100F29DDD /* CryptoConverter.swift */; };
 		EA6C9EAB21441C4D00CCC2F3 /* AnimatableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6C9EAA21441C4D00CCC2F3 /* AnimatableLabel.swift */; };
 		EA6C9EAD21441EF000CCC2F3 /* LabelAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6C9EAC21441EF000CCC2F3 /* LabelAnimator.swift */; };
 		EA6C9EAF21457E1B00CCC2F3 /* CircleTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6C9EAE21457E1B00CCC2F3 /* CircleTimeView.swift */; };
@@ -108,6 +109,7 @@
 		EA62B7A9211C3A0F007F5C16 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		EA69D5BF2156342A00F29DDD /* BackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
 		EA69D5C12157E26600F29DDD /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
+		EA69D5C7215A76A100F29DDD /* CryptoConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoConverter.swift; sourceTree = "<group>"; };
 		EA6C9EAA21441C4D00CCC2F3 /* AnimatableLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatableLabel.swift; sourceTree = "<group>"; };
 		EA6C9EAC21441EF000CCC2F3 /* LabelAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelAnimator.swift; sourceTree = "<group>"; };
 		EA6C9EAE21457E1B00CCC2F3 /* CircleTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleTimeView.swift; sourceTree = "<group>"; };
@@ -242,6 +244,7 @@
 				EAC780232131E5A6000237D7 /* ErrorManager.swift */,
 				EAD1A5DB212EEC77002C4410 /* Database */,
 				EA17CF98212DCD13002757E5 /* AuthManager.swift */,
+				EA69D5C7215A76A100F29DDD /* CryptoConverter.swift */,
 				EAD1A5D5212EBB5E002C4410 /* KeychainManager.swift */,
 				EA12880F2134659200F2533E /* TemplateFormatter.swift */,
 				EABA3462211F145E00B2040B /* SpeechManagers */,
@@ -581,6 +584,7 @@
 				EA02094921541BC100DE9717 /* RxSwift+Utils.swift in Sources */,
 				EA17CF99212DCD13002757E5 /* AuthManager.swift in Sources */,
 				EA69D5C02156342A00F29DDD /* BackgroundWorker.swift in Sources */,
+				EA69D5C8215A76A100F29DDD /* CryptoConverter.swift in Sources */,
 				EAC78040213318CB000237D7 /* TemplateRouter.swift in Sources */,
 				EA6C9EAF21457E1B00CCC2F3 /* CircleTimeView.swift in Sources */,
 				EA17CF97212DCC44002757E5 /* DatabaseManager.swift in Sources */,

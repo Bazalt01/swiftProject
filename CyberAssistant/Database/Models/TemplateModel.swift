@@ -8,12 +8,15 @@
 
 import Foundation
 
-protocol TemplateModel: BaseModel {    
+let TemplateInternalAuthorPathKey = "internalAuthor.login"
+
+protocol TemplateModel: BaseModel {
     var value: String { get set }
     var totalValue: String { get }
     var muted: Bool { get set }
+    var author: AccountModel? { get }
     
-    init(value: String, muted: Bool)
-    
+    init(value: String, muted: Bool, author: AccountModel)
+        
     func generateTemplate()
 }

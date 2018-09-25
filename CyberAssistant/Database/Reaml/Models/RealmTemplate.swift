@@ -14,9 +14,14 @@ class RealmTemplate: RealmModel, TemplateModel {
     @objc dynamic var value: String = ""
     private(set) var totalValue: String = ""
     @objc dynamic var muted: Bool = false
+    @objc dynamic var internalAuthor: RealmAccount?
+    var author: AccountModel? {
+        return internalAuthor
+    }
     
-    required convenience init(value: String, muted: Bool) {
+    required convenience init(value: String, muted: Bool, author: AccountModel) {
         self.init()
+        self.internalAuthor = author as? RealmAccount
         self.value = value
         self.muted = muted
     }
@@ -32,7 +37,7 @@ class RealmTemplate: RealmModel, TemplateModel {
     required init(value: Any, schema: RLMSchema) {
         super.init(value: value, schema: schema)
     }
-    
+
     func generateTemplate() {
          totalValue = TemplateFormatter.generateTemplateResult(template: value)
     }

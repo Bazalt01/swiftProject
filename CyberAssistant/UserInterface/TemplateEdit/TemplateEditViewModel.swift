@@ -10,6 +10,7 @@ import Foundation
 
 class TemplateEditViewModel: BaseCollectionViewModel {
     private var templateManager: TemplateManager
+    private var authManager: AuthManager
 
     private(set) var template: TemplateModel?
     private(set) var router: TemplateEditRouter
@@ -22,8 +23,9 @@ class TemplateEditViewModel: BaseCollectionViewModel {
     
     // MARK: - Inits
     
-    init(templateManager: TemplateManager, template: TemplateModel?, router: TemplateEditRouter) {
+    init(templateManager: TemplateManager, authManager: AuthManager, template: TemplateModel?, router: TemplateEditRouter) {
         self.templateManager = templateManager
+        self.authManager = authManager
         self.template = template
         self.router = router
         
@@ -63,7 +65,7 @@ class TemplateEditViewModel: BaseCollectionViewModel {
         }
         
         guard var templ = template else {
-            let newTemplate = RealmTemplate(value: value, muted: false)
+            let newTemplate = RealmTemplate(value: value, muted: false, author: authManager.authorizedAccount.value!)
             DatabaseManager.database.insert(model: newTemplate) { (error) in
             }
             return nil
