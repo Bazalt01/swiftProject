@@ -29,7 +29,7 @@ class TemplateManager: BackgroundWorker {
                          
                          TemplateRule(rule: "(Any type)[a,b,c,d,...,n] - Will choose just one from sequence",
                                       example: "Dima can eat 10 [apples,kiwis,peaches] per minite.",
-                                      result: "Dima can eat 10 kiwis per minite.")]
+                                      result: "Dima can eat 10 kiwis per minute.")]
     let templateModelsObserver = PublishSubject<FetchResult?>()
     
     // MARK: - Public

@@ -216,10 +216,10 @@ class EnterView: UIView {
     private func updateSignInUpButton() {
         switch currentOption {
         case .All, .SignIn:
-            signInUpButton.setTitle("Sing Up", for: .normal)
+            signInUpButton.setTitle("Sign Up", for: .normal)
             break
         case .SignUp:
-            signInUpButton.setTitle("Sing In", for: .normal)
+            signInUpButton.setTitle("Sign In", for: .normal)
             break
         }
     }

@@ -19,6 +19,7 @@ enum ErrorCode: Int {
     
     case accountIsExist = 20000
     case accountIsNotExist
+    case couldntCreateAccount
     
     case cantGetDatabase = 30000
     
@@ -48,6 +49,8 @@ class ErrorManager {
             return NSError(domain: errorDomain, code: code.rawValue, userInfo: [NSLocalizedDescriptionKey : "Account with current login is existed"])
         case .accountIsNotExist:
             return NSError(domain: errorDomain, code: code.rawValue, userInfo: [NSLocalizedDescriptionKey : "Account isn't existed"])
+        case .couldntCreateAccount:
+            return NSError(domain: errorDomain, code: code.rawValue, userInfo: [NSLocalizedDescriptionKey : "Sorry. We couldn't create your account"])
             
         // 30000
         case .cantGetDatabase:

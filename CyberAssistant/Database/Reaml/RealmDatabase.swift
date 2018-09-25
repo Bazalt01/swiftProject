@@ -33,8 +33,8 @@ class RealmDatabase {
     
     func currentUser(success:@escaping (SyncUser) -> Void, failure:@escaping (Error) -> Void) {
         guard let currentUser = SyncUser.current else {
-            let creds = SyncCredentials.nickname(Configuration.AdminNickname, isAdmin: true)
-            SyncUser.logIn(with: creds, server: Configuration.AUTH_URL, onCompletion: { (user, err) in
+            let creds = SyncCredentials.nickname(RealmConfiguration.AdminNickname, isAdmin: true)
+            SyncUser.logIn(with: creds, server: RealmConfiguration.AUTH_URL, onCompletion: { (user, err) in
                 if let error = err {
                     failure(error)
                 }
@@ -50,7 +50,7 @@ class RealmDatabase {
     // MARK: - Private
     
     private func configureRealm(user: SyncUser) -> Realm {
-        var config = user.configuration(realmURL: Configuration.REALM_URL, fullSynchronization: true, enableSSLValidation: false, urlPrefix: nil)
+        var config = user.configuration(realmURL: RealmConfiguration.REALM_URL, fullSynchronization: true, enableSSLValidation: false, urlPrefix: nil)
         config.objectTypes = self.baseClasses
         return try! Realm(configuration: config)
     }
