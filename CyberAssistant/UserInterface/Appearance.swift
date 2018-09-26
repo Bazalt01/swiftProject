@@ -74,7 +74,11 @@ struct AppearanceColor {
     static let emptyBackground = ashBlack
     
     static let viewBackground = ashBlack
-    static let collectionBackground = ashBlack        
+    static let collectionBackground = ashBlack
+    static let tableCellBackground = cyberGreen
+    
+    static let tableLabel = ashBlack
+    static let tableLabelBackground = cyberGreen
     
     static let actionIcon = white
     static let deleteBackground = red
@@ -175,6 +179,12 @@ struct Appearance {
         label.font = AppearanceFont.baseLabel
         label.textColor = AppearanceColor.baseLabel.withAlphaComponent(0.6)
         label.backgroundColor = AppearanceColor.baseLabelBackground
+    }
+    
+    static func applyFor(tableLabel label: UILabel) {
+        label.font = AppearanceFont.baseLabel
+        label.textColor = AppearanceColor.tableLabel
+        label.backgroundColor = AppearanceColor.tableLabelBackground
     }
     
     static func applyFor(textView: UITextView) {

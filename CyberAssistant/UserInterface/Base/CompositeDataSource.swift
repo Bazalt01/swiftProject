@@ -8,9 +8,9 @@
 
 import Foundation
 
-class CompositeDataSource: BaseDataSource {
+class CompositeDataSource: BaseCollectionDataSource {
     
-    var dataSources = [BaseDataSource]() {
+    var dataSources = [BaseCollectionDataSource]() {
         didSet {
             var classes = [BaseCollectionViewCell.Type]()
             for dataSource in dataSources {

@@ -26,4 +26,11 @@ class MainRouter {
             rh.pushToViewController?(viewController: tc)
         }
     }
+    
+    func openSettingsController() {
+        if let rh = routeHandler {
+            let tc = Assembly.shared.configuredSettingsViewController()
+            rh.pushToViewController?(viewController: tc)
+        }
+    }
 }

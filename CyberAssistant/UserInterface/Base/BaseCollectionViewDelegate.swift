@@ -13,11 +13,11 @@ import RxCocoa
 class BaseCollectionViewDelegate: NSObject {
     private(set) var didSelectTemplateObserver = PublishSubject<CellViewModel>()
     private(set) var cellLayoutManager: BaseCellLayoutManager
-    private var dataSource: BaseDataSource
+    private var dataSource: BaseCollectionDataSource
     
     // MARK: - Inits
     
-    init(cellLayoutManager: BaseCellLayoutManager, dataSource: BaseDataSource) {
+    init(cellLayoutManager: BaseCellLayoutManager, dataSource: BaseCollectionDataSource) {
         self.cellLayoutManager = cellLayoutManager
         self.dataSource = dataSource
     }

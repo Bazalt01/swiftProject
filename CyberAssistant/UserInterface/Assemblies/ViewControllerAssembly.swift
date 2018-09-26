@@ -53,4 +53,12 @@ class Assembly {
         router.routeHandler = vc
         return vc
     }
+    
+    func configuredSettingsViewController() -> SettingsViewController {
+        let router = SettingsRouter()
+        let vm = SettingsViewModel(authManager: authManager, router: router)
+        let vc = SettingsViewController(viewModel: vm)
+        router.routeHandler = vc
+        return vc
+    }
 }

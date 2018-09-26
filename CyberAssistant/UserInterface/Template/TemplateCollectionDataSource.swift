@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-class TemplateCollectionDataSource: BaseDataSource {
+class TemplateCollectionDataSource: BaseCollectionDataSource {
     
     // MARK: - Inits
     

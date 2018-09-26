@@ -38,7 +38,7 @@ class BaseCollectionViewController: BaseViewController {
     
     func configureAppearance() {
         if let cv = collectionView {
-            cv.backgroundColor = UIColor.clear
+            cv.backgroundColor = AppearanceColor.collectionBackground
         }
     }
     

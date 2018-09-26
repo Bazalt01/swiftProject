@@ -1,5 +1,5 @@
 //
-//  BaseDataSource.swift
+//  BaseCollectionDataSource.swift
 //  CasinoAssistant
 //
 //  Created by g.tokmakov on 12/08/2018.
@@ -21,7 +21,7 @@ struct BatchUpdate {
 
 typealias SupplementaryViewClassWithKind = (classType: UICollectionReusableView.Type, kind: SupplementaryViewKind)
 
-class BaseDataSource: NSObject {
+class BaseCollectionDataSource: NSObject {
     var cellClasses = [BaseCollectionViewCell.Type]()
     var supplementaryViewClasses: [SupplementaryViewClassWithKind]?
     weak var collectionView: UICollectionView? {
@@ -114,7 +114,7 @@ class BaseDataSource: NSObject {
     }
 }
 
-extension BaseDataSource: UICollectionViewDataSource {
+extension BaseCollectionDataSource: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         assert(sections.count > 0)
         return sections.count

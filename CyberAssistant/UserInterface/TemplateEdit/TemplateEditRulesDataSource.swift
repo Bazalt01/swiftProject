@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TemplateEditRulesDataSource: BaseDataSource {
+class TemplateEditRulesDataSource: BaseCollectionDataSource {
     
     // MARK: - Inits
     

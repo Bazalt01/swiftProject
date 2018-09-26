@@ -16,6 +16,7 @@ class MainViewController: BaseViewController {
     
     private var circleTimeView: CircleTimeView?
     private var templatesButton = UIButton()
+    private var settingsButton = UIButton()
     private var templateLabels = [UILabel]()
     private var newTemplateButton = UIButton()
     
@@ -92,6 +93,19 @@ class MainViewController: BaseViewController {
             }
         }
         
+        configureSettingsButton()
+        view.addSubview(settingsButton)
+        settingsButton.snp.makeConstraints { (make) in
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
+                make.left.equalTo(view.safeAreaLayoutGuide).inset(10)
+            }
+            else {
+                make.top.equalTo(topLayoutGuide.snp.bottom).inset(10)
+                make.left.equalTo(view).inset(10)
+            }
+        }
+        
         configureNewTemplateButton()
         stackView.addArrangedSubview(newTemplateButton)
         newTemplateButton.isHidden = true
@@ -110,6 +124,12 @@ class MainViewController: BaseViewController {
     private func configureTemplatesButton() {
         if let image = UIImage.image(imageName: "ic_templates", renderingMode: .alwaysTemplate) {
             templatesButton.setImage(image, for: .normal)            
+        }
+    }
+    
+    private func configureSettingsButton() {
+        if let image = UIImage.image(imageName: "ic_settings", renderingMode: .alwaysTemplate) {
+            settingsButton.setImage(image, for: .normal)
         }
     }
     
@@ -145,6 +165,10 @@ class MainViewController: BaseViewController {
             self?.viewModel.openTemplates()
         })
         
+        settingsButton.rx.tap.subscribe(onNext: { [weak self]() in
+            self?.viewModel.openSettings()
+        })
+
         newTemplateButton.rx.tap.subscribe(onNext: { [weak self]() in
             self?.viewModel.openNewTemplate()
         })
@@ -198,6 +222,7 @@ class MainViewController: BaseViewController {
         }
         Appearance.applyFor(addButton: newTemplateButton)
         templatesButton.tintColor = AppearanceColor.tint
+        settingsButton.tintColor = AppearanceColor.tint
     }
 }
 

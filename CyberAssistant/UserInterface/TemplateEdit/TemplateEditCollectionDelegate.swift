@@ -12,7 +12,7 @@ class TemplateEditCollectionDelegate: BaseCollectionViewDelegate {
     
     // MARK: - Inits
     
-    init(dataSource: BaseDataSource) {
+    init(dataSource: BaseCollectionDataSource) {
         let lm = BaseCellLayoutManager(cellsByClass: [TemplateEditCell.className(): TemplateEditCell(),
                                                       TemplateEditRuleCell.className(): TemplateEditRuleCell()])
         super.init(cellLayoutManager: lm, dataSource: dataSource)

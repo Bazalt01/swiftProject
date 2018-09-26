@@ -39,7 +39,7 @@ class MainViewModel: SpeechManagerDelegate {
         self.router = router
         
         let time = UserDefaults.standard.integer(forKey: delayTimeKey)
-        self.delayTime = time > 0 ? time : kDefaultTime        
+        self.delayTime = time > 0 ? time : kDefaultTime
     }
     
     // MARK: - Public
@@ -67,6 +67,10 @@ class MainViewModel: SpeechManagerDelegate {
     
     func openNewTemplate() {
         router.openNewTemplateController()
+    }
+    
+    func openSettings() {
+        router.openSettingsController()
     }
     
     func playNextSpeechModel() {
