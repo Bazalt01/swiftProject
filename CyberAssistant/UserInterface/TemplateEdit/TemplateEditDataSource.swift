@@ -10,7 +10,7 @@ import UIKit
 
 class TemplateEditDataSource: BaseCollectionDataSource {
     var templateString: String? {
-        return templateEditCellModel?.templateAttrText.string        
+        return templateEditCellModel?.template
     }
     private var templateEditCellModel: TemplateEditCellModel?
     
@@ -25,7 +25,7 @@ class TemplateEditDataSource: BaseCollectionDataSource {
     
     func configureAndSetCellViewModel(template: String) {
         templateEditCellModel = TemplateEditCellModel()
-        templateEditCellModel!.update(template: NSAttributedString(string: template))
+        templateEditCellModel!.update(template: template)
         cellViewModels = [templateEditCellModel!]
         notifyUpdate(batchUpdates: nil, completion: nil)
     }        

@@ -22,7 +22,7 @@ class TemplateEditCell: BaseCollectionViewCell {
     override var viewModel: ViewModel? {
         didSet {
             if let vm = localViewModel {
-                templateEditTextView.attributedText = updateTemplateTextAppearance(attr: vm.templateAttrText)
+                templateEditTextView.text = vm.template
             }
         }
     }
@@ -69,29 +69,13 @@ class TemplateEditCell: BaseCollectionViewCell {
     }
     
     func configureSubsciptions() {
-        templateEditTextView.rx.attributedText.asObservable().ca_subscribe(onNext: { [weak self](attrText) in
-            self?.updateAttrText(attrText: attrText)
+        templateEditTextView.rx.text.asObservable().ca_subscribe(onNext: { [weak self](text) in
+            self?.localViewModel?.update(template: text)
         })
-    }
-    
-    func updateAttrText(attrText: NSAttributedString?) {
-        var value = NSAttributedString(string: "")
-        if attrText != nil {
-            value = attrText!
-        }
-        self.localViewModel?.update(template: value)
-        self.templateEditTextView.attributedText = self.localViewModel?.templateAttrText
     }
     
     func configureAppearance() {
         Appearance.applyFor(textView: templateEditTextView)
         contentView.backgroundColor = AppearanceColor.viewBackground
-    }
-    
-    func updateTemplateTextAppearance(attr: NSAttributedString) -> NSAttributedString {
-        let mAttr = NSMutableAttributedString(attributedString: attr)
-        let range = NSRange(location: 0, length: attr.length)
-        mAttr.addAttribute(NSAttributedStringKey.font, value: self.templateEditTextView.font!, range: range)
-        return mAttr.copy() as! NSAttributedString
     }
 }

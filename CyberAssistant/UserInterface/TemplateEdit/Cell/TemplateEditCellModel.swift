@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 class TemplateEditCellModel: BaseCellViewModel {
-    private(set) var templateAttrText = NSAttributedString()
+    private(set) var template = ""
     
     // MARK: - Inits
     
@@ -24,13 +24,12 @@ class TemplateEditCellModel: BaseCellViewModel {
     
     // MARK: - Public
     
-    func update(template: NSAttributedString) {
-        if template.isEqual(to: templateAttrText) {
+    func update(template: String?) {
+        guard
+            template != nil,
+            template != self.template else {
             return
         }
-        
-        let attributes = [NSAttributedStringKey.foregroundColor : AppearanceColor.textView, NSAttributedStringKey.font : AppearanceFont.textView]
-        let attrText = NSMutableAttributedString(string: template.string, attributes: attributes)
-        templateAttrText = TemplateFormatter.format(attrTemplate: attrText)
+        self.template = template!
     }
 }

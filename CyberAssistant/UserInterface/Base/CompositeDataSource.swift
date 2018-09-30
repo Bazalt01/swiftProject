@@ -8,7 +8,7 @@
 
 import Foundation
 
-class CompositeDataSource: BaseCollectionDataSource {    
+class CompositeDataSource: BaseCollectionDataSource {
     private(set) var dataSources = [BaseCollectionDataSource]()        
     
     // MARK: - Public
