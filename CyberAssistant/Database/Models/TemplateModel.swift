@@ -8,12 +8,18 @@
 
 import Foundation
 
-let TemplateInternalAuthorPathKey = "internalAuthor.login"
+let TemplateInternalAuthorPathKey = "internalAuthor.unicID"
+let TemplateSharedKey = "shared"
+
+protocol SharedTemplateModel: TemplateModel {
+    var saved: Bool { get set }
+}
 
 protocol TemplateModel: BaseModel {
     var value: String { get set }
     var totalValue: String { get }
     var muted: Bool { get set }
+    var shared: Bool { get set }
     var author: AccountModel? { get }
     
     init(value: String, muted: Bool, author: AccountModel)

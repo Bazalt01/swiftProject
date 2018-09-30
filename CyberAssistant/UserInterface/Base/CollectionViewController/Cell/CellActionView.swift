@@ -52,6 +52,10 @@ class CellActionView: UIView {
             break
         case .mute:
             Appearance.applyFor(muteButton: actionButton)
+            break
+        case .share:
+            Appearance.applyFor(shareButton: actionButton)
+            break
         }
     }
     

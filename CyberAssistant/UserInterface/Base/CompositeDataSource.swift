@@ -8,26 +8,52 @@
 
 import Foundation
 
-class CompositeDataSource: BaseCollectionDataSource {
+class CompositeDataSource: BaseCollectionDataSource {    
+    private(set) var dataSources = [BaseCollectionDataSource]()        
     
-    var dataSources = [BaseCollectionDataSource]() {
-        didSet {
-            var classes = [BaseCollectionViewCell.Type]()
-            for dataSource in dataSources {
-                classes.append(contentsOf: dataSource.cellClasses)
-            }
-            cellClasses = classes
-        }
+    // MARK: - Public
+    
+    func add(dataSource: BaseCollectionDataSource) {
+        insert(dataSource: dataSource, index: dataSources.count)
     }
     
-    override var sections: [Array<CellViewModel>] {
-        get {
-            var sections = [Array<CellViewModel>]()
-            for dataSource in dataSources {
-                sections.append(contentsOf: dataSource.sections)
+    func insert(dataSource: BaseCollectionDataSource, index: Int) {
+        dataSources.insert(dataSource, at: index)
+        
+        cellClasses.append(contentsOf: dataSource.cellClasses)
+        supplementaryViewClasses.append(contentsOf: dataSource.supplementaryViewClasses)
+    }
+    
+    func remove(atIndex index: Int) {
+        dataSources.remove(at: index)
+    }
+    
+    override func numberOfSections() -> Int {
+        return dataSources.count
+    }
+    
+    override func numberOfItems(inSection section: Int) -> Int {
+        return dataSources[section].cellViewModels.count
+    }
+
+    override func model(atIndexPath indexPath: IndexPath) -> ViewModel? {
+        return dataSources[indexPath.section].cellViewModels[indexPath.item]
+    }
+    
+    override func index(forItem item: ViewModel) -> IndexPath? {
+        for section in 0..<dataSources.count {
+            let dataSource = dataSources[section]
+            if let indexPath = dataSource.index(forItem: item) {
+                return IndexPath(item: indexPath.item, section: section)
             }
-            sections.append(self.cellViewModels)
-            return sections
         }
+        return nil
+    }
+    
+    // MARK: - Private
+    
+    override func supplementaryModel(atSection section: Int, kind: SupplementaryViewKind) -> ViewModel? {
+        let dataSource = dataSources[section]
+        return kind == .header ? dataSource.supplementaryViewHeaderModel : dataSource.supplementaryViewFooterModel
     }
 }

@@ -41,7 +41,7 @@ class SettingCellView: UITableViewCell {
             make.margins.equalToSuperview()
         }
         
-        contentView.layoutMargins = UIEdgeInsets(edge: LayoutConstants.spacing)
+        contentView.layoutMargins = UIEdgeInsets(ca_edge: LayoutConstants.spacing)
         selectionStyle = .none
         configureAppearance()
     }

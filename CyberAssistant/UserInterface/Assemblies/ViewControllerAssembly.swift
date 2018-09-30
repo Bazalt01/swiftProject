@@ -61,4 +61,13 @@ class Assembly {
         router.routeHandler = vc
         return vc
     }
+    
+    func configuredTemplateShareViewController() -> TemplateShareViewController {
+        let tm = TemplateManager(authManager: authManager)
+        let router = TemplateShareRouter()
+        let vm = TemplateShareViewModel(templateManager: tm, authManager: authManager, router: router)
+        let vc = TemplateShareViewController(viewModel: vm)
+        router.routeHandler = vc
+        return vc
+    }
 }

@@ -8,8 +8,7 @@
 
 import Foundation
 
-class SettingsRouter {
-    var routeHandler: RouterHandler?
+class SettingsRouter: BaseRouter {
     
     // MARK: - Public
     

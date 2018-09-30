@@ -8,8 +8,7 @@
 
 import UIKit
 
-class TemplateEditRouter {
-    var routeHandler: RouterHandler?
+class TemplateEditRouter: BaseRouter {
     
     // MARK: - Public
     

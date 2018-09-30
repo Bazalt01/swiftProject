@@ -12,20 +12,18 @@ let fittingOptions: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFont
 
 class TemplateEditRuleCell: BaseCollectionViewCell {
     private let stackView = UIStackView()
-    private var ruleLabel = AnimatableLabel()
-    private var exampleLabel = AnimatableLabel()
-    private var resultLabel = AnimatableLabel()
+    private let ruleLabel = AnimatableLabel()
+    private let exampleLabel = AnimatableLabel()
+    private let resultLabel = AnimatableLabel()
     
     private var localViewModel: TemplateEditRuleCellModel? {
-        get {
-            guard viewModel is TemplateEditRuleCellModel else {
-                return nil
-            }
-            return viewModel as? TemplateEditRuleCellModel
+        guard viewModel is TemplateEditRuleCellModel else {
+            return nil
         }
+        return viewModel as? TemplateEditRuleCellModel
     }
     
-    override var viewModel: CellViewModel? {
+    override var viewModel: ViewModel? {
         didSet {
             if let vm = localViewModel {
 //                ruleLabel.setText(attributedText: vm.rule, animator: vm.labelAnimator)
@@ -67,8 +65,8 @@ class TemplateEditRuleCell: BaseCollectionViewCell {
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let fittingSize = configuredFittingSize(size: size)
-        var totalSize = CGSize(width: size.width, height: contentView.layoutMargins.verticalInset)                
+        let fittingSize = ca_configuredFittingSize(size: size)
+        var totalSize = CGSize(width: size.width, height: contentView.layoutMargins.ca_verticalInset)
         
         totalSize.height += CGFloat((stackView.arrangedSubviews.count - 1)) * stackView.spacing
         for view in stackView.arrangedSubviews {
@@ -76,17 +74,19 @@ class TemplateEditRuleCell: BaseCollectionViewCell {
         }
         
         return totalSize
-    }        
+    }
     
-    func configureViews() {
+    // MARK: - Private
+    
+    private func configureViews() {
         configureStackView()
         contentView.addSubview(stackView)
         stackView.snp.makeConstraints { (make) in
             make.edges.equalTo(self.contentView.snp.margins)
         }
-        contentView.layoutMargins = UIEdgeInsets(edge: LayoutConstants.spacing)
+        contentView.layoutMargins = UIEdgeInsets(ca_edge: LayoutConstants.spacing)
         
-        configuredRuleTextView()
+        configuredRuleLabel()
         configuredExampleLabel()
         configuredResultLabel()
         
@@ -95,31 +95,29 @@ class TemplateEditRuleCell: BaseCollectionViewCell {
         stackView.addArrangedSubview(resultLabel)
     }
     
-    func configuredRuleTextView() {
-        ruleLabel.numberOfLines = 0
-    }
-    
-    func configuredExampleLabel() {
-        exampleLabel.numberOfLines = 0
-    }
-    
-    func configuredResultLabel() {
-        resultLabel.numberOfLines = 0
-    }
-    
-    func configureAppearance() {
-        Appearance.applyFor(baseLabel: ruleLabel)
-        Appearance.applyFor(baseLabel: exampleLabel)
-        Appearance.applyFor(baseLabel: resultLabel)
-        contentView.backgroundColor = AppearanceColor.viewBackground
-    }
-
-    // MARK: - Private
-    
     private func configureStackView() {
         stackView.axis = .vertical
         stackView.alignment = .leading
         stackView.distribution = .fill
         stackView.spacing = LayoutConstants.spacing
     }    
+
+    private func configuredRuleLabel() {
+        ruleLabel.numberOfLines = 0
+    }
+    
+    private func configuredExampleLabel() {
+        exampleLabel.numberOfLines = 0
+    }
+    
+    private func configuredResultLabel() {
+        resultLabel.numberOfLines = 0
+    }
+    
+    private func configureAppearance() {
+        Appearance.applyFor(baseLabel: ruleLabel)
+        Appearance.applyFor(baseLabel: exampleLabel)
+        Appearance.applyFor(baseLabel: resultLabel)
+        contentView.backgroundColor = AppearanceColor.viewBackground
+    }
 }

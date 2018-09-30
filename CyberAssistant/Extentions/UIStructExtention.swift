@@ -9,34 +9,34 @@
 import UIKit
 
 extension UIEdgeInsets {
-    init(edge: CGFloat) {
+    init(ca_edge edge: CGFloat) {
         self.init(top: edge, left: edge, bottom: edge, right: edge)
     }
     
-    mutating func appendInsets(insets: UIEdgeInsets) {
+    mutating func ca_append(insets: UIEdgeInsets) {
         self.top += insets.top
         self.bottom += insets.bottom
         self.left += insets.left
         self.right += insets.right
     }
     
-    var horizontalInset: CGFloat {
+    var ca_horizontalInset: CGFloat {
         return self.right + self.left
     }
     
-    var verticalInset: CGFloat {
+    var ca_verticalInset: CGFloat {
         return self.bottom + self.top
     }
 }
 
 extension CGSize {
-    init(size: CGFloat) {
+    init(ca_size size: CGFloat) {
         self.init(width: size, height: size)
     }
 }
 
 extension CGRect {
-    func center() -> CGPoint {
+    func ca_center() -> CGPoint {
         return CGPoint(x: self.width / 2.0, y: self.height / 2.0)
     }
 }

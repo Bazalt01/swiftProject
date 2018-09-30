@@ -131,8 +131,7 @@ class TemplateFormatter {
     
     private class func regularExpresion(pattern: String) -> NSRegularExpression? {
         do {
-            return try NSRegularExpression(pattern: pattern, options: [])
-            
+            return try NSRegularExpression(pattern: pattern, options: [])            
         } catch {
             return nil
         }

@@ -44,27 +44,35 @@ class TemplateViewModel {
         router.openTemplateEditorController(template: nil)
     }
     
+    func openShareTemplates() {
+        router.openTemplateShareController()
+    }
+    
     // MARK: - Private
     
     private func configureSubsciptions() {
-        collectionViewDelegate.didSelectTemplateObserver.subscribe(onNext: { [weak self](cellViewModel) in
+        collectionViewDelegate.didSelectTemplateObserver.ca_subscribe(onNext: { [weak self](cellViewModel) in
             self?.findAndOpenTemplate(cellViewModel: cellViewModel)
         })
         
-        self.templateManager.templateModelsObserver.subscribe(onNext: { [weak self](fetchResult) in
+        self.templateManager.templateModelsObserver.ca_subscribe(onNext: { [weak self](fetchResult) in
             self?.processModels(fetchResult: fetchResult)
         })
         
-        dataSource.deleteTemplateObserver.subscribe(onNext: { [weak self](template) in
+        dataSource.deleteTemplateObserver.ca_subscribe(onNext: { [weak self](template) in
             self?.delete(template: template)
         })
         
-        dataSource.muteTemplateObserver.subscribe(onNext: { [weak self](template) in
+        dataSource.muteTemplateObserver.ca_subscribe(onNext: { [weak self](template) in
             self?.mute(template: template)
+        })
+        
+        dataSource.shareTemplateObserver.ca_subscribe(onNext: { [weak self](template) in
+            self?.share(template: template)
         })
     }
     
-    private func findAndOpenTemplate(cellViewModel: CellViewModel) {
+    private func findAndOpenTemplate(cellViewModel: ViewModel) {
         if let template = self.dataSource.template(byCellModel: cellViewModel) {
             self.openTemplateForEditing(template: template)
         }
@@ -82,7 +90,10 @@ class TemplateViewModel {
     private func configureBatchUpdates(fetchResultChanges: [FetchResultChanges]) -> [BatchUpdate] {
         var batchUpdates = [BatchUpdate]()
         for fetchResultChange in fetchResultChanges {
-            let batchUpdate = BatchUpdate(option: fetchResultChange.option, indexes: fetchResultChange.indexes, section: 0)
+            let indexPathes = fetchResultChange.indexes.map { (index) -> IndexPath in
+                return IndexPath(item: index, section: 0)
+            }
+            let batchUpdate = BatchUpdate(option: fetchResultChange.option, indexPathes: indexPathes, sections: IndexSet())
             batchUpdates.append(batchUpdate)
         }
         return batchUpdates
@@ -100,6 +111,13 @@ class TemplateViewModel {
         var templ = template
         templateManager.saveTemplate {
             templ.muted = !templ.muted
+        }
+    }
+    
+    private func share(template: TemplateModel) {
+        var templ = template
+        templateManager.saveTemplate {
+            templ.shared = !templ.shared
         }
     }
 }

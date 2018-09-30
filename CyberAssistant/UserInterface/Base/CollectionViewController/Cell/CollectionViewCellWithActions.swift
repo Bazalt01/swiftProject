@@ -137,10 +137,11 @@ class CollectionViewCellWithActions: BaseCollectionViewCell {
             contentViewX = -shiftLimit
         }
         contentView.frame.origin.x = contentViewX
-        actionViews.enumerated().forEach { (arg0) in
-            let (offset, view) = arg0
-            view.frame.origin.x = contentView.frame.size.width - CGFloat(fabs((contentViewX / CGFloat(offset + 1))))
-        }
+        let shiftWidth: CGFloat = fabs(contentViewX / CGFloat(actionViews.count))
+        actionViews.enumerated().forEach { (offset, view) in
+            let shift: CGFloat = shiftWidth * CGFloat(actionViews.count - offset)
+            view.frame.origin.x = contentView.frame.size.width - shift
+        }        
     }
     
     private func calculatePointForEnd(startPoint: CGPoint, currentPoint: CGPoint) -> (point: CGPoint, duration: Double)  {
@@ -162,7 +163,7 @@ class CollectionViewCellWithActions: BaseCollectionViewCell {
 
 extension CollectionViewCellWithActions: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
+        return false
     }
     
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {

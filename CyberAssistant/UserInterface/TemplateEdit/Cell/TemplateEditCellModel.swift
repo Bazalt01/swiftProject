@@ -10,17 +10,16 @@ import Foundation
 import RxSwift
 
 class TemplateEditCellModel: BaseCellViewModel {
-    private(set) var templateAttrText: NSAttributedString
+    private(set) var templateAttrText = NSAttributedString()
     
     // MARK: - Inits
     
     convenience init() {
-        self.init(cellClass: TemplateEditCell.self)
-        self.templateAttrText = NSAttributedString()
+        self.init(viewClass: TemplateEditCell.self)
     }
-    required init(cellClass: BaseCollectionViewCell.Type) {
-        self.templateAttrText = NSAttributedString()
-        super.init(cellClass: cellClass)
+    
+    required init(viewClass: (UIView & View).Type) {
+        super.init(viewClass: viewClass)
     }
     
     // MARK: - Public

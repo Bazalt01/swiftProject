@@ -80,7 +80,7 @@ class CircleTimeView: UIView {
         updateShapeLayer()
         
         let degree = CGFloat(360 / 60 * time)
-        let center = bounds.center()
+        let center = bounds.ca_center()
         updateTimeRegulatorPosition(degree: degree, center: center)
     }
     
@@ -144,7 +144,7 @@ class CircleTimeView: UIView {
         stackView.addArrangedSubview(timeLabel)
         stackView.addArrangedSubview(playButton)
         playButton.snp.makeConstraints { (make) in
-            make.size.equalTo(CGSize(size: AppearanceSize.playButtonSize))
+            make.size.equalTo(CGSize(ca_size: AppearanceSize.playButtonSize))
         }
         
         addSubview(timeRegulator)
@@ -172,7 +172,7 @@ class CircleTimeView: UIView {
     }
     
     private func configurePlayStopShapesLayer() {
-        let frame = CGRect(origin: .zero, size: CGSize(size: AppearanceSize.playButtonSize))
+        let frame = CGRect(origin: .zero, size: CGSize(ca_size: AppearanceSize.playButtonSize))
         configurePlayPath(frame: frame)
         configureStopPath(frame: frame)
         buttonShapeLayer.frame = frame
@@ -210,7 +210,7 @@ class CircleTimeView: UIView {
     }
     
     private func configureTimeRegulator() {
-        let rect = CGRect(origin: .zero, size: CGSize(size: AppearanceSize.timeRegulatorSize))
+        let rect = CGRect(origin: .zero, size: CGSize(ca_size: AppearanceSize.timeRegulatorSize))
         let path = UIBezierPath(ovalIn: rect)
         timeRegulatorLayer.frame = rect
         timeRegulatorLayer.path = path.cgPath
@@ -254,7 +254,7 @@ class CircleTimeView: UIView {
     }
     
     private func calculateTimeRegulatorPosition(point: CGPoint) {
-        let center = bounds.center()
+        let center = bounds.ca_center()
         let targetPoint = CGPoint(x: point.x - center.x, y: point.y - center.y)
         let value = targetPoint.y / targetPoint.x
         var degree = atan(value) * 180.0 / CGFloat.pi
@@ -262,8 +262,7 @@ class CircleTimeView: UIView {
         if (targetPoint.x == 0.0) {
             degree = targetPoint.y > 0.0 ? 180.0 : 0.0
         }
-        else
-        {
+        else {
             degree += targetPoint.x > 0.0 ? 90.0 : 270.0
         }
         updateTime(degree: Int(ceil(degree)))
@@ -372,7 +371,7 @@ class CircleTimeView: UIView {
     // MARK: - Handlers
     
     @objc private func handlePressPlay(sender: UIButton) {
-        if canPlay == false {
+        guard canPlay else {
             return
         }
         changeButtonPathAnimated()

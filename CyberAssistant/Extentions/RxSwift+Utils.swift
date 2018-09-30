@@ -9,7 +9,7 @@
 import RxSwift
 
 extension ObservableType {
-    func subscribe(onNext: ((Self.E) -> Void)?) {
+    func ca_subscribe(onNext: ((Self.E) -> Void)?) {
         let _ = subscribe(onNext: onNext, onError: nil, onCompleted: nil, onDisposed: nil)
     }
 }

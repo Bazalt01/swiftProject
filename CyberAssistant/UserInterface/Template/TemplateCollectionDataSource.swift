@@ -20,6 +20,7 @@ class TemplateCollectionDataSource: BaseCollectionDataSource {
     
     let deleteTemplateObserver = PublishSubject<TemplateModel>()
     let muteTemplateObserver = PublishSubject<TemplateModel>()
+    let shareTemplateObserver = PublishSubject<TemplateModel>()
     
     // MARK: - Public
     
@@ -29,22 +30,26 @@ class TemplateCollectionDataSource: BaseCollectionDataSource {
             let cellVM = configuredCellViewModel(template: template)
             viewModels.append(cellVM)
         }
+        
         cellViewModels = viewModels
         notifyUpdate(batchUpdates: batchUpdates, completion: nil)
     }
     
     func configuredCellViewModel(template: TemplateModel) -> TemplateCellModel {
         let cellVM = TemplateCellModel(template: template)
-        cellVM.deleteBlock = { [weak self]() in
+        cellVM.deleteBlock = { [weak self] in
             self?.deleteTemplateObserver.onNext(template)
         }
-        cellVM.muteBlock = { [weak self]() in
+        cellVM.muteBlock = { [weak self] in
             self?.muteTemplateObserver.onNext(template)
+        }
+        cellVM.shareBlock = { [weak self] in
+            self?.shareTemplateObserver.onNext(template)
         }
         return cellVM
     }
     
-    func template(byCellModel cellModel: CellViewModel) -> TemplateModel? {
+    func template(byCellModel cellModel: ViewModel) -> TemplateModel? {
         if cellModel is TemplateCellModel {
             return (cellModel as! TemplateCellModel).template
         }

@@ -12,6 +12,7 @@ import SnapKit
 class TemplateViewController: BaseCollectionViewController {
     private var viewModel: TemplateViewModel
     private let addButton = UIButton()
+    private let shareButton = UIButton()
     private let emptyView = EmptyView()
     
     // MARK: - Inits
@@ -21,14 +22,14 @@ class TemplateViewController: BaseCollectionViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Public
+    // MARK: - Life Circle
     
     override func viewDidLoad() {
-
         super.viewDidLoad()
         
         title = "Templates"
@@ -41,11 +42,15 @@ class TemplateViewController: BaseCollectionViewController {
         viewModel.configure()
     }
     
+    // MARK: - Public
+    
     override func configureViews() {
         super.configureViews()
-        configureAddPatternButton()
-        let barBattonItem = configureBarButtonItem(button: addButton)
-        navigationItem.rightBarButtonItem = barBattonItem
+        configureAddTemplateButton()
+        configureShareTemplateButton()
+        let addBarBattonItem = configureBarButtonItem(button: addButton)
+        let shareBarBattonItem = configureBarButtonItem(button: shareButton)
+        navigationItem.rightBarButtonItems = [addBarBattonItem, shareBarBattonItem]
         
         configureEmptyView()
         view.addSubview(emptyView)
@@ -58,11 +63,15 @@ class TemplateViewController: BaseCollectionViewController {
     
     override func configureSubsciptions() {
         super.configureSubsciptions()
-        addButton.rx.tap.subscribe(onNext: { [weak self]() in
+        addButton.rx.tap.ca_subscribe(onNext: { [weak self]() in
             self?.viewModel.createNewTemplate()
         })
+
+        shareButton.rx.tap.ca_subscribe(onNext: { [weak self]() in
+            self?.viewModel.openShareTemplates()
+        })
         
-        viewModel.hasTemplatesObserver.subscribe(onNext: { [weak self](hasTemplates) in
+        viewModel.hasTemplatesObserver.ca_subscribe(onNext: { [weak self](hasTemplates) in
             self?.emptyView.isHidden = hasTemplates
         })
     }
@@ -72,19 +81,27 @@ class TemplateViewController: BaseCollectionViewController {
         view.backgroundColor = AppearanceColor.collectionBackground
     }
     
-    func configureAddPatternButton() {
-        if let image = UIImage.image(imageName: "ic_add", renderingMode: .alwaysTemplate) {
+    // MARK: - Private
+    
+    private func configureAddTemplateButton() {
+        if let image = UIImage.ca_image(imageName: "ic_add", renderingMode: .alwaysTemplate) {
             addButton.setImage(image, for: .normal)
         }
     }
     
-    func configureBarButtonItem(button: UIButton) -> UIBarButtonItem {
+    private func configureShareTemplateButton() {
+        if let image = UIImage.ca_image(imageName: "ic_share", renderingMode: .alwaysTemplate) {
+            shareButton.setImage(image, for: .normal)
+        }
+    }
+    
+    private func configureBarButtonItem(button: UIButton) -> UIBarButtonItem {
         let barButtonItem = UIBarButtonItem(customView: button)
         return barButtonItem
     }
     
-    func configureEmptyView() {
-        if let image = UIImage.image(imageName: "eye", renderingMode: .alwaysTemplate) {
+    private func configureEmptyView() {
+        if let image = UIImage.ca_image(imageName: "eye", renderingMode: .alwaysTemplate) {
             emptyView.emptyModel = EmptyModel(message: "You need creating a template", image: image)
         }
     }

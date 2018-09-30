@@ -9,56 +9,93 @@
 import UIKit
 
 enum SupplementaryViewKind: String {
-    case header = "Header"
-    case footer = "Footer"
+    case header = "UICollectionElementKindSectionHeader"
+    case footer = "UICollectionElementKindSectionFooter"
 }
 
 struct BatchUpdate {
     private(set) var option: BatchOption
-    private(set) var indexes: [Int]
-    private(set) var section: Int
+    private(set) var indexPathes: [IndexPath]
+    private(set) var sections: IndexSet
+    init(option: BatchOption, indexPathes: [IndexPath], sections: IndexSet) {
+        self.option = option
+        self.indexPathes = indexPathes
+        self.sections = sections
+    }
 }
 
-typealias SupplementaryViewClassWithKind = (classType: UICollectionReusableView.Type, kind: SupplementaryViewKind)
+typealias SupplementaryViewClassWithKind = (classType: BaseSupplementaryView.Type, kind: SupplementaryViewKind)
 
 class BaseCollectionDataSource: NSObject {
-    var cellClasses = [BaseCollectionViewCell.Type]()
-    var supplementaryViewClasses: [SupplementaryViewClassWithKind]?
+    var key: String?
+    var title: String?
+    var cellClasses = [BaseCollectionViewCell.Type]() {
+        didSet {
+            if let cv = collectionView {
+                register(cellClasses: cellClasses, collectionView: cv)
+            }
+        }
+    }
+    var supplementaryViewClasses = [SupplementaryViewClassWithKind]() {
+        didSet {
+            if let cv = collectionView {
+                register(supplementaryViewClasses: supplementaryViewClasses, collectionView: cv)
+            }
+        }
+    }
     weak var collectionView: UICollectionView? {
         didSet {
             if let cv = collectionView {
-                registerReusableViewsWithCollectionView(collectionView: cv)
+                register(cellClasses: cellClasses, collectionView: cv)
+                register(supplementaryViewClasses: supplementaryViewClasses, collectionView: cv)
             }
         }
     }
     
-    var sections: [Array<CellViewModel>] {
-        get {
-            return [cellViewModels]
-        }
+    func numberOfSections() -> Int {
+        return 1
     }
     
-    var cellViewModels = Array<CellViewModel>()
+    func numberOfItems(inSection section: Int) -> Int {
+        return cellViewModels.count
+    }
+    
+    func index(forItem item: ViewModel) -> IndexPath? {
+        guard let index = cellViewModels.firstIndex(where: { (viewModel) -> Bool in
+            item.isEqual(viewModel: viewModel)
+        }) else {
+            return nil
+        }
+        return IndexPath(item: index, section: 0)
+    }
+    
+    var cellViewModels = Array<ViewModel>()
+    var supplementaryViewHeaderModel: ViewModel?
+    var supplementaryViewFooterModel: ViewModel?
     
     // MARK: - Public
     
-    func registerReusableViewsWithCollectionView(collectionView: UICollectionView) {
-        for cellClass in cellClasses {
+    func register(cellClasses classes: [BaseCollectionViewCell.Type], collectionView: UICollectionView) {
+        for cellClass in classes {
             collectionView.register(cellClass, forCellWithReuseIdentifier: cellClass.ca_reuseIdentifier())
-        }
-        
-        if let classes = supplementaryViewClasses {
-            for supplementaryViewClass in classes {
-                let classType = supplementaryViewClass.classType
-                let kind = supplementaryViewClass.kind
-                collectionView.register(classType, forSupplementaryViewOfKind: kind.rawValue, withReuseIdentifier: classType.ca_reuseIdentifier())
-            }
         }
     }
     
-    func modelAtIndexPath(indexPath: IndexPath) -> CellViewModel? {
-        assert(sections.count > 0)
-        return sections[indexPath.section][indexPath.item]
+    func register(supplementaryViewClasses classes: [SupplementaryViewClassWithKind], collectionView: UICollectionView) {
+        for supplementaryViewClass in classes {
+            let classType = supplementaryViewClass.classType
+            let kind = supplementaryViewClass.kind
+            collectionView.register(classType, forSupplementaryViewOfKind: kind.rawValue, withReuseIdentifier: classType.ca_reuseIdentifier())
+        }
+    }
+    
+    func model(atIndexPath indexPath: IndexPath) -> ViewModel? {
+        assert(cellViewModels.count > 0)
+        return cellViewModels[indexPath.item]
+    }
+    
+    func supplementaryModel(atSection section: Int, kind: SupplementaryViewKind) -> ViewModel? {
+        return kind == .header ? supplementaryViewHeaderModel : supplementaryViewFooterModel
     }
     
     func notifyUpdate(batchUpdates: [BatchUpdate]?, completion: (() -> Void)?) {
@@ -90,48 +127,58 @@ class BaseCollectionDataSource: NSObject {
     
     
     private func performBatchUpdates(collectionView: UICollectionView, batchUpdates: [BatchUpdate]) {
-        for batch in batchUpdates {
-            let indexPaths = createIndexPath(batchUpdate: batch)
-            switch batch.option {
-            case .delete:
-                collectionView.deleteItems(at: indexPaths)
-                break
-            case .insert:
-                collectionView.insertItems(at: indexPaths)
-                break
-            case .update:
-                collectionView.reloadItems(at: indexPaths)
+        let sortedBatchUpdates = sortedBatchUpdateByOption(batchUpdates: batchUpdates)
+        collectionView.performBatchUpdates({
+            for batch in sortedBatchUpdates {
+                switch batch.option {
+                case .delete:
+                    collectionView.deleteItems(at: batch.indexPathes)
+                    collectionView.deleteSections(batch.sections)
+                    break
+                case .insert:
+                    collectionView.insertSections(batch.sections)
+                    collectionView.insertItems(at: batch.indexPathes)
+                    break
+                case .update:
+                    collectionView.reloadItems(at: batch.indexPathes)
+                }
             }
-        }
+        }, completion: nil)
     }
     
-    private func createIndexPath(batchUpdate: BatchUpdate) -> [IndexPath] {
-        var indexPaths = [IndexPath]()
-        for index in batchUpdate.indexes {
-            indexPaths.append(IndexPath(item: index, section: batchUpdate.section))
-        }
-        return indexPaths
+    private func sortedBatchUpdateByOption(batchUpdates: [BatchUpdate]) -> [BatchUpdate] {
+        return batchUpdates.sorted(by: { (batchUpdate1, batchUpdate2) -> Bool in
+            return batchUpdate1.option.rawValue < batchUpdate2.option.rawValue
+        })
     }
 }
 
 extension BaseCollectionDataSource: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        assert(sections.count > 0)
-        return sections.count
+        return numberOfSections()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        assert(sections.count > 0)
-        return sections[section].count
+        return numberOfItems(inSection: section)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cellViewModel = modelAtIndexPath(indexPath: indexPath) else {
+        guard let cellViewModel = model(atIndexPath: indexPath) else {
             return UICollectionViewCell()
         }
-        let reuseIdentifier = cellViewModel.cellClass.ca_reuseIdentifier()
+        let reuseIdentifier = cellViewModel.viewClass.ca_reuseIdentifier()
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! BaseCollectionViewCell
         cell.viewModel = cellViewModel
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard let viewModel = supplementaryModel(atSection: indexPath.section, kind: SupplementaryViewKind(rawValue: kind)!) else {
+            return UICollectionReusableView()
+        }
+        let reuseIdentifier = viewModel.viewClass.ca_reuseIdentifier()
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseIdentifier, for: indexPath) as! BaseSupplementaryView
+        view.viewModel = viewModel
+        return view
     }
 }

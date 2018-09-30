@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension UICollectionReusableView {
+extension UIView {
     
     // MARK: - Public
     
@@ -17,6 +17,8 @@ extension UICollectionReusableView {
     }
 }
 
-protocol CollectionViewCell {
-    var viewModel: CellViewModel? { get set }
+protocol CollectionSupplementaryView: View {    
+}
+
+protocol CollectionViewCell: View {
 }

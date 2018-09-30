@@ -1,5 +1,5 @@
 //
-//  CellLayoutModel.swift
+//  LayoutModel.swift
 //  CasinoAssistant
 //
 //  Created by g.tokmakov on 12/08/2018.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CellLayoutModel {
+class LayoutModel {
     private(set) var size: CGSize
     
     // MARK: - Inits

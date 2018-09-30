@@ -18,8 +18,9 @@ struct TemplateRule {
 
 class TemplateManager: BackgroundWorker {
     private var authManager: AuthManager
-    var models = [TemplateModel]()
     private var database: Database?
+    var models = [TemplateModel]()
+    var sharedModels = [TemplateModel]()
     let templateRules = [TemplateRule(rule: "(number)[n] - random value from 0 to n",
                                       example: "There are [10] apples.",
                                       result: "There are 8 apples."),
@@ -42,20 +43,19 @@ class TemplateManager: BackgroundWorker {
     // MARK: - Public
     
     func configure() {
-        guard let account = self.authManager.authorizedAccount.value else {
-            _ = self.authManager.authorizedAccount.asObservable().subscribe { [weak self](newAccount) in
-                guard let acc = newAccount.element! else { return }
-                self?.loadContent(account: acc)
-            }
-            return
+        self.authManager.authorizedAccount.asObservable().ca_subscribe { [weak self](newAccount) in
+            guard let acc = newAccount else { return }
+            self?.models = []
+            self?.loadContent(account: acc)
         }
-        loadContent(account: account)
     }
     
-    func createTemplate(string: String, completion: @escaping (_ template: TemplateModel) -> Void) {
+    func createTemplate(string: String, completion: ((_ template: TemplateModel) -> Void)?) {
         let template = RealmTemplate(value: string, muted: false, author: authManager.authorizedAccount.value!)
-            DatabaseManager.database.insert(model: template) { (error) in
-            completion(template)
+        DatabaseManager.database.insert(model: template) { (error) in
+            if let compl = completion {
+                compl(template)
+            }
         }
     }
     
@@ -70,18 +70,34 @@ class TemplateManager: BackgroundWorker {
         }
     }
     
+    func loadSharedContent(excludeAccount account: AccountModel, observer: PublishSubject<FetchResult?>) {
+        let sortAuthor = SortModel.init(key: "internalAuthor.name", ascending: true)
+        let sortValue = SortModel.init(key: "value", ascending: true)
+        
+        let predicate = NSPredicate(format: "\(TemplateInternalAuthorPathKey) != %@ AND \(TemplateSharedKey) = 1", account.login as CVarArg)
+        self.start({ [weak self] in
+            let database = DatabaseManager.createDatabase()
+            database.configure()
+            
+            database.objects(objectType: RealmTemplate.self, predicate: predicate, sortModes: [sortAuthor, sortValue], observer: observer, responseQueue: DispatchQueue.main)
+            self?.database = database
+        })
+    }
+
     // MARK: - Private
     
     private func loadContent(account: AccountModel) {
         let sort = SortModel.init(key: "value", ascending: true)
         let observer = self.templateModelsObserver
-        observer.subscribe(onNext: { [weak self](fetchResult) in
+        observer.ca_subscribe(onNext: { [weak self](fetchResult) in
             if let result = fetchResult {
                 self?.models = result.models as! [TemplateModel]
             }
         })
         
-        let predicate = NSPredicate(format: "\(TemplateInternalAuthorPathKey) = %@", account.login as CVarArg)
+        print("[TEMPLATE_MANAGER] Load content account: \(account.login)")
+        
+        let predicate = NSPredicate(format: "\(TemplateInternalAuthorPathKey) = %@", account.unicID as CVarArg)
         self.start({ [weak self] in
             let database = DatabaseManager.createDatabase()
             database.configure()

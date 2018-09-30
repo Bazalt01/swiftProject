@@ -10,9 +10,7 @@ import UIKit
 
 class TemplateEditDataSource: BaseCollectionDataSource {
     var templateString: String? {
-        get {
-            return templateEditCellModel?.templateAttrText.string
-        }
+        return templateEditCellModel?.templateAttrText.string        
     }
     private var templateEditCellModel: TemplateEditCellModel?
     

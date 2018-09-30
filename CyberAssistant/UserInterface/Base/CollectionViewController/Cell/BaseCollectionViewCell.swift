@@ -11,9 +11,9 @@ import SnapKit
 
 let kSwipeAnimationDuration = 0.25;
 
-class BaseCollectionViewCell: UICollectionViewCell, CollectionViewCell {    
-    var viewModel: CellViewModel?
-    var viewModelForSize: CellViewModel?    
+class BaseCollectionViewCell: UICollectionViewCell, CollectionViewCell {
+    var viewModel: ViewModel?
+    var viewModelForSize: ViewModel?    
 
     // MARK: - Inits
     
@@ -30,17 +30,5 @@ class BaseCollectionViewCell: UICollectionViewCell, CollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()        
         viewModel = nil
-    }
-    
-    func configuredFittingSize(size: CGSize) -> CGSize {
-        let width = size.width - contentView.layoutMargins.horizontalInset
-        let height = CGFloat.greatestFiniteMagnitude
-        return CGSize(width: width, height: height)
-    }
-}
-
-extension BaseCollectionViewCell {
-    class func className() -> String {
-        return NSStringFromClass(self)
     }
 }

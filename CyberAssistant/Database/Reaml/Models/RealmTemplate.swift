@@ -10,20 +10,22 @@ import Foundation
 import RealmSwift
 import Realm
 
-class RealmTemplate: RealmModel, TemplateModel {
+class RealmTemplate: RealmModel, TemplateModel, SharedTemplateModel {
     @objc dynamic var value: String = ""
     private(set) var totalValue: String = ""
     @objc dynamic var muted: Bool = false
+    @objc dynamic var shared: Bool = false
     @objc dynamic var internalAuthor: RealmAccount?
     var author: AccountModel? {
         return internalAuthor
     }
+    var saved: Bool = false
     
     required convenience init(value: String, muted: Bool, author: AccountModel) {
         self.init()
         self.internalAuthor = author as? RealmAccount
         self.value = value
-        self.muted = muted
+        self.muted = muted        
     }
     
     required init() {

@@ -13,7 +13,7 @@ class TemplateCollectionDelegate: BaseCollectionViewDelegate {
     // MARK: - Inits
     
     init(dataSource: BaseCollectionDataSource) {
-        let lm = BaseCellLayoutManager(cellsByClass: [TemplateCell.className(): TemplateCell()])
-        super.init(cellLayoutManager: lm, dataSource: dataSource)
+        let lm = LayoutManager(viewsByClass: [TemplateCell.ca_reuseIdentifier(): TemplateCell()])
+        super.init(layoutManager: lm, dataSource: dataSource)
     }
 }

@@ -12,7 +12,6 @@ protocol AccountModel: BaseModel {
     var login: String { get }
     var password: String { get }
     var name: String { get }
-    var authorized: Bool { set get }
     
     init(login: String, password: String, name: String?)
 }

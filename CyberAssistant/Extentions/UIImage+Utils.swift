@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIImage {
-    class func image(withFillColor color: UIColor, radius: CGFloat) -> UIImage? {
+    class func ca_image(withFillColor color: UIColor, radius: CGFloat) -> UIImage? {
         let diameter = radius * 2
         let rect = CGRect(origin: .zero, size: CGSize(width: diameter, height: diameter))
         
@@ -27,11 +27,11 @@ extension UIImage {
         var image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
     
-        image = image!.resizableImage(withCapInsets: UIEdgeInsets(edge: radius), resizingMode: .stretch)
+        image = image!.resizableImage(withCapInsets: UIEdgeInsets(ca_edge: radius), resizingMode: .stretch)
         return image
     }
     
-    class func image(imageName: String, renderingMode: UIImageRenderingMode) -> UIImage? {
+    class func ca_image(imageName: String, renderingMode: UIImageRenderingMode) -> UIImage? {
         return UIImage(named: imageName)?.withRenderingMode(renderingMode)
     }
 }

@@ -14,10 +14,10 @@ struct SortModel {
     private(set) var ascending: Bool
 }
 
-enum BatchOption {
+enum BatchOption: UInt {
+    case delete
     case insert
     case update
-    case delete
 }
 
 struct FetchResult {

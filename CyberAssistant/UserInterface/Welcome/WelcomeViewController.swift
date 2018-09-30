@@ -41,6 +41,7 @@ class WelcomeViewController: BaseViewController {
         configureAppearance()
     }
     
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -52,27 +53,27 @@ class WelcomeViewController: BaseViewController {
     }
     
     private func configureSubsciptions() {
-        enterView.signInObserver.subscribe(onNext: { [weak self](result) in
+        enterView.signInObserver.ca_subscribe(onNext: { [weak self](result) in
             self?.processSignIn(result: result)
         })
         
-        enterView.signUpObserver.subscribe(onNext: { [weak self](result) in
+        enterView.signUpObserver.ca_subscribe(onNext: { [weak self](result) in
             self?.processSignUp(result: result)
         })
         
-        enterView.errorObserver.subscribe(onNext: { [weak self](error) in
+        enterView.errorObserver.ca_subscribe(onNext: { [weak self](error) in
             self?.viewModel.showError(error: error)
         })
         
-        NotificationCenter.default.rx.notification(NSNotification.Name.UIKeyboardWillShow).subscribe(onNext: { [weak self](notification) in
+        NotificationCenter.default.rx.notification(NSNotification.Name.UIKeyboardWillShow).ca_subscribe(onNext: { [weak self](notification) in
             self?.updateEnterViewPositionRatioKeyboard(notification: notification)
         })
-        NotificationCenter.default.rx.notification(NSNotification.Name.UIKeyboardWillHide).subscribe(onNext: { [weak self](notification) in
+        NotificationCenter.default.rx.notification(NSNotification.Name.UIKeyboardWillHide).ca_subscribe(onNext: { [weak self](notification) in
             self?.updateEnterViewPositionRatioKeyboard(notification: notification)
         })
         
         let tap = UITapGestureRecognizer.init()
-        tap.rx.event.asObservable().subscribe(onNext: { [weak self](gesture) in
+        tap.rx.event.asObservable().ca_subscribe(onNext: { [weak self](gesture) in
             self?.view.endEditing(true)
         })
         view.addGestureRecognizer(tap)

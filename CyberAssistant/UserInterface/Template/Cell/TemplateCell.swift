@@ -15,16 +15,14 @@ class TemplateCell: CollectionViewCellWithActions {
     private var templateLabel = UILabel()
     private var exampleLabel = UILabel()
     private var localViewModel: TemplateCellModel? {
-        get {
-            guard viewModel is TemplateCellModel else {
-                return nil
-            }
-            return viewModel as? TemplateCellModel
+        guard viewModel is TemplateCellModel else {
+            return nil
         }
+        return viewModel as? TemplateCellModel
     }
     private var disposables = [Disposable]()
     
-    override var viewModel: CellViewModel? {
+    override var viewModel: ViewModel? {
         didSet {
             if let vm = localViewModel {
                 updateMutedAppearance(muted: vm.muted)
@@ -62,8 +60,8 @@ class TemplateCell: CollectionViewCellWithActions {
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let fittingSize = configuredFittingSize(size: size)
-        var totalSize = CGSize(width: size.width, height: contentView.layoutMargins.verticalInset)
+        let fittingSize = ca_configuredFittingSize(size: size)
+        var totalSize = CGSize(width: size.width, height: contentView.layoutMargins.ca_verticalInset)
         
         totalSize.height += CGFloat((stackView.arrangedSubviews.count - 1)) * stackView.spacing
         for view in stackView.arrangedSubviews {
@@ -88,7 +86,7 @@ class TemplateCell: CollectionViewCellWithActions {
         stackView.snp.makeConstraints { (make) in
             make.edges.equalTo(self.contentView.snp.margins)
         }
-        contentView.layoutMargins = UIEdgeInsets(edge: LayoutConstants.spacing)
+        contentView.layoutMargins = UIEdgeInsets(ca_edge: LayoutConstants.spacing)
         
         configuredTemplateLabel()
         configuredExampleLabel()        
@@ -121,7 +119,7 @@ class TemplateCell: CollectionViewCellWithActions {
     }
     
     private func configuredExampleLabel() {
-        templateLabel.numberOfLines = 0
+        exampleLabel.numberOfLines = 0
     }
     
     private func configureAppearance() {

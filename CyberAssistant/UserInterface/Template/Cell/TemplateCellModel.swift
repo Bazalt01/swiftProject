@@ -11,9 +11,7 @@ import RxSwift
 
 class TemplateCellModel: BaseCellViewModel {
     var templateAttrText: NSAttributedString {
-        get {
-            return TemplateFormatter.format(template: template!.value)
-        }
+        return TemplateFormatter.format(template: template!.value)        
     }
     var templateExample: String {
         return template != nil ? template!.totalValue : ""
@@ -22,8 +20,10 @@ class TemplateCellModel: BaseCellViewModel {
     private(set) var actionViewModels: [CellActionViewModel]?
     
     private var muteActionViewModel: CellActionViewModel?
+    private var shareActionViewModel: CellActionViewModel?
 
     var deleteBlock: (() -> Void)?
+    
     var muteBlock: (() -> Void)?
     private(set) var muted = false {
         didSet {
@@ -31,32 +31,43 @@ class TemplateCellModel: BaseCellViewModel {
         }
     }
     
+    var shareBlock: (() -> Void)?
+    private(set) var shared = false {
+        didSet {
+            sharedChangedObserver.onNext(shared)
+        }
+    }
+    
     let pressActionObserver = PublishSubject<Void>()
     let mutedChangedObserver = PublishSubject<Bool>()
+    let sharedChangedObserver = PublishSubject<Bool>()
     
     // MARK: - Inits
     
     init(template: TemplateModel) {
         self.template = template
         template.generateTemplate()
-        super.init(cellClass: TemplateCell.self)
+        super.init(viewClass: TemplateCell.self)
         
         self.muted = template.muted
+        self.shared = template.shared
         
         let delete = configuredDeleteActionViewModel()
         let mute = configuredMuteActionViewModel()
+        let share = configuredShareActionViewModel()
         muteActionViewModel = mute
-        self.actionViewModels = [mute, delete]
+        shareActionViewModel = share
+        self.actionViewModels = [share, mute, delete]
     }
     
-    required init(cellClass: BaseCollectionViewCell.Type) {
-        super.init(cellClass: cellClass)
+    required init(viewClass: (UIView & View).Type) {
+        super.init(viewClass: viewClass)
     }
     
     // MARK: - Private
     
     private func configuredDeleteActionViewModel() -> CellActionViewModel {
-        let icon = UIImage.image(imageName: "ic_trash", renderingMode: .alwaysTemplate)
+        let icon = UIImage.ca_image(imageName: "ic_trash", renderingMode: .alwaysTemplate)
         return CellActionViewModel.init(type: .delete, selectedIcon: nil, deselectedIcon: icon) { [weak self]() in
             if let deleteBlock = self?.deleteBlock {
                 deleteBlock()
@@ -65,8 +76,8 @@ class TemplateCellModel: BaseCellViewModel {
     }
     
     private func configuredMuteActionViewModel() -> CellActionViewModel {
-        let unmuteIcon = UIImage.image(imageName: "ic_unmute", renderingMode: .alwaysTemplate)
-        let muteIcon = UIImage.image(imageName: "ic_mute", renderingMode: .alwaysTemplate)
+        let unmuteIcon = UIImage.ca_image(imageName: "ic_unmute", renderingMode: .alwaysTemplate)
+        let muteIcon = UIImage.ca_image(imageName: "ic_mute", renderingMode: .alwaysTemplate)
         let model = CellActionViewModel.init(type: .mute, selectedIcon: unmuteIcon, deselectedIcon: muteIcon) { [weak self]() in
             if let muteBlock = self?.muteBlock {
                 self?.updateMute()
@@ -77,11 +88,32 @@ class TemplateCellModel: BaseCellViewModel {
         return model
     }
     
+    private func configuredShareActionViewModel() -> CellActionViewModel {
+        let privateIcon = UIImage.ca_image(imageName: "ic_private", renderingMode: .alwaysTemplate)
+        let shareIcon = UIImage.ca_image(imageName: "ic_share", renderingMode: .alwaysTemplate)
+        let model = CellActionViewModel.init(type: .share, selectedIcon: privateIcon, deselectedIcon: shareIcon) { [weak self]() in
+            if let shareBlock = self?.shareBlock {
+                self?.updateShare()
+                shareBlock()
+            }
+        }
+        model.selected = shared
+        return model
+    }
+    
     private func updateMute() {
         if let vm = muteActionViewModel {
             vm.selected = !vm.selected
             muted = vm.selected
             pressActionObserver.onNext(())
         }        
+    }
+    
+    private func updateShare() {
+        if let vm = shareActionViewModel {
+            vm.selected = !vm.selected
+            shared = vm.selected
+            pressActionObserver.onNext(())
+        }
     }
 }

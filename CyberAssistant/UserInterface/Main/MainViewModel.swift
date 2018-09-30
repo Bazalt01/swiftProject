@@ -114,7 +114,7 @@ class MainViewModel: SpeechManagerDelegate {
     }
     
     private func configureSubscriptions() {
-        templateManager.templateModelsObserver.subscribe(onNext: { [weak self](fetchResult) in
+        templateManager.templateModelsObserver.ca_subscribe(onNext: { [weak self](fetchResult) in
             if let result = fetchResult {
                 self?.updateModels(models: result.models as! [TemplateModel])
             }

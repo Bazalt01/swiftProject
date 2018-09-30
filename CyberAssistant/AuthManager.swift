@@ -14,16 +14,19 @@ import RxCocoa
 class AuthManager {    
     private(set) var authorizedAccount = BehaviorRelay<AccountModel?>(value: nil)
     private var authResult: AuthResult?
+    let logoutObserver = PublishSubject<Void>()
     
     // MARK: - Inits
     
     init() {
         guard let authResult = KeychainManager.currentAuthResult() else { return }
-        
+                
+        print("[AUTH] Start with login: \(authResult.login)")
         self.authResult = authResult
         let predicate = NSPredicate(format: "login = %@ AND password = %@", authResult.login, authResult.password)
         let account = DatabaseManager.database.object(objectType: RealmAccount.self, predicate: predicate) as? AccountModel
         authorizedAccount.accept(account)
+        logoutObserver.onNext(())
     }
     
     // MARK: - Public
@@ -33,6 +36,8 @@ class AuthManager {
             failure(ErrorManager.error(code: .accountIsNotExist))
             return            
         }
+        
+        print("[AUTH] Sign in with login: \(account.login)")
         authorizedAccount.accept(account)
         let updatedAuthResult = AuthResult(login: account.login, password: account.password)
         KeychainManager.saveAuthResult(result: updatedAuthResult)

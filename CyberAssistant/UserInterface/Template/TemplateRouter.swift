@@ -8,14 +8,20 @@
 
 import UIKit
 
-class TemplateRouter {
-    var routeHandler: RouterHandler?
+class TemplateRouter: BaseRouter {
     
     // MARK: - Public
     
     func openTemplateEditorController(template: TemplateModel?) {
         if let rh = routeHandler {
             let tc = Assembly.shared.configuredTemplateEditViewController(template: template)
+            rh.pushToViewController?(viewController: tc)
+        }
+    }
+    
+    func openTemplateShareController() {
+        if let rh = routeHandler {
+            let tc = Assembly.shared.configuredTemplateShareViewController()
             rh.pushToViewController?(viewController: tc)
         }
     }

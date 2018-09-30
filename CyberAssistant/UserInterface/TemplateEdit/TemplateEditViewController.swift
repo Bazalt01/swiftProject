@@ -20,6 +20,7 @@ class TemplateEditViewController: BaseCollectionViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -55,21 +56,21 @@ class TemplateEditViewController: BaseCollectionViewController {
         super.configureSubsciptions()
         
         weak var weakSelf = self
-        saveButton.rx.tap.subscribe(onNext: { () in
+        saveButton.rx.tap.ca_subscribe(onNext: { () in
             weakSelf?.viewModel.saveTemplate()
         })
         
-        NotificationCenter.default.rx.notification(NSNotification.Name.UIKeyboardWillShow).subscribe(onNext: { (notification) in
+        NotificationCenter.default.rx.notification(NSNotification.Name.UIKeyboardWillShow).ca_subscribe(onNext: { (notification) in
             weakSelf?.updateInsetRatioKeyboard(notification: notification)
         })
         
-        NotificationCenter.default.rx.notification(NSNotification.Name.UIKeyboardWillHide).subscribe(onNext: { (notification) in
+        NotificationCenter.default.rx.notification(NSNotification.Name.UIKeyboardWillHide).ca_subscribe(onNext: { (notification) in
             weakSelf?.updateInsetRatioKeyboard(notification: notification)
         })        
     }
     
     func configureSaveButton() {
-        if let image = UIImage.image(imageName: "ic_save", renderingMode: .alwaysTemplate) {
+        if let image = UIImage.ca_image(imageName: "ic_save", renderingMode: .alwaysTemplate) {
             saveButton.setImage(image, for: .normal)
         }
     }

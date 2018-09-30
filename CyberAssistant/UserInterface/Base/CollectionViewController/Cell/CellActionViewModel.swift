@@ -12,6 +12,7 @@ import RxSwift
 enum CellActionType {
     case delete
     case mute
+    case share
 }
 
 class CellActionViewModel {

@@ -32,7 +32,8 @@ class TemplateEditViewModel: BaseCollectionViewModel {
         self.editDataSource = TemplateEditDataSource()
         self.ruleDataSource = TemplateEditRulesDataSource()
         self.dataSource = CompositeDataSource()
-        self.dataSource.dataSources = [self.editDataSource, self.ruleDataSource]
+        self.dataSource.add(dataSource: self.editDataSource)
+        self.dataSource.add(dataSource: self.ruleDataSource)
         self.collectionViewDelegate = TemplateEditCollectionDelegate(dataSource: self.dataSource)
     }
     
@@ -65,15 +66,12 @@ class TemplateEditViewModel: BaseCollectionViewModel {
         }
         
         guard var templ = template else {
-            let newTemplate = RealmTemplate(value: value, muted: false, author: authManager.authorizedAccount.value!)
-            DatabaseManager.database.insert(model: newTemplate) { (error) in
-            }
+            templateManager.createTemplate(string: value, completion: nil)
             return nil
         }
-        DatabaseManager.database.update { (error) in
+        templateManager.saveTemplate {
             templ.value = value
         }
-        
         return nil
     }
     

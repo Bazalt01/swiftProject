@@ -127,27 +127,27 @@ class EnterView: UIView {
     }
     
     private func setVisibleElements(visible: Bool, fromOption: EnterOption, toOption: EnterOption) {
-        if let elementsFrom = visibleElementsSets[fromOption], let elementsTo =  visibleElementsSets[toOption] {
-            
-            let elementSetFrom = Set(elementsFrom)
-            let elementSetTo = Set(elementsTo)
-            
-            let intersection = elementSetFrom.intersection(elementSetTo)
-            let subtracting = elementSetFrom.subtracting(elementSetTo)
-            
-            UIView.animate(withDuration: 0.3) {
-                for view in intersection {
-                    if view.isHidden != !visible {
-                        view.isHidden = !visible
-                        view.alpha = visible ? 1.0 : 0.0
-                    }
+        guard let elementsFrom = visibleElementsSets[fromOption], let elementsTo = visibleElementsSets[toOption] else {
+            return
+        }
+        let elementSetFrom = Set(elementsFrom)
+        let elementSetTo = Set(elementsTo)
+        
+        let intersection = elementSetFrom.intersection(elementSetTo)
+        let subtracting = elementSetFrom.subtracting(elementSetTo)
+        
+        UIView.animate(withDuration: 0.3) {
+            for view in intersection {
+                if view.isHidden != !visible {
+                    view.isHidden = !visible
+                    view.alpha = visible ? 1.0 : 0.0
                 }
-                
-                for view in subtracting {
-                    if view.isHidden != visible {
-                        view.isHidden = visible
-                        view.alpha = visible ? 0.0 : 1.0
-                    }
+            }
+            
+            for view in subtracting {
+                if view.isHidden != visible {
+                    view.isHidden = visible
+                    view.alpha = visible ? 0.0 : 1.0
                 }
             }
         }
@@ -188,11 +188,11 @@ class EnterView: UIView {
     }
     
     private func configureSubsciptions() {
-        enterButton.rx.tap.subscribe(onNext: { [weak self]() in
+        enterButton.rx.tap.ca_subscribe(onNext: { [weak self]() in
             self?.pressEnter()
         })
         
-        signInUpButton.rx.tap.subscribe(onNext: { [weak self]() in
+        signInUpButton.rx.tap.ca_subscribe(onNext: { [weak self]() in
             self?.signButtonPress()
         })
     }
@@ -231,7 +231,6 @@ class EnterView: UIView {
         
         if let error = viewModel.check(login: login, password: password, repeatPassword: repeatPasswordTextField.text, option: currentOption) {
             errorObserver.onNext(error)
-            clearPasswords()
             return
         }
         

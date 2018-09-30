@@ -9,5 +9,5 @@
 import Foundation
 
 protocol BaseModel {
-    var unicID: UInt64 { get }
+    var unicID: String { get }
 }

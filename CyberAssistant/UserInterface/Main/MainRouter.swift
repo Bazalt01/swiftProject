@@ -8,8 +8,7 @@
 
 import UIKit
 
-class MainRouter {
-    var routeHandler: RouterHandler?
+class MainRouter: BaseRouter {
     
     // MARK: - Public
     

@@ -13,9 +13,9 @@ class TemplateEditCollectionDelegate: BaseCollectionViewDelegate {
     // MARK: - Inits
     
     init(dataSource: BaseCollectionDataSource) {
-        let lm = BaseCellLayoutManager(cellsByClass: [TemplateEditCell.className(): TemplateEditCell(),
-                                                      TemplateEditRuleCell.className(): TemplateEditRuleCell()])
-        super.init(cellLayoutManager: lm, dataSource: dataSource)
+        let lm = LayoutManager(viewsByClass: [TemplateEditCell.ca_reuseIdentifier(): TemplateEditCell(),
+                                              TemplateEditRuleCell.ca_reuseIdentifier(): TemplateEditRuleCell()])
+        super.init(layoutManager: lm, dataSource: dataSource)
     }
     
     // MARK: - Public

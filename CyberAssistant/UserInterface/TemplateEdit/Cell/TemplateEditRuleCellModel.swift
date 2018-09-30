@@ -6,7 +6,7 @@
 //  Copyright © 2018 g.tokmakov. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 class TemplateEditRuleCellModel: BaseCellViewModel {
     private(set) var rule: NSAttributedString
@@ -32,16 +32,16 @@ class TemplateEditRuleCellModel: BaseCellViewModel {
         self.example = TemplateFormatter.format(template: rule.example)
         self.result = TemplateFormatter.format(template: rule.result)
         self.animator = labelAnimator
-        super.init(cellClass: TemplateEditRuleCell.self)
+        super.init(viewClass: TemplateEditRuleCell.self)
     }
     
-    required init(cellClass: BaseCollectionViewCell.Type) {
+    required init(viewClass: (UIView & View).Type) {
         assert(false)
         self.templateRule = TemplateRule(rule: "", example: "", result: "")
         self.animator = LabelAnimator(stepDuration: 1.0)
         self.rule = NSAttributedString(string: "")
         self.example = NSAttributedString(string: "")
         self.result = NSAttributedString(string: "")
-        super.init(cellClass: cellClass)
+        super.init(viewClass: viewClass)
     }
 }

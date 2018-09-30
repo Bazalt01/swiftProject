@@ -15,6 +15,7 @@ struct AppearanceFont {
     static let textField = UIFont.systemFont(ofSize: 17)
     static let textView = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.light)
     static let titleLabel = UIFont.systemFont(ofSize: 17)
+    static let headerLabel = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.bold)
     static let attentionLabel = UIFont.systemFont(ofSize: 24)
     static let timeLabel = UIFont.systemFont(ofSize: 56, weight: UIFont.Weight.light)
     static let baseLabel = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.light)
@@ -34,6 +35,7 @@ struct AppearanceSize {
 
 private let purple = UIColor(hue: 257.0/360.0, saturation: 0.6, brightness: 1.0, alpha: 1.0)
 private let cyberGreen = UIColor(hue: 132.0/360.0, saturation: 0.67, brightness: 0.85, alpha: 1.0)
+private let darkCyberGreen = UIColor(hue: 132.0/360.0, saturation: 0.67, brightness: 0.35, alpha: 1.0)
 private let lightGray = UIColor(hue: 0, saturation: 0, brightness: 0.9, alpha: 1)
 private let gray = UIColor(hue: 0, saturation: 0, brightness: 0.8, alpha: 1)
 private let ashBlack = UIColor(white: 0.1, alpha: 1.0)
@@ -83,6 +85,7 @@ struct AppearanceColor {
     static let actionIcon = white
     static let deleteBackground = red
     static let muteBackground = orange
+    static let shareBackground = purple
     
     static let circleShape = cyberGreen
     static let circleTimeButton = cyberGreen
@@ -113,10 +116,10 @@ struct Appearance {
         button.titleLabel?.font = AppearanceFont.button
         button.setTitleColor(AppearanceColor.buttonTitle, for: .normal)
         button.setTitleColor(AppearanceColor.buttonTitleHighlited, for: .highlighted)
-        if let image = UIImage.image(withFillColor: AppearanceColor.buttonBackground, radius: 6.0) {
+        if let image = UIImage.ca_image(withFillColor: AppearanceColor.buttonBackground, radius: 6.0) {
             button.setBackgroundImage(image, for: .normal)
         }
-        if let image = UIImage.image(withFillColor: AppearanceColor.buttonBackgroundHighlited, radius: 6.0) {
+        if let image = UIImage.ca_image(withFillColor: AppearanceColor.buttonBackgroundHighlited, radius: 6.0) {
             button.setBackgroundImage(image, for: .highlighted)
         }    
     }        
@@ -158,8 +161,19 @@ struct Appearance {
         button.backgroundColor = AppearanceColor.muteBackground
     }
     
+    static func applyFor(shareButton button: UIButton) {
+        button.tintColor = AppearanceColor.actionIcon
+        button.backgroundColor = AppearanceColor.shareBackground
+    }
+    
     static func applyFor(baseLabel label: UILabel) {
         label.font = AppearanceFont.baseLabel
+        label.textColor = AppearanceColor.baseLabel
+        label.backgroundColor = AppearanceColor.baseLabelBackground
+    }
+    
+    static func applyFor(headerLabel label: UILabel) {
+        label.font = AppearanceFont.headerLabel
         label.textColor = AppearanceColor.baseLabel
         label.backgroundColor = AppearanceColor.baseLabelBackground
     }

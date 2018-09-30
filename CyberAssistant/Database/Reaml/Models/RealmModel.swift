@@ -10,5 +10,9 @@ import Foundation
 import RealmSwift
 
 class RealmModel: Object, BaseModel {
-    var unicID: UInt64 = 0
+    @objc dynamic var unicID: String = UUID().uuidString
+    
+    override class func primaryKey() -> String {
+        return "unicID"
+    }
 }

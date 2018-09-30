@@ -13,15 +13,13 @@ import RxSwift
 class TemplateEditCell: BaseCollectionViewCell {
     private var templateEditTextView = UITextView()
     private var localViewModel: TemplateEditCellModel? {
-        get {
-            guard viewModel is TemplateEditCellModel else {
-                return nil
-            }
-            return viewModel as? TemplateEditCellModel
+        guard viewModel is TemplateEditCellModel else {
+            return nil
         }
+        return viewModel as? TemplateEditCellModel        
     }
     
-    override var viewModel: CellViewModel? {
+    override var viewModel: ViewModel? {
         didSet {
             if let vm = localViewModel {
                 templateEditTextView.attributedText = updateTemplateTextAppearance(attr: vm.templateAttrText)
@@ -61,7 +59,7 @@ class TemplateEditCell: BaseCollectionViewCell {
         templateEditTextView.snp.makeConstraints { (make) in
             make.edges.equalTo(self.contentView.layoutMargins)
         }
-        let margins = UIEdgeInsets(edge: LayoutConstants.spacing)
+        let margins = UIEdgeInsets(ca_edge: LayoutConstants.spacing)
         contentView.layoutMargins = margins
         
         configureSubsciptions()
@@ -71,7 +69,7 @@ class TemplateEditCell: BaseCollectionViewCell {
     }
     
     func configureSubsciptions() {
-        templateEditTextView.rx.attributedText.asObservable().subscribe(onNext: { [weak self](attrText) in
+        templateEditTextView.rx.attributedText.asObservable().ca_subscribe(onNext: { [weak self](attrText) in
             self?.updateAttrText(attrText: attrText)
         })
     }

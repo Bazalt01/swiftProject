@@ -16,10 +16,6 @@ class RealmAccount: RealmModel, AccountModel {
     @objc dynamic private(set) var name: String = ""
     @objc dynamic var authorized: Bool = false
     
-    override static func primaryKey() -> String {
-        return "login"
-    }
-    
     required init(login: String, password: String, name: String?) {
         self.login = login
         self.password = password
@@ -30,6 +26,8 @@ class RealmAccount: RealmModel, AccountModel {
             self.name = login
         }
         super.init()
+        
+        self.unicID = login
     }
     
     required init() {

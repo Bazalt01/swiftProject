@@ -8,14 +8,33 @@
 
 import UIKit
 
-class BaseCellViewModel: CellViewModel {
-    private(set) var cellClass: BaseCollectionViewCell.Type    
-    var layoutModel = CellLayoutModel(size: CGSize.zero)
+class BaseCellViewModel: Hashable, ViewModel {
+    private(set) var viewClass: (UIView & View).Type
+    var layoutModel = LayoutModel(size: CGSize.zero)
     var isCalculatingSize: Bool = false
     
     // MARK: - Inits
     
-    required init(cellClass: BaseCollectionViewCell.Type) {
-        self.cellClass = cellClass
+    required init(viewClass: (UIView & View).Type) {
+        self.viewClass = viewClass
+    }
+    
+    static func == (lhs: BaseCellViewModel, rhs: BaseCellViewModel) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
+    
+    // MARK: - Hashable
+    
+    var hashValue: Int {
+        return Unmanaged.passUnretained(self).toOpaque().hashValue
+    }
+    
+    func isEqual(viewModel: ViewModel) -> Bool {
+        guard viewModel is BaseCellViewModel else {
+            return false
+        }
+        
+        let vm = viewModel as! BaseCellViewModel
+        return self == vm
     }
 }

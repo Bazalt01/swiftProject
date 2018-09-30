@@ -8,8 +8,7 @@
 
 import UIKit
 
-class WelcomeRouter {
-    var routeHandler: RouterHandler?
+class WelcomeRouter: BaseRouter {
     
     // MARK: - Public
     

@@ -27,6 +27,7 @@ class MainViewController: BaseViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {        
         fatalError("init(coder:) has not been implemented")
     }
@@ -65,7 +66,7 @@ class MainViewController: BaseViewController {
         view.addSubview(circleTimeView)
         circleTimeView.snp.makeConstraints { (make) in
             make.center.equalToSuperview()
-            make.size.equalTo(CGSize(size: AppearanceSize.circleTimeViewSize))
+            make.size.equalTo(CGSize(ca_size: AppearanceSize.circleTimeViewSize))
         }
 
         let stackView = configuredStackView()
@@ -73,6 +74,8 @@ class MainViewController: BaseViewController {
         stackView.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
             make.top.equalTo(circleTimeView.snp.bottom).offset(40)
+            make.right.equalTo(-LayoutConstants.spacing)
+            make.left.equalTo(LayoutConstants.spacing)
         }
         
         configureTemplateLabels()
@@ -115,6 +118,7 @@ class MainViewController: BaseViewController {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .center
+        stackView.spacing = LayoutConstants.spacing * 1.5
         return stackView
     }
     
@@ -122,13 +126,13 @@ class MainViewController: BaseViewController {
     }
     
     private func configureTemplatesButton() {
-        if let image = UIImage.image(imageName: "ic_templates", renderingMode: .alwaysTemplate) {
+        if let image = UIImage.ca_image(imageName: "ic_templates", renderingMode: .alwaysTemplate) {
             templatesButton.setImage(image, for: .normal)            
         }
     }
     
     private func configureSettingsButton() {
-        if let image = UIImage.image(imageName: "ic_settings", renderingMode: .alwaysTemplate) {
+        if let image = UIImage.ca_image(imageName: "ic_settings", renderingMode: .alwaysTemplate) {
             settingsButton.setImage(image, for: .normal)
         }
     }
@@ -137,6 +141,7 @@ class MainViewController: BaseViewController {
         for _ in 0..<kLimitForShowing {
             let label = UILabel()
             label.numberOfLines = 2
+            label.textAlignment = .center
             templateLabels.append(label)
         }
     }
@@ -146,46 +151,46 @@ class MainViewController: BaseViewController {
     }
     
     private func configureSubsciptions() {
-        circleTimeView?.playObserver.subscribe(onNext: { [weak self](isPlaying) in
+        circleTimeView?.playObserver.ca_subscribe(onNext: { [weak self](isPlaying) in
             if isPlaying {
                 self?.viewModel.playNextSpeechModel()
             }
         })
         
-        circleTimeView?.timeOver.subscribe(onNext: { [weak self]() in
+        circleTimeView?.timeOver.ca_subscribe(onNext: { [weak self]() in
             self?.viewModel.updateTemplatePosition()
             self?.viewModel.playNextSpeechModel()
         })
         
-        circleTimeView?.timeObserver.subscribe(onNext: { [weak self](time) in
+        circleTimeView?.timeObserver.ca_subscribe(onNext: { [weak self](time) in
             self?.viewModel.updateDelayTyme(time: time)
         })
         
-        templatesButton.rx.tap.subscribe(onNext: { [weak self]() in
+        templatesButton.rx.tap.ca_subscribe(onNext: { [weak self]() in
             self?.viewModel.openTemplates()
         })
         
-        settingsButton.rx.tap.subscribe(onNext: { [weak self]() in
+        settingsButton.rx.tap.ca_subscribe(onNext: { [weak self]() in
             self?.viewModel.openSettings()
         })
 
-        newTemplateButton.rx.tap.subscribe(onNext: { [weak self]() in
+        newTemplateButton.rx.tap.ca_subscribe(onNext: { [weak self]() in
             self?.viewModel.openNewTemplate()
         })
         
-        viewModel.templateResultsObserver.subscribe(onNext: { [weak self](templateResults) in
+        viewModel.templateResultsObserver.ca_subscribe(onNext: { [weak self](templateResults) in
             self?.updateLabels(labelTexts: templateResults)
         })
         
-        viewModel.canPlayObserver.subscribe(onNext: { [weak self](canPlay) in
+        viewModel.canPlayObserver.ca_subscribe(onNext: { [weak self](canPlay) in
             self?.circleTimeView?.canPlay = canPlay
         })
         
-        viewModel.needNewTemplateObserver.subscribe(onNext: { [weak self](needNewTempalate) in
+        viewModel.needNewTemplateObserver.ca_subscribe(onNext: { [weak self](needNewTempalate) in
             self?.newTemplateButton.isHidden = needNewTempalate == false
         })
         
-        viewModel.speechCompletedObserver.subscribe { [weak self]() in
+        viewModel.speechCompletedObserver.ca_subscribe { [weak self]() in
             self?.circleTimeView?.fire()
         }
     }
