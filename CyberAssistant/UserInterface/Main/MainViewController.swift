@@ -65,7 +65,8 @@ class MainViewController: BaseViewController {
         
         view.addSubview(circleTimeView)
         circleTimeView.snp.makeConstraints { (make) in
-            make.center.equalToSuperview()
+            make.centerY.equalToSuperview().offset(-40)
+            make.centerX.equalToSuperview()
             make.size.equalTo(CGSize(ca_size: AppearanceSize.circleTimeViewSize))
         }
 
@@ -73,7 +74,7 @@ class MainViewController: BaseViewController {
         view.addSubview(stackView)
         stackView.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
-            make.top.equalTo(circleTimeView.snp.bottom).offset(40)
+            make.top.equalTo(circleTimeView.snp.bottom).offset(80)
             make.right.equalTo(-LayoutConstants.spacing)
             make.left.equalTo(LayoutConstants.spacing)
         }
