@@ -71,7 +71,9 @@ extension SettingsViewController: UITableViewDataSource {
 
 extension SettingsViewController: RouterHandler {
     func presentViewController(viewController: UIViewController) {
-        present(viewController, animated: true, completion: nil)
+        if let nc = navigationController {
+            nc.present(viewController, animated: true, completion: nil)            
+        }
     }
     
     func popViewController() {

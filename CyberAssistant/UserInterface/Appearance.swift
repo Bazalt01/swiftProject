@@ -31,6 +31,7 @@ struct AppearanceSize {
     static let cellActionWidth: CGFloat = 70.0
     static let timeRegulatorSize: CGFloat = 20.0
     static let circleTimeViewSize: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 240.0 : 160.0
+    static let pixelSize = CGSize(ca_size: UIDevice.current.userInterfaceIdiom == .pad ? 20.0 : 12.0)
 }
 
 private let purple = UIColor(hue: 257.0/360.0, saturation: 0.6, brightness: 1.0, alpha: 1.0)

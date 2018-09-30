@@ -15,6 +15,7 @@ class SettingsRouter: BaseRouter {
     func openWelcomeViewController() {
         if let rh = routeHandler {
             let vc = Assembly.shared.configuredWelcomeViewController()
+            vc.modalPresentationStyle = .overFullScreen
             rh.presentViewController?(viewController: vc)
         }
     }

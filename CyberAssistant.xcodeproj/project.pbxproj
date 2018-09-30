@@ -46,6 +46,8 @@
 		EA68CB68215E31DE00004AAB /* UIView+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB67215E31DE00004AAB /* UIView+Utils.swift */; };
 		EA68CB6A215E348D00004AAB /* TemplateShareHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB69215E348D00004AAB /* TemplateShareHeaderViewModel.swift */; };
 		EA68CB6C215E941700004AAB /* TemplateShareMainDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB6B215E941700004AAB /* TemplateShareMainDataSource.swift */; };
+		EA68CB6E2160F4B000004AAB /* TransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB6D2160F4B000004AAB /* TransitionAnimator.swift */; };
+		EA68CB732161047A00004AAB /* Transitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB722161047A00004AAB /* Transitor.swift */; };
 		EA69D5C02156342A00F29DDD /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA69D5BF2156342A00F29DDD /* BackgroundWorker.swift */; };
 		EA69D5C22157E26600F29DDD /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA69D5C12157E26600F29DDD /* EmptyView.swift */; };
 		EA69D5C8215A76A100F29DDD /* CryptoConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA69D5C7215A76A100F29DDD /* CryptoConverter.swift */; };
@@ -153,6 +155,8 @@
 		EA68CB67215E31DE00004AAB /* UIView+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Utils.swift"; sourceTree = "<group>"; };
 		EA68CB69215E348D00004AAB /* TemplateShareHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareHeaderViewModel.swift; sourceTree = "<group>"; };
 		EA68CB6B215E941700004AAB /* TemplateShareMainDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareMainDataSource.swift; sourceTree = "<group>"; };
+		EA68CB6D2160F4B000004AAB /* TransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionAnimator.swift; sourceTree = "<group>"; };
+		EA68CB722161047A00004AAB /* Transitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transitor.swift; sourceTree = "<group>"; };
 		EA69D5BF2156342A00F29DDD /* BackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
 		EA69D5C12157E26600F29DDD /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		EA69D5C7215A76A100F29DDD /* CryptoConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoConverter.swift; sourceTree = "<group>"; };
@@ -368,6 +372,15 @@
 			path = AdditionalViews;
 			sourceTree = "<group>";
 		};
+		EA68CB6F2160F4B800004AAB /* TransitionAnimations */ = {
+			isa = PBXGroup;
+			children = (
+				EA68CB722161047A00004AAB /* Transitor.swift */,
+				EA68CB6D2160F4B000004AAB /* TransitionAnimator.swift */,
+			);
+			path = TransitionAnimations;
+			sourceTree = "<group>";
+		};
 		EAB06978211A0BD200EF6913 = {
 			isa = PBXGroup;
 			children = (
@@ -412,6 +425,7 @@
 				EAE9EE3521288682000A2220 /* Appearance.swift */,
 				EAC7801D21319C71000237D7 /* RouteHandler.swift */,
 				EAFE00B7213BAB8B00ECF793 /* ViewSizeProcessor.swift */,
+				EA68CB6F2160F4B800004AAB /* TransitionAnimations */,
 				EABA347E2121667900B2040B /* Assemblies */,
 				EABA347A212165F000B2040B /* Base */,
 				EABA346F212080D700B2040B /* ViewModel.swift */,
@@ -717,6 +731,7 @@
 				EA68CB6A215E348D00004AAB /* TemplateShareHeaderViewModel.swift in Sources */,
 				EABA347721208DE200B2040B /* CollectionViewCell.swift in Sources */,
 				EA68CB5B215CE4A300004AAB /* TemplateShareCellModel.swift in Sources */,
+				EA68CB6E2160F4B000004AAB /* TransitionAnimator.swift in Sources */,
 				EAD1A5E2212EEDE3002C4410 /* RealmAccount.swift in Sources */,
 				EABA345A211F04F200B2040B /* ViewControllerAssembly.swift in Sources */,
 				EA68CB6C215E941700004AAB /* TemplateShareMainDataSource.swift in Sources */,
@@ -738,6 +753,7 @@
 				EA69D5C8215A76A100F29DDD /* CryptoConverter.swift in Sources */,
 				EA68CB54215CE27000004AAB /* TemplateShareDataSource.swift in Sources */,
 				EAC78040213318CB000237D7 /* TemplateRouter.swift in Sources */,
+				EA68CB732161047A00004AAB /* Transitor.swift in Sources */,
 				EA68CB4B215CD6D100004AAB /* TemplateShareViewController.swift in Sources */,
 				EA6C9EAF21457E1B00CCC2F3 /* CircleTimeView.swift in Sources */,
 				EA17CF97212DCC44002757E5 /* DatabaseManager.swift in Sources */,

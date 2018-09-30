@@ -6,8 +6,8 @@
 //  Copyright © 2018 g.tokmakov. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-class BaseRouter {
+class BaseRouter {    
     weak var routeHandler: RouterHandler?
 }

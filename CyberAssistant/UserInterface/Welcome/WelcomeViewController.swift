@@ -19,13 +19,15 @@ class WelcomeViewController: BaseViewController {
     private let enterView = EnterView()
     private var centerYConstraint: Constraint?
     private var bottomConstraint: Constraint?
+    private let transitor = Transitor()
     
     // MARK: - Inits
     
     init(viewModel: WelcomeViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        
+
+        self.transitioningDelegate = transitor        
         configureViews()
         
         view.addSubview(enterView)
