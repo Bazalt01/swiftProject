@@ -43,9 +43,9 @@ class EnterView: UIView {
         }
     }
     
-    var signInObserver = PublishSubject<AuthResult>()
-    var signUpObserver = PublishSubject<AuthResult>()
-    var errorObserver = PublishSubject<Error>()
+    var signInObservable = PublishSubject<AuthResult>()
+    var signUpObservable = PublishSubject<AuthResult>()
+    var errorObservable = PublishSubject<Error>()
     
     // MARK: - Inits
     
@@ -230,7 +230,7 @@ class EnterView: UIView {
         }
         
         if let error = viewModel.check(login: login, password: password, repeatPassword: repeatPasswordTextField.text, option: currentOption) {
-            errorObserver.onNext(error)
+            errorObservable.onNext(error)
             return
         }
         
@@ -238,10 +238,10 @@ class EnterView: UIView {
         
         switch currentOption {
         case .SignIn:
-            signInObserver.onNext(authResult)
+            signInObservable.onNext(authResult)
             break
         case .SignUp:
-            signUpObserver.onNext(authResult)
+            signUpObservable.onNext(authResult)
             break
         default: break
         }

@@ -28,12 +28,12 @@ class TemplateShareDataSource: BaseCollectionDataSource {
     
     // MARK: - Public
     
-    func add(template: SharedTemplateModel, needNotify: Bool, observer: PublishSubject<SharedTemplateModel>) {
-        insert(template: template, index: cellViewModels.count, needNotify: needNotify, observer: observer)
+    func add(template: SharedTemplateModel, needNotify: Bool, observable: PublishSubject<SharedTemplateModel>) {
+        insert(template: template, index: cellViewModels.count, needNotify: needNotify, observable: observable)
     }
     
-    func insert(template: SharedTemplateModel, index: Int, needNotify: Bool, observer: PublishSubject<SharedTemplateModel>) {
-        let cellViewModel = TemplateShareCellModel(template: template, observer: observer)
+    func insert(template: SharedTemplateModel, index: Int, needNotify: Bool, observable: PublishSubject<SharedTemplateModel>) {
+        let cellViewModel = TemplateShareCellModel(template: template, didSave: observable)
         cellViewModels.insert(cellViewModel, at: index)
         if needNotify {
             notifyUpdate(batchUpdates: nil, completion: nil)

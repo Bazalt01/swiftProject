@@ -23,7 +23,7 @@ class TemplateShareViewController: BaseCollectionViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Life Circle
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()

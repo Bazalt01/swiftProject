@@ -146,7 +146,7 @@ class RealmDatabase {
 }
 
 extension RealmDatabase: Database {
-    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes: [SortModel]?, observer: PublishSubject<FetchResult?>, responseQueue: DispatchQueue) {
+    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes: [SortModel]?, fetchResult: PublishSubject<FetchResult?>, responseQueue: DispatchQueue) {
         guard let rm = realm else {
             return
         }
@@ -167,19 +167,19 @@ extension RealmDatabase: Database {
             case .initial(let initialObjects):
                 let result = self?.processInitial(objects: initialObjects, queue: responseQueue)
                 responseQueue.async {
-                    observer.onNext(result)
+                    fetchResult.onNext(result)
                 }
                 break
             case .update(let changedObjects, let deletions, let insertions, let modifications):
                 let update = RealmObserveUpdate(deletions: deletions, insertions: insertions, modifications: modifications)
                 let result = self?.processChanges(update: update, objects: changedObjects, queue: responseQueue)
                 responseQueue.async {
-                    observer.onNext(result)
+                    fetchResult.onNext(result)
                 }
                 break
             case .error( _):
                 responseQueue.async {
-                    observer.onNext(nil)
+                    fetchResult.onNext(nil)
                 }
                 break
             }
@@ -187,8 +187,8 @@ extension RealmDatabase: Database {
         subscribedObjects[token] = objects
     }
     
-    func object(objectType: BaseModel.Type, predicate: NSPredicate?, observer: PublishSubject<FetchResult?>, responseQueue: DispatchQueue) {
-        objects(objectType: objectType, predicate: predicate, sortModes: nil, observer: observer, responseQueue: responseQueue)
+    func object(objectType: BaseModel.Type, predicate: NSPredicate?, fetchResult: PublishSubject<FetchResult?>, responseQueue: DispatchQueue) {
+        objects(objectType: objectType, predicate: predicate, sortModes: nil, fetchResult: fetchResult, responseQueue: responseQueue)
     }
     
     func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes:[SortModel]?) -> [BaseModel] {

@@ -23,11 +23,11 @@ class CellActionViewModel {
     
     var selected: Bool = false {
         didSet {
-            self.selecteObserver.onNext(selected)
+            self.select.onNext(selected)
         }
     }
     
-    let selecteObserver = PublishSubject<Bool>()
+    let select = PublishSubject<Bool>()
     
     // MARK: - Inits
     

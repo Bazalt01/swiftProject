@@ -96,12 +96,12 @@ class TemplateCell: CollectionViewCellWithActions {
     }
     
     private func configureSubscriptions(viewModel: TemplateCellModel) {
-        let pressDisposable = viewModel.pressActionObserver.subscribe(onNext: { [weak self]() in
+        let pressDisposable = viewModel.didPressAction.subscribe(onNext: { [weak self]() in
             self?.hideActions()
             }, onError: nil, onCompleted: nil, onDisposed: nil)
         disposables.append(pressDisposable)
         
-        let mutedDisposable = viewModel.mutedChangedObserver.subscribe(onNext: { [weak self](muted) in
+        let mutedDisposable = viewModel.didMutedChanged.subscribe(onNext: { [weak self](muted) in
             self?.updateMutedAppearance(muted: muted)
             }, onError: nil, onCompleted: nil, onDisposed: nil)
         disposables.append(mutedDisposable)

@@ -32,7 +32,7 @@ class MainViewController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - LifeCircle
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -152,18 +152,18 @@ class MainViewController: BaseViewController {
     }
     
     private func configureSubsciptions() {
-        circleTimeView?.playObserver.ca_subscribe(onNext: { [weak self](isPlaying) in
+        circleTimeView?.playObservable.ca_subscribe(onNext: { [weak self](isPlaying) in
             if isPlaying {
                 self?.viewModel.playNextSpeechModel()
             }
         })
         
-        circleTimeView?.timeOver.ca_subscribe(onNext: { [weak self]() in
+        circleTimeView?.timeOverObservable.ca_subscribe(onNext: { [weak self]() in
             self?.viewModel.updateTemplatePosition()
             self?.viewModel.playNextSpeechModel()
         })
         
-        circleTimeView?.timeObserver.ca_subscribe(onNext: { [weak self](time) in
+        circleTimeView?.timeObservable.ca_subscribe(onNext: { [weak self](time) in
             self?.viewModel.updateDelayTyme(time: time)
         })
         
@@ -179,19 +179,19 @@ class MainViewController: BaseViewController {
             self?.viewModel.openNewTemplate()
         })
         
-        viewModel.templateResultsObserver.ca_subscribe(onNext: { [weak self](templateResults) in
+        viewModel.templateResults.ca_subscribe(onNext: { [weak self](templateResults) in
             self?.updateLabels(labelTexts: templateResults)
         })
         
-        viewModel.canPlayObserver.ca_subscribe(onNext: { [weak self](canPlay) in
+        viewModel.canPlay.ca_subscribe(onNext: { [weak self](canPlay) in
             self?.circleTimeView?.canPlay = canPlay
         })
         
-        viewModel.needNewTemplateObserver.ca_subscribe(onNext: { [weak self](needNewTempalate) in
+        viewModel.needNewTemplate.ca_subscribe(onNext: { [weak self](needNewTempalate) in
             self?.newTemplateButton.isHidden = needNewTempalate == false
         })
         
-        viewModel.speechCompletedObserver.ca_subscribe { [weak self]() in
+        viewModel.didCompleteSpeech.ca_subscribe { [weak self]() in
             self?.circleTimeView?.fire()
         }
     }

@@ -18,7 +18,7 @@ class TemplateShareMainDataSource: CompositeDataSource {
     private(set) var dataSourcesByKey = [String : TemplateShareDataSource]()
     private(set) var sectionMaps = [String : [Int]]()
     
-    let saveObserver = PublishSubject<SharedTemplateModel>()
+    let didSaveTemplate = PublishSubject<SharedTemplateModel>()
     
     // MARK: - Public
     
@@ -57,14 +57,14 @@ class TemplateShareMainDataSource: CompositeDataSource {
                 continue
             }
             if let dataSource = dataSourcesByKey[author.name] {
-                dataSource.insert(template: template, index: index, needNotify: false, observer: saveObserver)
+                dataSource.insert(template: template, index: index, needNotify: false, observable: didSaveTemplate)
                 
                 let section = dataSources.firstIndex(of: dataSource)!
                 indexPaths.append(IndexPath(item: index, section: section))
             }
             else {
                 let dataSource = TemplateShareDataSource(title: author.name)
-                dataSource.add(template: template, needNotify: false, observer: saveObserver)
+                dataSource.add(template: template, needNotify: false, observable: didSaveTemplate)
                 
                 let section = sectionByKey[author.name]!.section
                 sections.append(section)
@@ -132,7 +132,7 @@ class TemplateShareMainDataSource: CompositeDataSource {
                 
                 let localIndex = indexes.firstIndex(of: index)!
                 dataSource.remove(atIndex: localIndex)
-                dataSource.insert(template: templates[index], index: localIndex, needNotify: false, observer: saveObserver)
+                dataSource.insert(template: templates[index], index: localIndex, needNotify: false, observable: didSaveTemplate)
                 
                 let section = dataSources.firstIndex(of: dataSource)!
                 indexPaths.append(IndexPath(item: localIndex, section: section))

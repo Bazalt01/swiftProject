@@ -15,7 +15,7 @@ class TemplateViewModel {
     private(set) var dataSource: TemplateCollectionDataSource
     private(set) var collectionViewDelegate: TemplateCollectionDelegate        
     
-    let hasTemplatesObserver = PublishSubject<Bool>()
+    let hasTemplates = PublishSubject<Bool>()
     
     // MARK: - Inits
     
@@ -37,7 +37,7 @@ class TemplateViewModel {
         configureSubsciptions()
         let models = self.templateManager.models
         dataSource.configureAndSetCellViewModel(templateModels: self.templateManager.models, batchUpdates: nil)
-        hasTemplatesObserver.onNext(models.count > 0)
+        hasTemplates.onNext(models.count > 0)
     }
     
     func createNewTemplate() {
@@ -51,23 +51,23 @@ class TemplateViewModel {
     // MARK: - Private
     
     private func configureSubsciptions() {
-        collectionViewDelegate.didSelectTemplateObserver.ca_subscribe(onNext: { [weak self](cellViewModel) in
+        collectionViewDelegate.didSelectTemplate.ca_subscribe(onNext: { [weak self](cellViewModel) in
             self?.findAndOpenTemplate(cellViewModel: cellViewModel)
         })
         
-        self.templateManager.templateModelsObserver.ca_subscribe(onNext: { [weak self](fetchResult) in
+        self.templateManager.templateFetchResult.ca_subscribe(onNext: { [weak self](fetchResult) in
             self?.processModels(fetchResult: fetchResult)
         })
         
-        dataSource.deleteTemplateObserver.ca_subscribe(onNext: { [weak self](template) in
+        dataSource.didDeleteTemplate.ca_subscribe(onNext: { [weak self](template) in
             self?.delete(template: template)
         })
         
-        dataSource.muteTemplateObserver.ca_subscribe(onNext: { [weak self](template) in
+        dataSource.didMuteTemplate.ca_subscribe(onNext: { [weak self](template) in
             self?.mute(template: template)
         })
         
-        dataSource.shareTemplateObserver.ca_subscribe(onNext: { [weak self](template) in
+        dataSource.didShareTemplate.ca_subscribe(onNext: { [weak self](template) in
             self?.share(template: template)
         })
     }
@@ -84,7 +84,7 @@ class TemplateViewModel {
         }
         let batchUpdates = configureBatchUpdates(fetchResultChanges: result.changes)
         dataSource.configureAndSetCellViewModel(templateModels: result.models as! [TemplateModel], batchUpdates: batchUpdates)
-        hasTemplatesObserver.onNext(result.models.count > 0)
+        hasTemplates.onNext(result.models.count > 0)
     }
     
     private func configureBatchUpdates(fetchResultChanges: [FetchResultChanges]) -> [BatchUpdate] {

@@ -33,8 +33,8 @@ struct FetchResultChanges {
 protocol Database {
     func configure()
     
-    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes:[SortModel]?, observer: PublishSubject<FetchResult?>, responseQueue: DispatchQueue)
-    func object(objectType: BaseModel.Type, predicate: NSPredicate?, observer: PublishSubject<FetchResult?>, responseQueue: DispatchQueue)
+    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes:[SortModel]?, fetchResult: PublishSubject<FetchResult?>, responseQueue: DispatchQueue)
+    func object(objectType: BaseModel.Type, predicate: NSPredicate?, fetchResult: PublishSubject<FetchResult?>, responseQueue: DispatchQueue)
     
     func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes:[SortModel]?) -> [BaseModel]
     func object(objectType: BaseModel.Type, predicate: NSPredicate?) -> BaseModel?

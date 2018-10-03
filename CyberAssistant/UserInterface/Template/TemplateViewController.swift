@@ -27,7 +27,7 @@ class TemplateViewController: BaseCollectionViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Life Circle
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,7 +71,7 @@ class TemplateViewController: BaseCollectionViewController {
             self?.viewModel.openShareTemplates()
         })
         
-        viewModel.hasTemplatesObserver.ca_subscribe(onNext: { [weak self](hasTemplates) in
+        viewModel.hasTemplates.ca_subscribe(onNext: { [weak self](hasTemplates) in
             self?.emptyView.isHidden = hasTemplates
         })
     }

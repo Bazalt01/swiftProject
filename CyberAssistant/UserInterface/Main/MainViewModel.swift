@@ -26,10 +26,10 @@ class MainViewModel: SpeechManagerDelegate {
     
     private(set) var isPlaying = false
     
-    let canPlayObserver = PublishSubject<Bool>()
-    let templateResultsObserver = PublishSubject<[String]>()
-    let needNewTemplateObserver = PublishSubject<Bool>()
-    let speechCompletedObserver = PublishSubject<Void>()
+    let canPlay = PublishSubject<Bool>()
+    let templateResults = PublishSubject<[String]>()
+    let needNewTemplate = PublishSubject<Bool>()
+    let didCompleteSpeech = PublishSubject<Void>()
     
     // MARK: - Inits
     
@@ -96,8 +96,8 @@ class MainViewModel: SpeechManagerDelegate {
     
     private func updateModelResultList() {
         guard templateModels.count > 0 else {
-            needNewTemplateObserver.onNext(true)
-            templateResultsObserver.onNext([])
+            needNewTemplate.onNext(true)
+            templateResults.onNext([])
             return
         }
         
@@ -109,12 +109,12 @@ class MainViewModel: SpeechManagerDelegate {
         let result = models.map { (model) -> String in
             return model.totalValue
         }
-        templateResultsObserver.onNext(result)
-        needNewTemplateObserver.onNext(false)
+        templateResults.onNext(result)
+        needNewTemplate.onNext(false)
     }
     
     private func configureSubscriptions() {
-        templateManager.templateModelsObserver.ca_subscribe(onNext: { [weak self](fetchResult) in
+        templateManager.templateFetchResult.ca_subscribe(onNext: { [weak self](fetchResult) in
             if let result = fetchResult {
                 self?.updateModels(models: result.models as! [TemplateModel])
             }
@@ -129,7 +129,7 @@ class MainViewModel: SpeechManagerDelegate {
             model.generateTemplate()
         }
         templateModels = randomSortedModels(models: models)
-        canPlayObserver.onNext(templateModels.count > 0)
+        canPlay.onNext(templateModels.count > 0)
     }
     
     private func randomSortedModels(models: [TemplateModel]) -> [TemplateModel] {
@@ -147,6 +147,6 @@ class MainViewModel: SpeechManagerDelegate {
 extension MainViewModel {
     func didFinishPlaying(sender:SpeechManager) {
         isPlaying = false
-        speechCompletedObserver.onNext(())
+        didCompleteSpeech.onNext(())
     }
 }

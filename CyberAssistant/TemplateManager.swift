@@ -32,7 +32,7 @@ class TemplateManager: BackgroundWorker {
                          TemplateRule(rule: "(Any type)[a,b,c,d,...,n] - Will choose just one from sequence",
                                       example: "Dima can eat 10 [apples,kiwis,peaches] per minite.",
                                       result: "Dima can eat 10 kiwis per minute.")]
-    let templateModelsObserver = PublishSubject<FetchResult?>()
+    let templateFetchResult = PublishSubject<FetchResult?>()
     
     // MARK: - Inits
     
@@ -70,7 +70,7 @@ class TemplateManager: BackgroundWorker {
         }
     }
     
-    func loadSharedContent(excludeAccount account: AccountModel, observer: PublishSubject<FetchResult?>) {
+    func loadSharedContent(excludeAccount account: AccountModel, fetchResult: PublishSubject<FetchResult?>) {
         let sortAuthor = SortModel.init(key: "internalAuthor.name", ascending: true)
         let sortValue = SortModel.init(key: "value", ascending: true)
         
@@ -79,7 +79,7 @@ class TemplateManager: BackgroundWorker {
             let database = DatabaseManager.createDatabase()
             database.configure()
             
-            database.objects(objectType: RealmTemplate.self, predicate: predicate, sortModes: [sortAuthor, sortValue], observer: observer, responseQueue: DispatchQueue.main)
+            database.objects(objectType: RealmTemplate.self, predicate: predicate, sortModes: [sortAuthor, sortValue], fetchResult: fetchResult, responseQueue: DispatchQueue.main)
             self?.database = database
         })
     }
@@ -88,8 +88,8 @@ class TemplateManager: BackgroundWorker {
     
     private func loadContent(account: AccountModel) {
         let sort = SortModel.init(key: "value", ascending: true)
-        let observer = self.templateModelsObserver
-        observer.ca_subscribe(onNext: { [weak self](fetchResult) in
+        let fetchResult = self.templateFetchResult
+        fetchResult.ca_subscribe(onNext: { [weak self](fetchResult) in
             if let result = fetchResult {
                 self?.models = result.models as! [TemplateModel]
             }
@@ -102,7 +102,7 @@ class TemplateManager: BackgroundWorker {
             let database = DatabaseManager.createDatabase()
             database.configure()
             
-            database.objects(objectType: RealmTemplate.self, predicate: predicate, sortModes: [sort], observer: observer, responseQueue: DispatchQueue.main)
+            database.objects(objectType: RealmTemplate.self, predicate: predicate, sortModes: [sort], fetchResult: fetchResult, responseQueue: DispatchQueue.main)
             self?.database = database
         })
     }

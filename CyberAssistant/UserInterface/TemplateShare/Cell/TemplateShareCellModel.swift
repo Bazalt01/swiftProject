@@ -28,13 +28,13 @@ class TemplateShareCellModel: BaseCellViewModel {
     var icon: UIImage? {
         return template.saved ? trashIcon : saveIcon
     }
-    private var saveChangedObserver: PublishSubject<SharedTemplateModel>
+    private var didSave: PublishSubject<SharedTemplateModel>
     
     // MARK: - Inits
     
-    init(template: SharedTemplateModel, observer: PublishSubject<SharedTemplateModel>) {
+    init(template: SharedTemplateModel, didSave: PublishSubject<SharedTemplateModel>) {
         self.template = template
-        self.saveChangedObserver = observer
+        self.didSave = didSave
         super.init(viewClass: TemplateShareCell.self)
         self.templateAttrText = attributedTemplate(template: template.value)
     }
@@ -48,7 +48,7 @@ class TemplateShareCellModel: BaseCellViewModel {
     
     func updateSaved() {
         template.saved = !template.saved
-        saveChangedObserver.onNext(template)
+        didSave.onNext(template)
     }
     
     // MARK: - Private

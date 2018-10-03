@@ -18,9 +18,9 @@ class TemplateCollectionDataSource: BaseCollectionDataSource {
         self.cellClasses = [TemplateCell.self]
     }
     
-    let deleteTemplateObserver = PublishSubject<TemplateModel>()
-    let muteTemplateObserver = PublishSubject<TemplateModel>()
-    let shareTemplateObserver = PublishSubject<TemplateModel>()
+    let didDeleteTemplate = PublishSubject<TemplateModel>()
+    let didMuteTemplate = PublishSubject<TemplateModel>()
+    let didShareTemplate = PublishSubject<TemplateModel>()
     
     // MARK: - Public
     
@@ -38,13 +38,13 @@ class TemplateCollectionDataSource: BaseCollectionDataSource {
     func configuredCellViewModel(template: TemplateModel) -> TemplateCellModel {
         let cellVM = TemplateCellModel(template: template)
         cellVM.deleteBlock = { [weak self] in
-            self?.deleteTemplateObserver.onNext(template)
+            self?.didDeleteTemplate.onNext(template)
         }
         cellVM.muteBlock = { [weak self] in
-            self?.muteTemplateObserver.onNext(template)
+            self?.didMuteTemplate.onNext(template)
         }
         cellVM.shareBlock = { [weak self] in
-            self?.shareTemplateObserver.onNext(template)
+            self?.didShareTemplate.onNext(template)
         }
         return cellVM
     }

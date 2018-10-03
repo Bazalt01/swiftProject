@@ -10,7 +10,7 @@ import UIKit
 
 class BaseNavigationController: UINavigationController {
 
-    // MARK: - Life Circle
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()

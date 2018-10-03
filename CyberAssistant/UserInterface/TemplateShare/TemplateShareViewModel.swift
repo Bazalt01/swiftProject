@@ -16,7 +16,7 @@ class TemplateShareViewModel: BaseCollectionViewModel {
     
     private(set) var dataSource: TemplateShareMainDataSource
     private(set) var collectionViewDelegate: TemplateShareCollectionDelegate
-    private var templateObserver = PublishSubject<FetchResult?>()
+    private var didChangedTemplates = PublishSubject<FetchResult?>()
     
     private var savedTemplatesByKeys = [String : SharedTemplateModel]()
     
@@ -38,17 +38,17 @@ class TemplateShareViewModel: BaseCollectionViewModel {
     
     func configure() {
         configureSubscriptions()
-        templateManager.loadSharedContent(excludeAccount: authManager.authorizedAccount.value!, observer: templateObserver)
+        templateManager.loadSharedContent(excludeAccount: authManager.authorizedAccount.value!, fetchResult: didChangedTemplates)
     }
     
     // MARK: - Private
     
     private func configureSubscriptions() {
-        templateObserver.ca_subscribe { [weak self](fetchResult) in
+        didChangedTemplates.ca_subscribe { [weak self](fetchResult) in
             self?.updateTemplates(fetchResult: fetchResult)
         }
         
-        dataSource.saveObserver.ca_subscribe { [weak self](template) in
+        dataSource.didSaveTemplate.ca_subscribe { [weak self](template) in
             self?.share(template: template)
         }
     }

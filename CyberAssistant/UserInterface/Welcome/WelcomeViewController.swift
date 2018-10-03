@@ -55,15 +55,15 @@ class WelcomeViewController: BaseViewController {
     }
     
     private func configureSubsciptions() {
-        enterView.signInObserver.ca_subscribe(onNext: { [weak self](result) in
+        enterView.signInObservable.ca_subscribe(onNext: { [weak self](result) in
             self?.processSignIn(result: result)
         })
         
-        enterView.signUpObserver.ca_subscribe(onNext: { [weak self](result) in
+        enterView.signUpObservable.ca_subscribe(onNext: { [weak self](result) in
             self?.processSignUp(result: result)
         })
         
-        enterView.errorObserver.ca_subscribe(onNext: { [weak self](error) in
+        enterView.errorObservable.ca_subscribe(onNext: { [weak self](error) in
             self?.viewModel.showError(error: error)
         })
         

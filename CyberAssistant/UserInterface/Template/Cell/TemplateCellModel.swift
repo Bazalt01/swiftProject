@@ -27,20 +27,20 @@ class TemplateCellModel: BaseCellViewModel {
     var muteBlock: (() -> Void)?
     private(set) var muted = false {
         didSet {
-            mutedChangedObserver.onNext(muted)
+            didMutedChanged.onNext(muted)
         }
     }
     
     var shareBlock: (() -> Void)?
     private(set) var shared = false {
         didSet {
-            sharedChangedObserver.onNext(shared)
+            didSharedChanged.onNext(shared)
         }
     }
     
-    let pressActionObserver = PublishSubject<Void>()
-    let mutedChangedObserver = PublishSubject<Bool>()
-    let sharedChangedObserver = PublishSubject<Bool>()
+    let didPressAction = PublishSubject<Void>()
+    let didMutedChanged = PublishSubject<Bool>()
+    let didSharedChanged = PublishSubject<Bool>()
     
     // MARK: - Inits
     
@@ -105,7 +105,7 @@ class TemplateCellModel: BaseCellViewModel {
         if let vm = muteActionViewModel {
             vm.selected = !vm.selected
             muted = vm.selected
-            pressActionObserver.onNext(())
+            didPressAction.onNext(())
         }        
     }
     
@@ -113,7 +113,7 @@ class TemplateCellModel: BaseCellViewModel {
         if let vm = shareActionViewModel {
             vm.selected = !vm.selected
             shared = vm.selected
-            pressActionObserver.onNext(())
+            didPressAction.onNext(())
         }
     }
 }

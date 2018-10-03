@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class BaseCollectionViewDelegate: NSObject {
-    private(set) var didSelectTemplateObserver = PublishSubject<ViewModel>()
+    private(set) var didSelectTemplate = PublishSubject<ViewModel>()
     private(set) var layoutManager: LayoutManager
     private var dataSource: BaseCollectionDataSource
     
@@ -39,7 +39,7 @@ extension BaseCollectionViewDelegate: UICollectionViewDelegate {
             assert(false, "nullable model")
             return
         }
-        didSelectTemplateObserver.onNext(model)
+        didSelectTemplate.onNext(model)
     }
 }
 

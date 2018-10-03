@@ -49,9 +49,9 @@ class CircleTimeView: UIView {
     private var timeLineForward = true
     
     var canPlay = false
-    let playObserver = PublishSubject<Bool>()
-    let timeObserver = PublishSubject<Int>()
-    let timeOver = PublishSubject<Void>()
+    let playObservable = PublishSubject<Bool>()
+    let timeObservable = PublishSubject<Int>()
+    let timeOverObservable = PublishSubject<Void>()
  
     // MARK: - Inits
     
@@ -385,7 +385,7 @@ class CircleTimeView: UIView {
         }
         
         isPlaying = !isPlaying
-        playObserver.onNext(isPlaying)
+        playObservable.onNext(isPlaying)
     }
     
     @objc private func handlePan(sender: UIPanGestureRecognizer) {
@@ -397,7 +397,7 @@ class CircleTimeView: UIView {
             calculateTimeRegulatorPosition(point: sender.location(in: self))
             break
         case .ended:
-            timeObserver.onNext(time)
+            timeObservable.onNext(time)
             break
         default:
             break
@@ -417,7 +417,7 @@ class CircleTimeView: UIView {
 
         if currentTime >= time {
             timer?.invalidate()
-            self.timeOver.onNext(())
+            self.timeOverObservable.onNext(())
         }
     }
 }

@@ -60,7 +60,7 @@ class CellActionView: UIView {
     }
     
     private func configureSubscriptions() {
-        _ = self.viewModel.selecteObserver.subscribe(onNext: { [weak self](selected) in
+        _ = self.viewModel.select.subscribe(onNext: { [weak self](selected) in
             self?.processSelected(selected: selected)
         }, onError: nil, onCompleted: nil, onDisposed: nil)
     }

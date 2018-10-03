@@ -7,14 +7,13 @@
 //
 
 import UIKit
-import RxSwift
 
 typealias LabelAnimatorToken = Int
 
 class LabelAnimator {
     private var index: Int = 0
     private var timer: Timer?
-    private(set) var stepObserverBlocks = [LabelAnimatorToken : () -> Void]()
+    private(set) var stepBlocks = [LabelAnimatorToken : () -> Void]()
     
     // MARK: - Inits
     
@@ -38,19 +37,19 @@ class LabelAnimator {
     
     func addStepObserver(block: @escaping () -> Void) -> LabelAnimatorToken {
         let token = index
-        stepObserverBlocks[token] = block
+        stepBlocks[token] = block
         index += 1
         return token
     }
     
     func removeStepObserver(token: LabelAnimatorToken) {
-        stepObserverBlocks[token] = nil
+        stepBlocks[token] = nil
     }
     
     // MARK: - Private
     
     @objc private func handledTime(sender: Timer) {
-        for block in stepObserverBlocks.values {
+        for block in stepBlocks.values {
             block()
         }
     }

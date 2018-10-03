@@ -11,7 +11,7 @@ import UIKit
 class BaseCollectionViewController: BaseViewController {
     var collectionView: UICollectionView?
     
-    // MARK: - Life Circle
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()

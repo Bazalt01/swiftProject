@@ -6,8 +6,7 @@
 //  Copyright © 2018 g.tokmakov. All rights reserved.
 //
 
-import Foundation
-import RxSwift
+import UIKit
 
 class TemplateEditCellModel: BaseCellViewModel {
     private(set) var template = ""

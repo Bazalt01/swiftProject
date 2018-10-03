@@ -14,7 +14,7 @@ import RxCocoa
 class AuthManager {    
     private(set) var authorizedAccount = BehaviorRelay<AccountModel?>(value: nil)
     private var authResult: AuthResult?
-    let logoutObserver = PublishSubject<Void>()
+    let logoutObservable = PublishSubject<Void>()
     
     // MARK: - Inits
     
@@ -26,7 +26,7 @@ class AuthManager {
         let predicate = NSPredicate(format: "login = %@ AND password = %@", authResult.login, authResult.password)
         let account = DatabaseManager.database.object(objectType: RealmAccount.self, predicate: predicate) as? AccountModel
         authorizedAccount.accept(account)
-        logoutObserver.onNext(())
+        logoutObservable.onNext(())
     }
     
     // MARK: - Public
