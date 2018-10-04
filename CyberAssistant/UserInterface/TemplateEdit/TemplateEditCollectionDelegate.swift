@@ -14,6 +14,7 @@ class TemplateEditCollectionDelegate: BaseCollectionViewDelegate {
     
     init(dataSource: BaseCollectionDataSource) {
         let lm = LayoutManager(viewsByClass: [TemplateEditCell.ca_reuseIdentifier(): TemplateEditCell(),
+                                              HeaderView.ca_reuseIdentifier(): HeaderView(),
                                               TemplateEditRuleCell.ca_reuseIdentifier(): TemplateEditRuleCell()])
         super.init(layoutManager: lm, dataSource: dataSource)
     }

@@ -1,0 +1,72 @@
+/* 
+  Localizable.strings
+  CyberAssistant
+
+  Created by g.tokmakov on 04/10/2018.
+  Copyright © 2018 g.tokmakov. All rights reserved.
+*/
+
+"random_value_from_to" = "(number)[n] - random value from 0 to n";
+"random_value_from_to_example" = "There are [10] apples.";
+"random_value_from_to_result" = "There are 8 apples.";
+
+"random_value_from_m_to_n" = "(number)[m-n] - random value from m to n";
+"random_value_from_m_to_n_example" = "There are [20-40] apples.";
+"random_value_from_m_to_n_result" = "There are 34 apples.";
+
+"any_value_sequence" = "(Any type)[a,b,c,d,...,n] - Will choose just one from sequence";
+"any_value_sequence_example" = "Dima can eat 10 [apples,kiwis,peaches] per minute.";
+"any_value_sequence_result" = "Dima can eat 10 kiwis per minute.";
+
+// General
+
+"ok" = "Ok";
+"cancel" = "Cancel";
+
+// Errors
+
+"login_is_too_short" = "The login is too short";
+"password_is_empty" = "The password is empty";
+"password_is_too_short" = "The password is too short";
+"repeat_password_is_empty" = "The repeat password is empty";
+"passwords_arent_equal" = "The repeat password isn't equal to the password";
+"login_is_existed" = "Account with current login is existed";
+"account_isnt_existed" = "Account isn't existed";
+"did_fail_create_account" = "Sorry. We couldn't create your account";
+"database_isnt_existed" = "Database isn't updated";
+"template_is_empty" = "Template can't be empty";
+"something_is_wrong" = "Sorry, something is wrong";
+
+// Enter View
+
+"login" = "Login";
+"password" = "Password";
+"repeat_password" = "Repeat Password";
+"enter" = "Enter";
+"sign_in" = "Sign In";
+"sign_up" = "Sign Up";
+"attention" = "Attention";
+
+// Settings
+
+"settings" = "Settings";
+"logout" = "Logout";
+
+// Main View
+
+"create_new_template" = "Create New Template";
+"do_you_want_create_new_template" = "You don't have any template. Do you want create new template?";
+
+// Templates
+
+"templates" = "Templates";
+"you_need_creating_template" = "You need creating a template";
+
+// Template Editor
+
+"template_editor" = "Template editor";
+"examples" = "Examples";
+
+// Template share
+
+"template_share" = "Template share";

@@ -32,7 +32,7 @@ class TemplateViewController: BaseCollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Templates"
+        title = NSLocalizedString("templates", comment: "")
         
         if let cv = collectionView {
             cv.dataSource = viewModel.dataSource
@@ -102,7 +102,7 @@ class TemplateViewController: BaseCollectionViewController {
     
     private func configureEmptyView() {
         if let image = UIImage.ca_image(imageName: "eye", renderingMode: .alwaysTemplate) {
-            emptyView.emptyModel = EmptyModel(message: "You need creating a template", image: image)
+            emptyView.emptyModel = EmptyModel(message: NSLocalizedString("you_need_creating_template", comment: ""), image: image)
         }
     }
 }

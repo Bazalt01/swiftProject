@@ -50,6 +50,7 @@ class CircleTimeView: UIView {
     
     var canPlay = false
     let playObservable = PublishSubject<Bool>()
+    let cantPlayObservable = PublishSubject<Void>()
     let timeObservable = PublishSubject<Int>()
     let timeOverObservable = PublishSubject<Void>()
  
@@ -68,6 +69,7 @@ class CircleTimeView: UIView {
         configure()
     }
     
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         self.time = kDefaultTime
         super.init(coder: aDecoder)
@@ -372,6 +374,7 @@ class CircleTimeView: UIView {
     
     @objc private func handlePressPlay(sender: UIButton) {
         guard canPlay else {
+            cantPlayObservable.onNext(())
             return
         }
         changeButtonPathAnimated()

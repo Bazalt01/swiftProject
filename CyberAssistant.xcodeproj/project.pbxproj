@@ -39,12 +39,12 @@
 		EA68CB56215CE2F000004AAB /* TemplateShareCollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB55215CE2F000004AAB /* TemplateShareCollectionDelegate.swift */; };
 		EA68CB59215CE3FB00004AAB /* TemplateShareCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB58215CE3FB00004AAB /* TemplateShareCell.swift */; };
 		EA68CB5B215CE4A300004AAB /* TemplateShareCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB5A215CE4A300004AAB /* TemplateShareCellModel.swift */; };
-		EA68CB5D215E145E00004AAB /* TemplateShareHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB5C215E145E00004AAB /* TemplateShareHeaderView.swift */; };
+		EA68CB5D215E145E00004AAB /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB5C215E145E00004AAB /* HeaderView.swift */; };
 		EA68CB5F215E15F000004AAB /* BaseSupplementaryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB5E215E15F000004AAB /* BaseSupplementaryViewModel.swift */; };
 		EA68CB61215E163D00004AAB /* BaseSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB60215E163D00004AAB /* BaseSupplementaryView.swift */; };
 		EA68CB66215E1E7F00004AAB /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB65215E1E7F00004AAB /* View.swift */; };
 		EA68CB68215E31DE00004AAB /* UIView+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB67215E31DE00004AAB /* UIView+Utils.swift */; };
-		EA68CB6A215E348D00004AAB /* TemplateShareHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB69215E348D00004AAB /* TemplateShareHeaderViewModel.swift */; };
+		EA68CB6A215E348D00004AAB /* HeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB69215E348D00004AAB /* HeaderViewModel.swift */; };
 		EA68CB6C215E941700004AAB /* TemplateShareMainDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB6B215E941700004AAB /* TemplateShareMainDataSource.swift */; };
 		EA68CB6E2160F4B000004AAB /* TransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB6D2160F4B000004AAB /* TransitionAnimator.swift */; };
 		EA68CB732161047A00004AAB /* Transitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB722161047A00004AAB /* Transitor.swift */; };
@@ -106,6 +106,7 @@
 		EAE9EE32212807A7000A2220 /* LayoutConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE9EE31212807A7000A2220 /* LayoutConstants.swift */; };
 		EAE9EE3621288682000A2220 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE9EE3521288682000A2220 /* Appearance.swift */; };
 		EAE9EE38212890E5000A2220 /* UIImage+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE9EE37212890E5000A2220 /* UIImage+Utils.swift */; };
+		EAF077D221661C4600E2CBDF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EAF077D021661C4600E2CBDF /* Localizable.strings */; };
 		EAFE00B0213ABC5B00ECF793 /* CompositeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFE00AF213ABC5B00ECF793 /* CompositeDataSource.swift */; };
 		EAFE00B2213ADF0A00ECF793 /* TemplateEditRulesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFE00B1213ADF0A00ECF793 /* TemplateEditRulesDataSource.swift */; };
 		EAFE00B4213B1C6800ECF793 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFE00B3213B1C6800ECF793 /* Button.swift */; };
@@ -148,12 +149,12 @@
 		EA68CB55215CE2F000004AAB /* TemplateShareCollectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareCollectionDelegate.swift; sourceTree = "<group>"; };
 		EA68CB58215CE3FB00004AAB /* TemplateShareCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareCell.swift; sourceTree = "<group>"; };
 		EA68CB5A215CE4A300004AAB /* TemplateShareCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareCellModel.swift; sourceTree = "<group>"; };
-		EA68CB5C215E145E00004AAB /* TemplateShareHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareHeaderView.swift; sourceTree = "<group>"; };
+		EA68CB5C215E145E00004AAB /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		EA68CB5E215E15F000004AAB /* BaseSupplementaryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSupplementaryViewModel.swift; sourceTree = "<group>"; };
 		EA68CB60215E163D00004AAB /* BaseSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSupplementaryView.swift; sourceTree = "<group>"; };
 		EA68CB65215E1E7F00004AAB /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		EA68CB67215E31DE00004AAB /* UIView+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Utils.swift"; sourceTree = "<group>"; };
-		EA68CB69215E348D00004AAB /* TemplateShareHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareHeaderViewModel.swift; sourceTree = "<group>"; };
+		EA68CB69215E348D00004AAB /* HeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderViewModel.swift; sourceTree = "<group>"; };
 		EA68CB6B215E941700004AAB /* TemplateShareMainDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareMainDataSource.swift; sourceTree = "<group>"; };
 		EA68CB6D2160F4B000004AAB /* TransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionAnimator.swift; sourceTree = "<group>"; };
 		EA68CB722161047A00004AAB /* Transitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transitor.swift; sourceTree = "<group>"; };
@@ -218,6 +219,10 @@
 		EAE9EE31212807A7000A2220 /* LayoutConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutConstants.swift; sourceTree = "<group>"; };
 		EAE9EE3521288682000A2220 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 		EAE9EE37212890E5000A2220 /* UIImage+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Utils.swift"; sourceTree = "<group>"; };
+		EAF077CB21661A5000E2CBDF /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
+		EAF077CC21661A5000E2CBDF /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		EAF077D121661C4600E2CBDF /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EAF077D421661C4C00E2CBDF /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EAFE00AF213ABC5B00ECF793 /* CompositeDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositeDataSource.swift; sourceTree = "<group>"; };
 		EAFE00B1213ADF0A00ECF793 /* TemplateEditRulesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEditRulesDataSource.swift; sourceTree = "<group>"; };
 		EAFE00B3213B1C6800ECF793 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
@@ -265,6 +270,8 @@
 				EA82E960214E3D96002BA8EA /* CollectionViewCellWithActions.swift */,
 				EAFE00B5213B1DE000ECF793 /* CellActionView.swift */,
 				EA82E95E214D94AC002BA8EA /* CellActionViewModel.swift */,
+				EA68CB5C215E145E00004AAB /* HeaderView.swift */,
+				EA68CB69215E348D00004AAB /* HeaderViewModel.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -330,8 +337,6 @@
 			children = (
 				EA68CB58215CE3FB00004AAB /* TemplateShareCell.swift */,
 				EA68CB5A215CE4A300004AAB /* TemplateShareCellModel.swift */,
-				EA68CB5C215E145E00004AAB /* TemplateShareHeaderView.swift */,
-				EA68CB69215E348D00004AAB /* TemplateShareHeaderViewModel.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -412,6 +417,7 @@
 				EAE9EE392128928F000A2220 /* Extentions */,
 				EAB06988211A0BD200EF6913 /* Main.storyboard */,
 				EAB0698B211A0BD300EF6913 /* Assets.xcassets */,
+				EAF077D021661C4600E2CBDF /* Localizable.strings */,
 				EAB0698D211A0BD300EF6913 /* LaunchScreen.storyboard */,
 				EAB06990211A0BD300EF6913 /* Info.plist */,
 			);
@@ -652,6 +658,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = EAB06978211A0BD200EF6913;
 			productRefGroup = EAB06982211A0BD200EF6913 /* Products */;
@@ -669,6 +676,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EAB0698F211A0BD300EF6913 /* LaunchScreen.storyboard in Resources */,
+				EAF077D221661C4600E2CBDF /* Localizable.strings in Resources */,
 				EAB0698C211A0BD300EF6913 /* Assets.xcassets in Resources */,
 				EAB0698A211A0BD200EF6913 /* Main.storyboard in Resources */,
 			);
@@ -728,7 +736,7 @@
 				EA68CB5F215E15F000004AAB /* BaseSupplementaryViewModel.swift in Sources */,
 				EAC780222131C5AF000237D7 /* SeparatorView.swift in Sources */,
 				EA6C9EAD21441EF000CCC2F3 /* LabelAnimator.swift in Sources */,
-				EA68CB6A215E348D00004AAB /* TemplateShareHeaderViewModel.swift in Sources */,
+				EA68CB6A215E348D00004AAB /* HeaderViewModel.swift in Sources */,
 				EABA347721208DE200B2040B /* CollectionViewCell.swift in Sources */,
 				EA68CB5B215CE4A300004AAB /* TemplateShareCellModel.swift in Sources */,
 				EA68CB6E2160F4B000004AAB /* TransitionAnimator.swift in Sources */,
@@ -763,7 +771,7 @@
 				EAFE00B0213ABC5B00ECF793 /* CompositeDataSource.swift in Sources */,
 				EABA346E2120679C00B2040B /* BaseCollectionDataSource.swift in Sources */,
 				EAD1A5E0212EED6C002C4410 /* TemplateModel.swift in Sources */,
-				EA68CB5D215E145E00004AAB /* TemplateShareHeaderView.swift in Sources */,
+				EA68CB5D215E145E00004AAB /* HeaderView.swift in Sources */,
 				EAE9EE27212725BD000A2220 /* RealmTemplate.swift in Sources */,
 				EABA3470212080D700B2040B /* ViewModel.swift in Sources */,
 				EA0209472153D0CB00DE9717 /* BaseViewController.swift in Sources */,
@@ -812,6 +820,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				EAB06989211A0BD200EF6913 /* Base */,
+				EAF077CB21661A5000E2CBDF /* ru */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -820,8 +829,18 @@
 			isa = PBXVariantGroup;
 			children = (
 				EAB0698E211A0BD300EF6913 /* Base */,
+				EAF077CC21661A5000E2CBDF /* ru */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		EAF077D021661C4600E2CBDF /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EAF077D121661C4600E2CBDF /* Base */,
+				EAF077D421661C4C00E2CBDF /* ru */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -831,6 +850,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -891,6 +911,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

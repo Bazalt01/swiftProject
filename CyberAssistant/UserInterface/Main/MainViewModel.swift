@@ -92,6 +92,14 @@ class MainViewModel: SpeechManagerDelegate {
         templateModels = models
     }
     
+    func showHasntTemplatesNotification() {
+        router.openAlertController(title: NSLocalizedString("attention", comment: ""), message: NSLocalizedString("attention", comment: "do_you_want_create_new_template"), acceptHandler: { [weak self] in
+            self?.router.openNewTemplateController()
+        }) {
+            
+        }
+    }
+    
     // MARK: - Private
     
     private func updateModelResultList() {

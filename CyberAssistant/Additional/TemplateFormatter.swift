@@ -67,15 +67,21 @@ class TemplateFormatter {
                 break
             case .numberRange:
                 let numbers = text.components(separatedBy: CharacterSet(charactersIn: "-"))
-                if let firstNumber = Int(numbers[0]), let secondNumber = Int(numbers[1]) {
-                    let number = firstNumber + Int(arc4random_uniform(UInt32(secondNumber - firstNumber)))
-                    replace(string: String(number), range: brackedValue.range)
-                }
+                let result = numbers.map({ (string) -> Int in
+                    return Int(string)!
+                }).sorted(by: { (value1, value2) -> Bool in
+                    return value1 < value2
+                })
+                
+                let number = result[0] + Int(arc4random_uniform(UInt32(result[1] - result[0])))
+                replace(string: String(number), range: brackedValue.range)
+                
                 break
             case .anySet:
                 let words = text.components(separatedBy: CharacterSet(charactersIn: ","))
                 let randomIndex = Int(arc4random_uniform(UInt32(words.count)))
-                replace(string: words[randomIndex], range: brackedValue.range)
+                let word = words[randomIndex].trimmingCharacters(in: CharacterSet.whitespaces)
+                replace(string: word, range: brackedValue.range)
                 break
             }
         }

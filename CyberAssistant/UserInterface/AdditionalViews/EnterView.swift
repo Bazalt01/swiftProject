@@ -36,8 +36,8 @@ class EnterView: UIView {
     private var visibleElementsSets = Dictionary<EnterOption, Array<UIView>>()
     
     var currentOption: EnterOption = .All {
-        willSet (option) {
-            setVisibleElements(visible: true, fromOption: .All, toOption: option)
+        didSet {
+            setVisibleElements(visible: true, fromOption: .All, toOption: currentOption)
             updateTitle()
             updateSignInUpButton()
         }
@@ -57,6 +57,7 @@ class EnterView: UIView {
         configureAppearance()
     }
     
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -164,23 +165,23 @@ class EnterView: UIView {
     
     private func configureLoginTextField() {
         loginTextField.delegate = self
-        loginTextField.placeholder = "Login"
+        loginTextField.placeholder = NSLocalizedString("login", comment: "")
     }
     
     private func configurePasswordTextField() {
         passwordTextField.isSecureTextEntry = true
         passwordTextField.delegate = self
-        passwordTextField.placeholder = "Password"
+        passwordTextField.placeholder = NSLocalizedString("password", comment: "")
     }
     
     private func configureRepeatPasswordTextField() {
         repeatPasswordTextField.isSecureTextEntry = true
         repeatPasswordTextField.delegate = self
-        repeatPasswordTextField.placeholder = "Repeat Password"
+        repeatPasswordTextField.placeholder = NSLocalizedString("repeat_password", comment: "")
     }
     
     private func configureEnterButton() {
-        enterButton.setTitle("Enter", for: .normal)
+        enterButton.setTitle(NSLocalizedString("enter", comment: ""), for: .normal)
     }
     
     private func configureSignInUpButton() {
@@ -205,10 +206,10 @@ class EnterView: UIView {
     private func updateTitle() {
         switch currentOption {
         case .All, .SignIn:
-            titleLabel.text = "Sign In"
+            titleLabel.text = NSLocalizedString("sign_in", comment: "")
             break
         case .SignUp:
-            titleLabel.text = "Sign Up"
+            titleLabel.text = NSLocalizedString("sign_up", comment: "")
             break
         }
     }
@@ -216,10 +217,10 @@ class EnterView: UIView {
     private func updateSignInUpButton() {
         switch currentOption {
         case .All, .SignIn:
-            signInUpButton.setTitle("Sign Up", for: .normal)
+            signInUpButton.setTitle(NSLocalizedString("sign_up", comment: ""), for: .normal)
             break
         case .SignUp:
-            signInUpButton.setTitle("Sign In", for: .normal)
+            signInUpButton.setTitle(NSLocalizedString("sign_in", comment: ""), for: .normal)
             break
         }
     }

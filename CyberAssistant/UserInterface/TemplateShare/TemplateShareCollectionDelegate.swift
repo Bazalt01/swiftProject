@@ -14,7 +14,7 @@ class TemplateShareCollectionDelegate: BaseCollectionViewDelegate {
     
     init(dataSource: BaseCollectionDataSource) {
         let lm = LayoutManager(viewsByClass: [TemplateShareCell.ca_reuseIdentifier(): TemplateShareCell(),
-                                              TemplateShareHeaderView.ca_reuseIdentifier(): TemplateShareHeaderView()])
+                                              HeaderView.ca_reuseIdentifier(): HeaderView()])
         super.init(layoutManager: lm, dataSource: dataSource)
     }
 }

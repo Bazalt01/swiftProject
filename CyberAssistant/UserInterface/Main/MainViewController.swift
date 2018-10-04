@@ -148,7 +148,7 @@ class MainViewController: BaseViewController {
     }
     
     private func configureNewTemplateButton() {        
-        newTemplateButton.setTitle("Create New Template", for: .normal)
+        newTemplateButton.setTitle(NSLocalizedString("create_new_template", comment: ""), for: .normal)
     }
     
     private func configureSubsciptions() {
@@ -156,6 +156,10 @@ class MainViewController: BaseViewController {
             if isPlaying {
                 self?.viewModel.playNextSpeechModel()
             }
+        })
+        
+        circleTimeView?.cantPlayObservable.ca_subscribe(onNext: { [weak self](isPlaying) in
+            self?.viewModel.showHasntTemplatesNotification()
         })
         
         circleTimeView?.timeOverObservable.ca_subscribe(onNext: { [weak self]() in

@@ -55,7 +55,7 @@ class SettingsViewModel {
     
     private func profileSection() -> TableSection {
         var section = TableSection()
-        let logout = SettingCellModelButton(title: "Logout") { [weak self] in
+        let logout = SettingCellModelButton(title: NSLocalizedString("logout", comment: "")) { [weak self] in
             self?.logout()
         }
         section.cellModels = [logout]

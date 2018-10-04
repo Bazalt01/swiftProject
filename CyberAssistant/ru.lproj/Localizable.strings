@@ -1,0 +1,72 @@
+/* 
+  Localizable.strings
+  CyberAssistant
+
+  Created by g.tokmakov on 04/10/2018.
+  Copyright © 2018 g.tokmakov. All rights reserved.
+*/
+
+"random_value_from_to" = "(число)[n] - случайное значение от 0 до n";
+"random_value_from_to_example" = "Билет номер [10].";
+"random_value_from_to_result" = "Билет номер 8.";
+
+"random_value_from_m_to_n" = "(число)[m-n] - случайное значение от m до n";
+"random_value_from_m_to_n_example" = "Билет номер [20-40].";
+"random_value_from_m_to_n_result" = "Билет номер 34.";
+
+"any_value_sequence" = "(Любое тип)[a,b,c,d,...,n] - Выбирает только одно значение из последовательности";
+"any_value_sequence_example" = "Дима есть 10 [яблок,киви,персиков] в минуту.";
+"any_value_sequence_result" = "Дима есть 10 киви в минуту.";
+
+// General
+
+"ok" = "Ок";
+"cancel" = "Отмена";
+
+// Errors
+
+"login_is_too_short" = "Ваш логин слишком короткий";
+"password_is_empty" = "Вы не указали пароль";
+"password_is_too_short" = "Ваш пароль слишком короткий";
+"repeat_password_is_empty" = "Вы не указали пароль повторно";
+"passwords_arent_equal" = "Введенные пароли не совпадают";
+"login_is_existed" = "Пользователь с данным логином уже существует";
+"account_isnt_existed" = "Пользователь с данным логином не существует";
+"did_fail_create_account" = "Что-то пошло не так. Не удалось создать данный аккаунт";
+"database_isnt_existed" = "Что-то пошло не так. Не удалось обновить базу данных";
+"template_is_empty" = "Шаблон не может быть пустым";
+"something_is_wrong" = "Извините, что-то пошло не так";
+
+// Enter View
+
+"login" = "Логин";
+"password" = "Пароль";
+"repeat_password" = "Повторный пароль";
+"enter" = "Ввод";
+"sign_in" = "Вход";
+"sign_up" = "Регистрация";
+"attention" = "Внимание";
+
+// Settings
+
+"settings" = "Настройки";
+"logout" = "Выйти из аккаунта";
+
+// Main View
+
+"create_new_template" = "Создать новый шаблон";
+"do_you_want_create_new_template" = "У вас не ни одного шаблона. Хотите создать шаблон?";
+
+// Templates
+
+"templates" = "Шаблоны";
+"you_need_creating_template" = "Вам надо создать новый шаблон";
+
+// Template Editor
+
+"template_editor" = "Редактор шаблонов";
+"examples" = "Примеры";
+
+// Template share
+
+"template_share" = "Открытые шаблоны";

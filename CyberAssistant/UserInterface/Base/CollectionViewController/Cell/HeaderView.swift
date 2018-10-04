@@ -1,5 +1,5 @@
 //
-//  TemplateShareHeaderView.swift
+//  HeaderView.swift
 //  CyberAssistant
 //
 //  Created by g.tokmakov on 28/09/2018.
@@ -9,10 +9,10 @@
 import UIKit
 import SnapKit
 
-class TemplateShareHeaderView: BaseSupplementaryView {
+class HeaderView: BaseSupplementaryView {
     private let titleLabel = UILabel()
-    private var localViewModel: TemplateShareHeaderViewModel? {
-        return viewModel as? TemplateShareHeaderViewModel
+    private var localViewModel: HeaderViewModel? {
+        return viewModel as? HeaderViewModel
     }
     override var viewModel: ViewModel? {
         didSet {

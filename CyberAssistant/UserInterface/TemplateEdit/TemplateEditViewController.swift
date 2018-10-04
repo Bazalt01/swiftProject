@@ -30,7 +30,7 @@ class TemplateEditViewController: BaseCollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Template editor"
+        title = NSLocalizedString("template_editor", comment: "")
         
         if let cv = collectionView {
             cv.dataSource = viewModel.dataSource

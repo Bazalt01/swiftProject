@@ -28,7 +28,7 @@ class TemplateShareViewController: BaseCollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Template share"
+        title = NSLocalizedString("template_share", comment: "")
         
         if let cv = collectionView {
             cv.dataSource = viewModel.dataSource

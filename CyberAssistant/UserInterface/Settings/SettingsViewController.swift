@@ -30,7 +30,7 @@ class SettingsViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Settings"
+        title = NSLocalizedString("settings", comment: "")
         
         viewModel.configure()
         

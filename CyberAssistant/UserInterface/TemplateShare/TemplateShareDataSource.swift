@@ -22,8 +22,8 @@ class TemplateShareDataSource: BaseCollectionDataSource {
         self.key = title
         self.title = title
         self.cellClasses = [TemplateShareCell.self]
-        self.supplementaryViewClasses = [(classType: TemplateShareHeaderView.self, kind: .header)]
-        self.supplementaryViewHeaderModel = TemplateShareHeaderViewModel(title: title)
+        self.supplementaryViewClasses = [(classType: HeaderView.self, kind: .header)]
+        self.supplementaryViewHeaderModel = HeaderViewModel(title: title)
     }
     
     // MARK: - Public

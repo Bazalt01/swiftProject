@@ -15,6 +15,8 @@ class TemplateEditRulesDataSource: BaseCollectionDataSource {
     override init() {
         super.init()
         self.cellClasses = [TemplateEditRuleCell.self]
+        self.supplementaryViewClasses = [(classType: HeaderView.self, kind: .header)]
+        self.supplementaryViewHeaderModel = HeaderViewModel(title: NSLocalizedString("examples", comment: ""))
     }
     
     // MARK: - Public

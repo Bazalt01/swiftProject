@@ -21,17 +21,17 @@ class TemplateManager: BackgroundWorker {
     private var database: Database?
     var models = [TemplateModel]()
     var sharedModels = [TemplateModel]()
-    let templateRules = [TemplateRule(rule: "(number)[n] - random value from 0 to n",
-                                      example: "There are [10] apples.",
-                                      result: "There are 8 apples."),
+    let templateRules = [TemplateRule(rule: NSLocalizedString("random_value_from_to", comment: ""),
+                                      example: NSLocalizedString("random_value_from_to_example", comment: ""),
+                                      result: NSLocalizedString("random_value_from_to_result", comment: "")),
                          
-                         TemplateRule(rule: "(number)[m-n] - random value from m to n",
-                                      example: "There are [20-40] apples.",
-                                      result: "There are 34 apples."),
+                         TemplateRule(rule: NSLocalizedString("random_value_from_m_to_n", comment: ""),
+                                      example: NSLocalizedString("random_value_from_m_to_n_example", comment: ""),
+                                      result: NSLocalizedString("random_value_from_m_to_n_result", comment: "")),
                          
-                         TemplateRule(rule: "(Any type)[a,b,c,d,...,n] - Will choose just one from sequence",
-                                      example: "Dima can eat 10 [apples,kiwis,peaches] per minite.",
-                                      result: "Dima can eat 10 kiwis per minute.")]
+                         TemplateRule(rule: NSLocalizedString("any_value_sequence", comment: ""),
+                                      example: NSLocalizedString("any_value_sequence_example", comment: ""),
+                                      result: NSLocalizedString("any_value_sequence_result", comment: ""))]
     let templateFetchResult = PublishSubject<FetchResult?>()
     
     // MARK: - Inits

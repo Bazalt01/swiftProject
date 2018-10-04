@@ -1,5 +1,5 @@
 //
-//  TemplateShareHeaderViewModel.swift
+//  HeaderViewModel.swift
 //  CyberAssistant
 //
 //  Created by g.tokmakov on 28/09/2018.
@@ -8,14 +8,14 @@
 
 import UIKit
 
-class TemplateShareHeaderViewModel: BaseSupplementaryViewModel {
+class HeaderViewModel: BaseSupplementaryViewModel {
     var title: String
     
     // MARK: - Inits
 
     init(title: String) {
         self.title = title
-        super.init(viewClass: TemplateShareHeaderView.self)
+        super.init(viewClass: HeaderView.self)
     }
 
     @available(*, unavailable)

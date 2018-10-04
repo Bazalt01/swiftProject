@@ -14,8 +14,8 @@ class TemplateEditRouter: BaseRouter {
     
     func openAlertController(message: String) {
         if let rh = routeHandler {
-            let ac = UIAlertController(title: "Attention", message: message, preferredStyle: .alert)
-            let action = UIAlertAction(title: "Ok", style: .default, handler: nil)
+            let ac = UIAlertController(title: NSLocalizedString("attention", comment: ""), message: message, preferredStyle: .alert)
+            let action = UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .default, handler: nil)
             ac.addAction(action)
             rh.presentViewController?(viewController: ac)
         }
