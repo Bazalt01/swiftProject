@@ -29,8 +29,8 @@
 		EA68CB3E215BBD5900004AAB /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB3D215BBD5900004AAB /* BaseTableViewController.swift */; };
 		EA68CB42215BFABB00004AAB /* SettingCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB41215BFABB00004AAB /* SettingCellModel.swift */; };
 		EA68CB44215BFAC600004AAB /* SettingCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB43215BFAC600004AAB /* SettingCellView.swift */; };
-		EA68CB47215C051400004AAB /* SettingCellModelButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB46215C051400004AAB /* SettingCellModelButton.swift */; };
-		EA68CB49215C099600004AAB /* SettingCellViewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB48215C099600004AAB /* SettingCellViewButton.swift */; };
+		EA68CB47215C051400004AAB /* SettingCellButtonModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB46215C051400004AAB /* SettingCellButtonModel.swift */; };
+		EA68CB49215C099600004AAB /* SettingCellButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB48215C099600004AAB /* SettingCellButton.swift */; };
 		EA68CB4B215CD6D100004AAB /* TemplateShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB4A215CD6D100004AAB /* TemplateShareViewController.swift */; };
 		EA68CB4D215CD6E800004AAB /* TemplateShareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB4C215CD6E800004AAB /* TemplateShareViewModel.swift */; };
 		EA68CB4F215CD70600004AAB /* TemplateShareRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB4E215CD70600004AAB /* TemplateShareRouter.swift */; };
@@ -139,8 +139,8 @@
 		EA68CB3D215BBD5900004AAB /* BaseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewController.swift; sourceTree = "<group>"; };
 		EA68CB41215BFABB00004AAB /* SettingCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCellModel.swift; sourceTree = "<group>"; };
 		EA68CB43215BFAC600004AAB /* SettingCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCellView.swift; sourceTree = "<group>"; };
-		EA68CB46215C051400004AAB /* SettingCellModelButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCellModelButton.swift; sourceTree = "<group>"; };
-		EA68CB48215C099600004AAB /* SettingCellViewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCellViewButton.swift; sourceTree = "<group>"; };
+		EA68CB46215C051400004AAB /* SettingCellButtonModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCellButtonModel.swift; sourceTree = "<group>"; };
+		EA68CB48215C099600004AAB /* SettingCellButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCellButton.swift; sourceTree = "<group>"; };
 		EA68CB4A215CD6D100004AAB /* TemplateShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareViewController.swift; sourceTree = "<group>"; };
 		EA68CB4C215CD6E800004AAB /* TemplateShareViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareViewModel.swift; sourceTree = "<group>"; };
 		EA68CB4E215CD70600004AAB /* TemplateShareRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareRouter.swift; sourceTree = "<group>"; };
@@ -311,9 +311,9 @@
 			isa = PBXGroup;
 			children = (
 				EA68CB43215BFAC600004AAB /* SettingCellView.swift */,
-				EA68CB48215C099600004AAB /* SettingCellViewButton.swift */,
 				EA68CB41215BFABB00004AAB /* SettingCellModel.swift */,
-				EA68CB46215C051400004AAB /* SettingCellModelButton.swift */,
+				EA68CB48215C099600004AAB /* SettingCellButton.swift */,
+				EA68CB46215C051400004AAB /* SettingCellButtonModel.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -782,7 +782,7 @@
 				EAFE00B8213BAB8B00ECF793 /* ViewSizeProcessor.swift in Sources */,
 				EABA347D2121662600B2040B /* BaseCellViewModel.swift in Sources */,
 				EA57F0182123478700309919 /* TemplateCellModel.swift in Sources */,
-				EA68CB47215C051400004AAB /* SettingCellModelButton.swift in Sources */,
+				EA68CB47215C051400004AAB /* SettingCellButtonModel.swift in Sources */,
 				EAFE00B6213B1DE000ECF793 /* CellActionView.swift in Sources */,
 				EA57F01C2123FCBC00309919 /* BaseCollectionViewController.swift in Sources */,
 				EA62B7AA211C3A0F007F5C16 /* MainViewModel.swift in Sources */,
@@ -806,7 +806,7 @@
 				EABA34962121C89000B2040B /* TemplateCollectionDataSource.swift in Sources */,
 				EAFE00B4213B1C6800ECF793 /* Button.swift in Sources */,
 				EA68CB3C215AB1B700004AAB /* SettingsRouter.swift in Sources */,
-				EA68CB49215C099600004AAB /* SettingCellViewButton.swift in Sources */,
+				EA68CB49215C099600004AAB /* SettingCellButton.swift in Sources */,
 				EA68CB66215E1E7F00004AAB /* View.swift in Sources */,
 				EAC780282132C0A0000237D7 /* TemplateEditViewController.swift in Sources */,
 				EAD1A5D6212EBB5E002C4410 /* KeychainManager.swift in Sources */,

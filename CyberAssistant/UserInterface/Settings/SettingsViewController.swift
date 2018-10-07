@@ -48,7 +48,7 @@ class SettingsViewController: BaseViewController {
     
     private func configureTableView() {        
         tableView.dataSource = self
-        tableView.register(SettingCellViewButton.self, forCellReuseIdentifier: SettingCellView.className())
+        tableView.register(SettingCellButton.self, forCellReuseIdentifier: SettingCellView.className())
     }
     
     private func configureAppearance() {

@@ -1,5 +1,5 @@
 //
-//  SettingCellViewButton.swift
+//  SettingCellButton.swift
 //  CyberAssistant
 //
 //  Created by g.tokmakov on 26/09/2018.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SettingCellViewButton: SettingCellView {
+class SettingCellButton: SettingCellView {
     private let titleLabel = UILabel()
     override var viewModel: SettingCellModel? {
         didSet {
@@ -16,13 +16,13 @@ class SettingCellViewButton: SettingCellView {
         }
     }
     
-    private var localViewModel: SettingCellModelButton? {
+    private var localViewModel: SettingCellButtonModel? {
         guard let vm = viewModel else {
             return nil
         }
         
-        assert(vm is SettingCellModelButton)
-        return vm as? SettingCellModelButton
+        assert(vm is SettingCellButtonModel)
+        return vm as? SettingCellButtonModel
     }
     
     // MARK: - Public

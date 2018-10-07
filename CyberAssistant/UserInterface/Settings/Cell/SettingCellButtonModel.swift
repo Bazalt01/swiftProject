@@ -1,5 +1,5 @@
 //
-//  SettingCellModelButton.swift
+//  SettingCellButtonModel.swift
 //  CyberAssistant
 //
 //  Created by g.tokmakov on 26/09/2018.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class SettingCellModelButton: SettingCellModel {
+class SettingCellButtonModel: SettingCellModel {
     let type = TableCellType.button
     private(set) var title: String
     private(set) var action: () -> Void
