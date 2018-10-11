@@ -1,14 +1,14 @@
 //
-//  SettingCellButton.swift
+//  SettingOptionCell.swift
 //  CyberAssistant
 //
-//  Created by g.tokmakov on 26/09/2018.
+//  Created by g.tokmakov on 08/10/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
 //
 
 import UIKit
 
-class SettingCellButton: SettingCellView {
+class SettingOptionCell: SettingCellView {
     private let titleLabel = UILabel()
     override var viewModel: SettingCellModel? {
         didSet {
@@ -20,7 +20,7 @@ class SettingCellButton: SettingCellView {
     
     override func configureViews() {
         super.configureViews()
-        configureTitleLabel()        
+        configureTitleLabel()
         stackView.addArrangedSubview(titleLabel)
     }
     
@@ -28,7 +28,7 @@ class SettingCellButton: SettingCellView {
         super.configureAppearance()
         Appearance.applyFor(tableLabel: titleLabel)
     }
-
+    
     // MARK: - Private
     
     private func applyViewModel(viewModel: SettingCellModel?) {
@@ -36,6 +36,7 @@ class SettingCellButton: SettingCellView {
     }
     
     private func configureTitleLabel() {
-        titleLabel.textAlignment = .center
+        titleLabel.textAlignment = .left
     }
 }
+

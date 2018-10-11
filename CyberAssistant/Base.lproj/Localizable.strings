@@ -50,6 +50,9 @@
 // Settings
 
 "settings" = "Settings";
+"language_title" = "Assistant's language";
+"english_language" = "English";
+"russian_language" = "Русский";
 "logout" = "Logout";
 
 // Main View

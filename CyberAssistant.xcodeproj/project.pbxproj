@@ -29,7 +29,6 @@
 		EA68CB3E215BBD5900004AAB /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB3D215BBD5900004AAB /* BaseTableViewController.swift */; };
 		EA68CB42215BFABB00004AAB /* SettingCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB41215BFABB00004AAB /* SettingCellModel.swift */; };
 		EA68CB44215BFAC600004AAB /* SettingCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB43215BFAC600004AAB /* SettingCellView.swift */; };
-		EA68CB47215C051400004AAB /* SettingCellButtonModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB46215C051400004AAB /* SettingCellButtonModel.swift */; };
 		EA68CB49215C099600004AAB /* SettingCellButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB48215C099600004AAB /* SettingCellButton.swift */; };
 		EA68CB4B215CD6D100004AAB /* TemplateShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB4A215CD6D100004AAB /* TemplateShareViewController.swift */; };
 		EA68CB4D215CD6E800004AAB /* TemplateShareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB4C215CD6E800004AAB /* TemplateShareViewModel.swift */; };
@@ -57,7 +56,15 @@
 		EA82E95F214D94AC002BA8EA /* CellActionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA82E95E214D94AC002BA8EA /* CellActionViewModel.swift */; };
 		EA82E961214E3D96002BA8EA /* CollectionViewCellWithActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA82E960214E3D96002BA8EA /* CollectionViewCellWithActions.swift */; };
 		EA8983E521406BEC00F90A1C /* AttentionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8983E421406BEC00F90A1C /* AttentionView.swift */; };
+		EA9D2CAF216B732100B811CB /* SettingOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D2CAE216B732100B811CB /* SettingOptionCell.swift */; };
+		EA9D2CB1216B78CE00B811CB /* SettingCellButtonModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D2CB0216B78CE00B811CB /* SettingCellButtonModel.swift */; };
 		EAA32EF0211B12450031DA08 /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA32EEF211B12450031DA08 /* SpeechManager.swift */; };
+		EAA46C40216A730C00A7DF17 /* SettingCellWithOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA46C3F216A730C00A7DF17 /* SettingCellWithOption.swift */; };
+		EAA46C42216A744F00A7DF17 /* SettingCellWithOptionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA46C41216A744F00A7DF17 /* SettingCellWithOptionModel.swift */; };
+		EAA46C46216B397700A7DF17 /* SettingsOptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA46C45216B397700A7DF17 /* SettingsOptionViewModel.swift */; };
+		EAA46C48216B398300A7DF17 /* SettingsMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA46C47216B398300A7DF17 /* SettingsMainViewModel.swift */; };
+		EAA46C4C216B3FBC00A7DF17 /* SettingOptionCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA46C4B216B3FBC00A7DF17 /* SettingOptionCellModel.swift */; };
+		EAA46C4E216B498700A7DF17 /* SettingsBaseRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA46C4D216B498700A7DF17 /* SettingsBaseRouter.swift */; };
 		EAB06985211A0BD200EF6913 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB06984211A0BD200EF6913 /* AppDelegate.swift */; };
 		EAB0698A211A0BD200EF6913 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EAB06988211A0BD200EF6913 /* Main.storyboard */; };
 		EAB0698C211A0BD300EF6913 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EAB0698B211A0BD300EF6913 /* Assets.xcassets */; };
@@ -139,7 +146,6 @@
 		EA68CB3D215BBD5900004AAB /* BaseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewController.swift; sourceTree = "<group>"; };
 		EA68CB41215BFABB00004AAB /* SettingCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCellModel.swift; sourceTree = "<group>"; };
 		EA68CB43215BFAC600004AAB /* SettingCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCellView.swift; sourceTree = "<group>"; };
-		EA68CB46215C051400004AAB /* SettingCellButtonModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCellButtonModel.swift; sourceTree = "<group>"; };
 		EA68CB48215C099600004AAB /* SettingCellButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCellButton.swift; sourceTree = "<group>"; };
 		EA68CB4A215CD6D100004AAB /* TemplateShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareViewController.swift; sourceTree = "<group>"; };
 		EA68CB4C215CD6E800004AAB /* TemplateShareViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareViewModel.swift; sourceTree = "<group>"; };
@@ -167,8 +173,16 @@
 		EA82E95E214D94AC002BA8EA /* CellActionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellActionViewModel.swift; sourceTree = "<group>"; };
 		EA82E960214E3D96002BA8EA /* CollectionViewCellWithActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellWithActions.swift; sourceTree = "<group>"; };
 		EA8983E421406BEC00F90A1C /* AttentionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttentionView.swift; sourceTree = "<group>"; };
+		EA9D2CAE216B732100B811CB /* SettingOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingOptionCell.swift; sourceTree = "<group>"; };
+		EA9D2CB0216B78CE00B811CB /* SettingCellButtonModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCellButtonModel.swift; sourceTree = "<group>"; };
 		EAA32EE4211B08090031DA08 /* CyberAssistant-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CyberAssistant-Bridging-Header.h"; sourceTree = "<group>"; };
 		EAA32EEF211B12450031DA08 /* SpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
+		EAA46C3F216A730C00A7DF17 /* SettingCellWithOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCellWithOption.swift; sourceTree = "<group>"; };
+		EAA46C41216A744F00A7DF17 /* SettingCellWithOptionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCellWithOptionModel.swift; sourceTree = "<group>"; };
+		EAA46C45216B397700A7DF17 /* SettingsOptionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsOptionViewModel.swift; sourceTree = "<group>"; };
+		EAA46C47216B398300A7DF17 /* SettingsMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMainViewModel.swift; sourceTree = "<group>"; };
+		EAA46C4B216B3FBC00A7DF17 /* SettingOptionCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingOptionCellModel.swift; sourceTree = "<group>"; };
+		EAA46C4D216B498700A7DF17 /* SettingsBaseRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsBaseRouter.swift; sourceTree = "<group>"; };
 		EAB06981211A0BD200EF6913 /* CyberAssistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CyberAssistant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAB06984211A0BD200EF6913 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EAB06989211A0BD200EF6913 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -281,7 +295,10 @@
 			children = (
 				EA68CB36215AB19400004AAB /* SettingsViewController.swift */,
 				EA68CB39215AB1AE00004AAB /* SettingsViewModel.swift */,
+				EAA46C47216B398300A7DF17 /* SettingsMainViewModel.swift */,
+				EAA46C45216B397700A7DF17 /* SettingsOptionViewModel.swift */,
 				EA68CB45215BFACB00004AAB /* Cell */,
+				EAA46C4D216B498700A7DF17 /* SettingsBaseRouter.swift */,
 				EA68CB3B215AB1B700004AAB /* SettingsRouter.swift */,
 			);
 			path = Settings;
@@ -313,7 +330,11 @@
 				EA68CB43215BFAC600004AAB /* SettingCellView.swift */,
 				EA68CB41215BFABB00004AAB /* SettingCellModel.swift */,
 				EA68CB48215C099600004AAB /* SettingCellButton.swift */,
-				EA68CB46215C051400004AAB /* SettingCellButtonModel.swift */,
+				EA9D2CB0216B78CE00B811CB /* SettingCellButtonModel.swift */,
+				EAA46C3F216A730C00A7DF17 /* SettingCellWithOption.swift */,
+				EAA46C41216A744F00A7DF17 /* SettingCellWithOptionModel.swift */,
+				EA9D2CAE216B732100B811CB /* SettingOptionCell.swift */,
+				EAA46C4B216B3FBC00A7DF17 /* SettingOptionCellModel.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -725,6 +746,7 @@
 				EAC7803A2132DB67000237D7 /* TemplateEditRuleCell.swift in Sources */,
 				EAA32EF0211B12450031DA08 /* SpeechManager.swift in Sources */,
 				EA471C982125997700452B5C /* RealmDatabase.swift in Sources */,
+				EAA46C4C216B3FBC00A7DF17 /* SettingOptionCellModel.swift in Sources */,
 				EAC780382132DB24000237D7 /* TemplateEditCellModel.swift in Sources */,
 				EAE9EE2E212803D4000A2220 /* EnterView.swift in Sources */,
 				EAC7801E21319C71000237D7 /* RouteHandler.swift in Sources */,
@@ -747,6 +769,7 @@
 				EA57F02A212422FD00309919 /* TemplateCollectionDelegate.swift in Sources */,
 				EAC7801C21313DEF000237D7 /* RealmModel.swift in Sources */,
 				EA69D5C22157E26600F29DDD /* EmptyView.swift in Sources */,
+				EAA46C4E216B498700A7DF17 /* SettingsBaseRouter.swift in Sources */,
 				EA68CB68215E31DE00004AAB /* UIView+Utils.swift in Sources */,
 				EAC780362132DB1C000237D7 /* TemplateEditCell.swift in Sources */,
 				EABA346C212066CB00B2040B /* TemplateCell.swift in Sources */,
@@ -766,8 +789,10 @@
 				EA6C9EAF21457E1B00CCC2F3 /* CircleTimeView.swift in Sources */,
 				EA17CF97212DCC44002757E5 /* DatabaseManager.swift in Sources */,
 				EAB0699C211A9F0B00EF6913 /* MainViewController.swift in Sources */,
+				EAA46C42216A744F00A7DF17 /* SettingCellWithOptionModel.swift in Sources */,
 				EAC780332132D381000237D7 /* TemplateEditCollectionDelegate.swift in Sources */,
 				EA68CB37215AB19400004AAB /* SettingsViewController.swift in Sources */,
+				EA9D2CB1216B78CE00B811CB /* SettingCellButtonModel.swift in Sources */,
 				EAFE00B0213ABC5B00ECF793 /* CompositeDataSource.swift in Sources */,
 				EABA346E2120679C00B2040B /* BaseCollectionDataSource.swift in Sources */,
 				EAD1A5E0212EED6C002C4410 /* TemplateModel.swift in Sources */,
@@ -782,12 +807,13 @@
 				EAFE00B8213BAB8B00ECF793 /* ViewSizeProcessor.swift in Sources */,
 				EABA347D2121662600B2040B /* BaseCellViewModel.swift in Sources */,
 				EA57F0182123478700309919 /* TemplateCellModel.swift in Sources */,
-				EA68CB47215C051400004AAB /* SettingCellButtonModel.swift in Sources */,
+				EAA46C40216A730C00A7DF17 /* SettingCellWithOption.swift in Sources */,
 				EAFE00B6213B1DE000ECF793 /* CellActionView.swift in Sources */,
 				EA57F01C2123FCBC00309919 /* BaseCollectionViewController.swift in Sources */,
 				EA62B7AA211C3A0F007F5C16 /* MainViewModel.swift in Sources */,
 				EAFE00B2213ADF0A00ECF793 /* TemplateEditRulesDataSource.swift in Sources */,
 				EABA34752120881900B2040B /* LayoutManager.swift in Sources */,
+				EA9D2CAF216B732100B811CB /* SettingOptionCell.swift in Sources */,
 				EAC7802C2132C0AF000237D7 /* TemplateEditRouter.swift in Sources */,
 				EAC780242131E5A6000237D7 /* ErrorManager.swift in Sources */,
 				EA68CB44215BFAC600004AAB /* SettingCellView.swift in Sources */,
@@ -800,9 +826,11 @@
 				EA1288102134659200F2533E /* TemplateFormatter.swift in Sources */,
 				EA68CB61215E163D00004AAB /* BaseSupplementaryView.swift in Sources */,
 				EAE9EE2C2127ED2A000A2220 /* WelcomeViewModel.swift in Sources */,
+				EAA46C46216B397700A7DF17 /* SettingsOptionViewModel.swift in Sources */,
 				EABA3461211F144C00B2040B /* BaseSpeechManager.swift in Sources */,
 				EABA34722120811000B2040B /* LayoutModel.swift in Sources */,
 				EA471C962125889D00452B5C /* Configuration.swift in Sources */,
+				EAA46C48216B398300A7DF17 /* SettingsMainViewModel.swift in Sources */,
 				EABA34962121C89000B2040B /* TemplateCollectionDataSource.swift in Sources */,
 				EAFE00B4213B1C6800ECF793 /* Button.swift in Sources */,
 				EA68CB3C215AB1B700004AAB /* SettingsRouter.swift in Sources */,

@@ -9,10 +9,6 @@
 import UIKit
 import SnapKit
 
-enum TableCellType {
-    case button
-}
-
 class SettingCellView: UITableViewCell {
     var stackView = UIStackView()
     var viewModel: SettingCellModel?
@@ -43,14 +39,25 @@ class SettingCellView: UITableViewCell {
         
         contentView.layoutMargins = UIEdgeInsets(ca_edge: LayoutConstants.spacing)
         selectionStyle = .none
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
+        contentView.addGestureRecognizer(tap)
+        
         configureAppearance()
     }
     
     func configureAppearance() {
         contentView.backgroundColor = AppearanceColor.tableCellBackground
+        backgroundColor = AppearanceColor.tableCellBackground
     }
 
     // MARK: - Private
+    
+    @objc private func handleTap(sender: UITapGestureRecognizer) {
+        if let vm = viewModel {
+            vm.selectAction()
+        }
+    }
     
     private func configureStackView() {
         stackView.axis = .vertical

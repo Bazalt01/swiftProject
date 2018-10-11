@@ -8,7 +8,7 @@
 
 import Foundation
 
-class SettingsRouter: BaseRouter {
+class SettingsRouter: SettingsBaseRouter {
     
     // MARK: - Public
     
@@ -20,9 +20,10 @@ class SettingsRouter: BaseRouter {
         }
     }
     
-    func popViewController() {
+    func openOptionListViewController(options: [TableOption], selectOption: @escaping (_ option: TableOption) -> Void) {
         if let rh = routeHandler {
-            rh.popViewController?()
+            let vc = Assembly.shared.configuredSettingsViewController(options: options, selectOption: selectOption)
+            rh.pushToViewController?(viewController: vc)
         }
-    }
+    }        
 }

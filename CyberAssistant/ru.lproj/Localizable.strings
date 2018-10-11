@@ -50,6 +50,9 @@
 // Settings
 
 "settings" = "Настройки";
+"language_title" = "Язык ассистента";
+"english_language" = "English";
+"russian_language" = "Русский";
 "logout" = "Выйти из аккаунта";
 
 // Main View

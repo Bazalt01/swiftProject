@@ -9,18 +9,29 @@
 import Foundation
 
 class Assembly {
+    var speechManager: SpeechManager
+    let authManager = AuthManager()
+
     static let shared: Assembly = {
         return Assembly()
     }()
 
-    let authManager = AuthManager()
+    init() {
+        var language = Language.russian
+        let savedLanguage = UserDefaults.standard.string(forKey: UserDefaultsKeys.languageKey)
+        if savedLanguage != nil {
+            language = Language(rawValue: savedLanguage!)!
+        }
+        let conf = SpeechConfigurator(language: language)
+        self.speechManager = BaseSpeechManager()
+        self.speechManager.configurator = conf
+    }
+    
     
     func configuredMainViewController() -> MainViewController {
-        let conf = SpeechConfigurator(language: .Russian)
-        let sm = BaseSpeechManager(configurator: conf)
         let tm = TemplateManager(authManager: authManager)
         let router = MainRouter()
-        let vm = MainViewModel(speechManager: sm, templateManager: tm, router: router)
+        let vm = MainViewModel(speechManager: speechManager, templateManager: tm, router: router)
         let vc = MainViewController(viewModel: vm)
         router.routeHandler = vc
         return vc
@@ -56,7 +67,16 @@ class Assembly {
     
     func configuredSettingsViewController() -> SettingsViewController {
         let router = SettingsRouter()
-        let vm = SettingsViewModel(authManager: authManager, router: router)
+        let vm = SettingsMainViewModel(authManager: authManager, speechManager: speechManager, router: router)
+        let vc = SettingsViewController(viewModel: vm)
+        router.routeHandler = vc
+        return vc
+    }
+    
+    func configuredSettingsViewController(options: [TableOption],
+                                          selectOption: @escaping (_ option: TableOption) -> Void) -> SettingsViewController {
+        let router = SettingsBaseRouter()
+        let vm = SettingsOptionViewModel(options: options, selectOption: selectOption, router: router)
         let vc = SettingsViewController(viewModel: vm)
         router.routeHandler = vc
         return vc

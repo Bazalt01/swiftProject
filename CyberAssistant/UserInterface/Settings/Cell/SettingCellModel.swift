@@ -8,7 +8,13 @@
 
 import Foundation
 
-protocol SettingCellModel {
-    var type: TableCellType { get }
-    var title: String { get }
+class SettingCellModel {
+    var title: String
+    var selectAction: () -> Void
+    var cellClass = SettingCellView.self
+    
+    init(title: String, selectAction: @escaping () -> Void) {
+        self.title = title
+        self.selectAction = selectAction
+    }
 }

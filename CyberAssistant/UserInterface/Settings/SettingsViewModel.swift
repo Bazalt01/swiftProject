@@ -7,28 +7,29 @@
 //
 
 import Foundation
+import RxSwift
 
 struct TableSection {
     var title: String?
     var cellModels: [SettingCellModel] = []
 }
 
+struct TableOption {
+    var value: String
+    var key: String
+    var selected: Bool
+}
+
 class SettingsViewModel {
-    private var authManager: AuthManager
-    private var router: SettingsRouter
-    private var sections: [TableSection] = []
+    var sections: [TableSection] = []
+    let didReloadData = PublishSubject<Void>()
+    var title = ""
     
-    // MARK: - Inits
-    
-    init(authManager: AuthManager, router: SettingsRouter) {
-        self.authManager = authManager
-        self.router = router
-    }
+    // MARK: - Inits        
     
     // MARK: - Public
     
     func configure() {
-        fillSections()
     }
     
     func numberOfSections() -> Int {
@@ -45,26 +46,5 @@ class SettingsViewModel {
     
     func cellModelAtIndexPath(indexPath: IndexPath) -> SettingCellModel {
         return sections[indexPath.section].cellModels[indexPath.item]
-    }
-    
-    // MARK: - Private
-    
-    private func fillSections() {
-        sections.append(profileSection())
-    }
-    
-    private func profileSection() -> TableSection {
-        var section = TableSection()
-        let logout = SettingCellButtonModel(title: NSLocalizedString("logout", comment: "")) { [weak self] in
-            self?.logout()
-        }
-        section.cellModels = [logout]
-        return section
-    }
-    
-    private func logout() {
-        authManager.logout()
-        router.openWelcomeViewController()
-        router.popViewController()
-    }
+    }        
 }

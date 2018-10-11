@@ -9,7 +9,8 @@
 import Foundation
 
 public enum Language: String {
-    case Russian = "ru-RU"
+    case russian = "ru-RU"
+    case english = "en-US"
 }
 
 class SpeechConfigurator {
@@ -25,10 +26,9 @@ protocol SpeechManagerDelegate {
 }
 
 protocol SpeechManager {
-    var configurator: SpeechConfigurator { get }
+    var configurator: SpeechConfigurator? { get set }
     var delegate: SpeechManagerDelegate? { get set }
-    
-    init(configurator: SpeechConfigurator)
+    var currentLanguage: Language? { get }                
     
     func syntesize(text: String)
 }

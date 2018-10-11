@@ -8,6 +8,7 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
 class SettingsViewController: BaseViewController {
     let viewModel: SettingsViewModel
@@ -30,7 +31,7 @@ class SettingsViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = NSLocalizedString("settings", comment: "")
+        title = viewModel.title
         
         viewModel.configure()
         
@@ -38,6 +39,9 @@ class SettingsViewController: BaseViewController {
         view.addSubview(tableView)
         tableView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
+        }
+        viewModel.didReloadData.ca_subscribe { [weak self] in
+            self?.tableView.reloadData()
         }
         
         configureAppearance()
@@ -48,7 +52,9 @@ class SettingsViewController: BaseViewController {
     
     private func configureTableView() {        
         tableView.dataSource = self
-        tableView.register(SettingCellButton.self, forCellReuseIdentifier: SettingCellView.className())
+        tableView.register(SettingCellButton.self, forCellReuseIdentifier: SettingCellButton.className())
+        tableView.register(SettingCellWithOption.self, forCellReuseIdentifier: SettingCellWithOption.className())
+        tableView.register(SettingOptionCell.self, forCellReuseIdentifier: SettingOptionCell.className())
     }
     
     private func configureAppearance() {
@@ -59,9 +65,14 @@ class SettingsViewController: BaseViewController {
 
 extension SettingsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SettingCellView.className(), for: indexPath) as! SettingCellView
-        cell.viewModel = viewModel.cellModelAtIndexPath(indexPath: indexPath)
+        let model = viewModel.cellModelAtIndexPath(indexPath: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: model.cellClass.className(), for: indexPath) as! SettingCellView
+        cell.viewModel = model
         return cell
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return viewModel.numberOfSections()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -74,6 +85,10 @@ extension SettingsViewController: RouterHandler {
         if let nc = navigationController {
             nc.present(viewController, animated: true, completion: nil)            
         }
+    }
+    
+    func pushToViewController(viewController: UIViewController) {
+        navigationController!.pushViewController(viewController, animated: true)
     }
     
     func popViewController() {

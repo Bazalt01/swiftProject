@@ -9,10 +9,10 @@
 import Foundation
 import AVFoundation
 
-class BaseSpeechManager : NSObject, SpeechManager, AVSpeechSynthesizerDelegate {
+class BaseSpeechManager : NSObject, SpeechManager, AVSpeechSynthesizerDelegate {    
     fileprivate var syntesizer = AVSpeechSynthesizer()
     
-    var configurator: SpeechConfigurator
+    var configurator: SpeechConfigurator?
     private var _delegate: SpeechManagerDelegate?
     var delegate: SpeechManagerDelegate? {
         get {
@@ -24,16 +24,23 @@ class BaseSpeechManager : NSObject, SpeechManager, AVSpeechSynthesizerDelegate {
         }
     }
     
+    var currentLanguage: Language? {
+        return configurator?.language
+    }
+    
     // MARK: - Inits
     
-    required init(configurator: SpeechConfigurator) {
-        self.configurator = configurator
+    override init() {
+        super.init()
     }
     
     // MARK: - Public
     
     func syntesize(text: String) {
-        let language = configurator.language.rawValue
+        guard let conf = configurator else {
+            return
+        }
+        let language = conf.language.rawValue
         let utterance = configuredUtterance(text: text, language: language)
         syntesizer.delegate = self
         syntesizer.speak(utterance)
