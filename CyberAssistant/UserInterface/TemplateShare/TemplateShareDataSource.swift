@@ -36,7 +36,7 @@ class TemplateShareDataSource: BaseCollectionDataSource {
         let cellViewModel = TemplateShareCellModel(template: template, didSave: observable)
         cellViewModels.insert(cellViewModel, at: index)
         if needNotify {
-            notifyUpdate(batchUpdates: nil, completion: nil)
+            notify(batchUpdates: nil, completion: nil)
         }
     }
     

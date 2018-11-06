@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 enum SupplementaryViewKind: String {
     case header = "UICollectionElementKindSectionHeader"
@@ -29,26 +30,23 @@ typealias SupplementaryViewClassWithKind = (classType: BaseSupplementaryView.Typ
 class BaseCollectionDataSource: NSObject {
     var key: String?
     var title: String?
-    var cellClasses = [BaseCollectionViewCell.Type]() {
+    var cellClasses: [BaseCollectionViewCell.Type] = [] {
         didSet {
-            if let cv = collectionView {
-                register(cellClasses: cellClasses, collectionView: cv)
-            }
+            guard let cv = collectionView else { return }
+            register(cellClasses: cellClasses, collectionView: cv)
         }
     }
-    var supplementaryViewClasses = [SupplementaryViewClassWithKind]() {
+    var supplementaryViewClasses: [SupplementaryViewClassWithKind] = [] {
         didSet {
-            if let cv = collectionView {
-                register(supplementaryViewClasses: supplementaryViewClasses, collectionView: cv)
-            }
+            guard let cv = collectionView else { return }
+            register(supplementaryViewClasses: supplementaryViewClasses, collectionView: cv)
         }
     }
     weak var collectionView: UICollectionView? {
         didSet {
-            if let cv = collectionView {
-                register(cellClasses: cellClasses, collectionView: cv)
-                register(supplementaryViewClasses: supplementaryViewClasses, collectionView: cv)
-            }
+            guard let cv = collectionView else { return }
+            register(cellClasses: cellClasses, collectionView: cv)
+            register(supplementaryViewClasses: supplementaryViewClasses, collectionView: cv)
         }
     }
     
@@ -61,11 +59,7 @@ class BaseCollectionDataSource: NSObject {
     }
     
     func index(forItem item: ViewModel) -> IndexPath? {
-        guard let index = cellViewModels.firstIndex(where: { (viewModel) -> Bool in
-            item.isEqual(viewModel: viewModel)
-        }) else {
-            return nil
-        }
+        guard let index = cellViewModels.firstIndex(where: { item.isEqual(viewModel: $0) }) else { return nil }
         return IndexPath(item: index, section: 0)
     }
     
@@ -98,36 +92,29 @@ class BaseCollectionDataSource: NSObject {
         return kind == .header ? supplementaryViewHeaderModel : supplementaryViewFooterModel
     }
     
-    func notifyUpdate(batchUpdates: [BatchUpdate]?, completion: (() -> Void)?) {
-        guard let cv = collectionView else {
-            return
+    func notify(batchUpdates: [BatchUpdate]?, completion: (() -> Void)?) {
+        guard let cv = collectionView,
+              let batchUpdates = batchUpdates else {
+                notifyUpdate()
+                return
         }
-        
-        if batchUpdates == nil {
-            notifyUpdate()
-        }
-        else {
-            cv.performBatchUpdates({
-                self.performBatchUpdates(collectionView: cv, batchUpdates: batchUpdates!)
-            }) { (finish) in
-                if let compl = completion {
-                    compl()
-                }
-            }
+        cv.performBatchUpdates({
+            self.performBatchUpdates(collectionView: cv, batchUpdates: batchUpdates)
+        }) { _ in
+            completion?()
         }
     }
     
     // MARK: - Private
     
-    private func notifyUpdate() {
-        if let cv = collectionView {
-            cv.reloadData()
-        }
+    func notifyUpdate() {
+        guard let cv = collectionView else { return }
+        cv.reloadData()
     }
     
     
     private func performBatchUpdates(collectionView: UICollectionView, batchUpdates: [BatchUpdate]) {
-        let sortedBatchUpdates = sortedBatchUpdateByOption(batchUpdates: batchUpdates)
+        let sortedBatchUpdates = batchUpdates.sorted { $0.option.rawValue < $1.option.rawValue }
         collectionView.performBatchUpdates({
             for batch in sortedBatchUpdates {
                 switch batch.option {
@@ -145,12 +132,6 @@ class BaseCollectionDataSource: NSObject {
             }
         }, completion: nil)
     }
-    
-    private func sortedBatchUpdateByOption(batchUpdates: [BatchUpdate]) -> [BatchUpdate] {
-        return batchUpdates.sorted(by: { (batchUpdate1, batchUpdate2) -> Bool in
-            return batchUpdate1.option.rawValue < batchUpdate2.option.rawValue
-        })
-    }
 }
 
 extension BaseCollectionDataSource: UICollectionViewDataSource {
@@ -163,9 +144,7 @@ extension BaseCollectionDataSource: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cellViewModel = model(atIndexPath: indexPath) else {
-            return UICollectionViewCell()
-        }
+        guard let cellViewModel = model(atIndexPath: indexPath) else { return UICollectionViewCell() }
         let reuseIdentifier = cellViewModel.viewClass.ca_reuseIdentifier()
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! BaseCollectionViewCell
         cell.viewModel = cellViewModel
@@ -173,9 +152,7 @@ extension BaseCollectionDataSource: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let viewModel = supplementaryModel(atSection: indexPath.section, kind: SupplementaryViewKind(rawValue: kind)!) else {
-            return UICollectionReusableView()
-        }
+        guard let viewModel = supplementaryModel(atSection: indexPath.section, kind: SupplementaryViewKind(rawValue: kind)!) else { return UICollectionReusableView() }
         let reuseIdentifier = viewModel.viewClass.ca_reuseIdentifier()
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseIdentifier, for: indexPath) as! BaseSupplementaryView
         view.viewModel = viewModel

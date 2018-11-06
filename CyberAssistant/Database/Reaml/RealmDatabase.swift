@@ -24,27 +24,32 @@ enum ExecuteOption {
 }
 
 class RealmDatabase {
-    var realm: Realm?
-    var user: SyncUser?
-    let baseClasses = [RealmAccount.self, RealmTemplate.self]
-    var subscribedObjects = [NotificationToken : Results<Object>]()
+    private var realm: Realm?
+    private var user: SyncUser?
+    private let baseClasses = [RealmAccount.self, RealmTemplate.self]
+    private var subscribedObjects: [NotificationToken : Results<Object>] = [:]
+    private let bag = DisposeBag()
     
     // MARK: - Public
-    
-    func currentUser(success:@escaping (SyncUser) -> Void, failure:@escaping (Error) -> Void) {
-        guard let currentUser = SyncUser.current else {
-            let creds = SyncCredentials.nickname(RealmConfiguration.AdminNickname, isAdmin: true)
-            SyncUser.logIn(with: creds, server: RealmConfiguration.AUTH_URL, onCompletion: { (user, err) in
-                if let error = err {
-                    failure(error)
-                }
-                else if let currentUser = user {
-                    success(currentUser)
-                }
-            })
-            return
+    func currentUser() -> Observable<SyncUser> {
+        return Observable<SyncUser>.create { (observer) -> Disposable in
+            guard let currentUser = SyncUser.current else {
+                let creds = SyncCredentials.nickname(RealmConfiguration.AdminNickname, isAdmin: true)
+                SyncUser.logIn(with: creds, server: RealmConfiguration.AUTH_URL, onCompletion: { (user, err) in
+                    if let error = err {
+                        observer.onError(error)
+                    }
+                    guard let currentUser = user else {
+                        observer.onError(ErrorCode.enternal)
+                        return
+                    }
+                    observer.onNext(currentUser)
+                })
+                return Disposables.create()
+            }
+            observer.onNext(currentUser)
+            return Disposables.create()
         }
-        success(currentUser)
     }
     
     // MARK: - Private
@@ -56,7 +61,7 @@ class RealmDatabase {
     }
     
     fileprivate func processChanges(update: RealmObserveUpdate, objects: Results<Object>, queue: DispatchQueue) -> FetchResult {
-        var changes = [FetchResultChanges]()
+        var changes: [FetchResultChanges] = []
         fillFetchResultChangess(changes: &changes, option: .delete, indexs: update.deletions)
         fillFetchResultChangess(changes: &changes, option: .insert, indexs: update.insertions)
         fillFetchResultChangess(changes: &changes, option: .update, indexs: update.modifications)
@@ -65,42 +70,32 @@ class RealmDatabase {
     }
     
     fileprivate func processInitial(objects: Results<Object>, queue: DispatchQueue) -> FetchResult {
-        var changes = [FetchResultChanges]()
-        let indexs = objects.enumerated().map { (offset, element) -> Int in
-            return offset
-        }
+        var changes: [FetchResultChanges] = []
+        let indexs = objects.enumerated().map { $0.offset }
         fillFetchResultChangess(changes: &changes, option: .insert, indexs: indexs)
         let models = transferedObjects(objects: objects, queue: queue)
         return FetchResult(models: models, changes: changes)
     }
     
     fileprivate func fillFetchResultChangess(changes: inout [FetchResultChanges], option: BatchOption, indexs: [Int]) {
-        if indexs.count > 0 {
-            let result = FetchResultChanges(option: option, indexes: indexs)
-            changes.append(result)
-        }
+        guard indexs.count > 0 else { return }
+        let result = FetchResultChanges(option: option, indexes: indexs)
+        changes.append(result)
     }
     
     fileprivate func transferedObjects(objects: Results<Object>, queue: DispatchQueue) -> [BaseModel] {
-        var result = [RealmModel]()
-        var objectRefs = [ThreadSafeReference<Object>]()
+        var result: [RealmModel] = []
+        var objectRefs: [ThreadSafeReference<Object>] = []
         for object in objects {
             objectRefs.append(ThreadSafeReference(to: object))
         }
         
         queue.sync { [weak self] in
-            guard let sself = self else {
-                return
-            }
-            guard let user = sself.user else {
-                return
-            }
-            let realm = sself.configureRealm(user: user)
+            guard let `self` = self, let user = self.user else { return }
+            let realm = self.configureRealm(user: user)
             
             for objectRef in objectRefs {
-                guard let object = realm.resolve(objectRef) else {
-                    return
-                }
+                guard let object = realm.resolve(objectRef) else { return }
                 result.append(object as! RealmModel)
             }
         }
@@ -108,78 +103,50 @@ class RealmDatabase {
     }
     
     fileprivate func converResultToArray(objects: Results<Object>) -> [BaseModel] {
-        var result = Array<RealmModel>()
+        var result: [RealmModel] = []
         for object in objects {
             result.append(object as! RealmModel)
         }
         return result
     }
     
-    fileprivate func execute(option: ExecuteOption, model: BaseModel?, processing: ((_ error: Error?) -> Void)?) {
-        guard let rm = realm else {
-            if let block = processing {
-                block(ErrorManager.error(code: .enternal))
-            }
-            return
-        }
-        
-        try! rm.write {
-            switch option {
-            case .insert:
-                if let object = model {
-                    rm.add(object as! Object)
-                }
-                break
-            case .delete:
-                if let object = model {
-                    rm.delete(object as! Object)
-                }
-                break
-            case .update:
-                break
-            }
-            if let block = processing {
-                block(nil)
-            }
-        }
+    fileprivate func sortDescriptors(sortModels: [SortModel]) -> [SortDescriptor] {
+        return sortModels.map { return SortDescriptor(keyPath: $0.key, ascending: $0.ascending) }
     }
 }
 
 extension RealmDatabase: Database {
-    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes: [SortModel]?, fetchResult: PublishSubject<FetchResult?>, responseQueue: DispatchQueue) {
-        guard let rm = realm else {
-            return
-        }
+    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes: [SortModel]?, fetchResult: PublishSubject<FetchResult>, responseQueue: DispatchQueue) {
+        guard let rm = realm else { return }
         
         var objects = rm.objects(objectType as! Object.Type)
-        if let predic = predicate {
-            objects = objects.filter(predic)
+        if let predicate = predicate {
+            objects = objects.filter(predicate)
         }
         
-        if let sortMs = sortModes {
-            for sortModel in sortMs {
-                objects = objects.sorted(byKeyPath: sortModel.key, ascending: sortModel.ascending)
-            }
+        if let sortModes = sortModes {
+            objects = objects.sorted(by: sortDescriptors(sortModels: sortModes))
         }
         
-        let token = objects.observe { [weak self](changes: RealmCollectionChange) in
+        let token = objects.observe { [weak self] changes in
+            guard let `self` = self else { return }
             switch changes {
             case .initial(let initialObjects):
-                let result = self?.processInitial(objects: initialObjects, queue: responseQueue)
+                let result = self.processInitial(objects: initialObjects, queue: responseQueue)
                 responseQueue.async {
                     fetchResult.onNext(result)
                 }
                 break
             case .update(let changedObjects, let deletions, let insertions, let modifications):
                 let update = RealmObserveUpdate(deletions: deletions, insertions: insertions, modifications: modifications)
-                let result = self?.processChanges(update: update, objects: changedObjects, queue: responseQueue)
+                let result = self.processChanges(update: update, objects: changedObjects, queue: responseQueue)
                 responseQueue.async {
                     fetchResult.onNext(result)
                 }
                 break
             case .error( _):
                 responseQueue.async {
-                    fetchResult.onNext(nil)
+                    fetchResult.onError(ErrorCode.enternal)
                 }
                 break
             }
@@ -187,51 +154,84 @@ extension RealmDatabase: Database {
         subscribedObjects[token] = objects
     }
     
-    func object(objectType: BaseModel.Type, predicate: NSPredicate?, fetchResult: PublishSubject<FetchResult?>, responseQueue: DispatchQueue) {
+    func object(objectType: BaseModel.Type, predicate: NSPredicate?, fetchResult: PublishSubject<FetchResult>, responseQueue: DispatchQueue) {
         objects(objectType: objectType, predicate: predicate, sortModes: nil, fetchResult: fetchResult, responseQueue: responseQueue)
     }
     
-    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes:[SortModel]?) -> [BaseModel] {
-        guard let rm = realm else {
-            return []
-        }
-        
-        var objects = rm.objects(objectType as! Object.Type)
-        if let predic = predicate {
-            objects = objects.filter(predic)
-        }
-        
-        if let sortMs = sortModes {
-            for sortModel in sortMs {
-                objects = objects.sorted(byKeyPath: sortModel.key, ascending: sortModel.ascending)
+    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes:[SortModel]?) -> Observable<[BaseModel]> {
+        return Observable<[BaseModel]>.create({ [weak self] (observer) -> Disposable in
+            guard let `self` = self, let rm = self.realm else {
+                observer.onNext([])
+                return Disposables.create()
             }
-        }
-        
-        return converResultToArray(objects: objects)
+            
+            var objects = rm.objects(objectType as! Object.Type)
+            if let predicate = predicate {
+                objects = objects.filter(predicate)
+            }
+            
+            if let sortModes = sortModes {
+                objects = objects.sorted(by: self.sortDescriptors(sortModels: sortModes))
+            }
+            observer.onNext(self.converResultToArray(objects: objects))
+            observer.onCompleted()
+            return Disposables.create()
+        })
     }
     
-    func object(objectType: BaseModel.Type, predicate: NSPredicate?) -> BaseModel? {
-        return objects(objectType: objectType, predicate: predicate, sortModes: nil).first
+    func object(objectType: BaseModel.Type, predicate: NSPredicate?) -> Observable<BaseModel?> {
+        return objects(objectType: objectType, predicate: predicate, sortModes: nil).map { $0.first }
     }
     
     func configure() {
-        currentUser(success: { [weak self](user) in
-            self?.user = user
-            self?.realm = self?.configureRealm(user: user)
-        }) { (error) in
-            print(error.localizedDescription)
-        }
+        currentUser()
+            .subscribe(onNext: { [weak self] user in
+            guard let `self` = self else { return }
+            self.user = user
+            self.realm = self.configureRealm(user: user)
+            }, onError: { print($0.localizedDescription) }, onCompleted: nil, onDisposed: nil)
+            .disposed(by: bag)
     }
     
-    func insert(model: BaseModel, processing: ((_ error: Error?) -> Void)?) {
-        execute(option: .insert, model: model, processing: processing)
+    func processing(operations: [(ExecuteOption, BaseModel?)]) -> Observable<Void> {
+        return Observable<Void>.create({ [unowned self] observer in
+            guard let rm = self.realm else {
+                observer.onError(ErrorCode.enternal)
+                return Disposables.create()
+            }
+            
+            try! rm.write {
+                operations.forEach { (option, model) in
+                    switch option {
+                    case .insert:
+                        if let object = model {
+                            rm.add(object as! Object)
+                        }
+                        break
+                    case .delete:
+                        if let object = model {
+                            rm.delete(object as! Object)
+                        }
+                        break
+                    case .update:
+                        break
+                    }
+                }
+                observer.onCompleted()
+            }
+            return Disposables.create()
+        })
     }
     
-    func update(processing: ((_ error: Error?) -> Void)?) {
-        execute(option: .update, model: nil, processing: processing)
+    func insert(model: BaseModel) -> Observable<Void> {
+        return processing(operations: [(.insert, model)])
     }
     
-    func delete(model: BaseModel, processing: ((_ error: Error?) -> Void)?) {
-        execute(option: .delete, model: model, processing: processing)
+    func update() -> Observable<Void> {
+        return processing(operations: [(.update, nil)])
+    }
+    
+    func delete(model: BaseModel) -> Observable<Void> {
+        return processing(operations: [(.delete, model)])
     }
 }

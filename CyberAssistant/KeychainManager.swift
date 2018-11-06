@@ -9,10 +9,14 @@
 import Foundation
 
 class KeychainManager {
-    class func saveAuthResult(result: AuthResult) {
-        let password = result.password.data(using: String.Encoding.utf8)!
+    class func save(account: AccountModel) {
+        save(authResult: AuthResult(login: account.login, password: account.password))
+    }
+    
+    class func save(authResult: AuthResult) {
+        let password = authResult.password.data(using: String.Encoding.utf8)!
         let query: [String : Any] = [kSecClass as String : kSecClassInternetPassword,
-                     kSecAttrAccount as String : result.login,
+                     kSecAttrAccount as String : authResult.login,
                      kSecAttrServer as String : KeyChain.server,
                      kSecValueData as String : password]
         SecItemAdd(query as CFDictionary, nil)
@@ -38,7 +42,7 @@ class KeychainManager {
         return AuthResult(login: login, password: password)
     }
     
-    class func removeAuthResult(result: AuthResult) {
+    class func remove(authResult: AuthResult) {
         let query: [String: Any] = [kSecClass as String: kSecClassInternetPassword,
                                     kSecAttrServer as String: KeyChain.server]
         SecItemDelete(query as CFDictionary)

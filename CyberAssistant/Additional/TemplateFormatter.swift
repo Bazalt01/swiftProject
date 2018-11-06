@@ -42,9 +42,7 @@ class TemplateFormatter {
         let unbrackedValues = findValuesInBracket(template: template, pattern: Pattern.unbracketPattern)
         let brackedValues = findValuesInBracket(template: template, pattern: Pattern.bracketPattern)
         
-        guard unbrackedValues.count > 0 else {
-            return template
-        }
+        guard unbrackedValues.count > 0 else { return template }
         
         var result = template
         func replace(string: String, range: NSRange) {
@@ -52,8 +50,7 @@ class TemplateFormatter {
                 result.replaceSubrange(subrange, with: string)
             }
         }
-        unbrackedValues.enumerated().reversed().forEach { (arg0) in
-            let (offset, value) = arg0
+        unbrackedValues.enumerated().reversed().forEach { (offset, value) in
             let text = value.text
             let brackedValue = brackedValues[offset]
             switch detectType(value: text) {
@@ -67,15 +64,9 @@ class TemplateFormatter {
                 break
             case .numberRange:
                 let numbers = text.components(separatedBy: CharacterSet(charactersIn: "-"))
-                let result = numbers.map({ (string) -> Int in
-                    return Int(string)!
-                }).sorted(by: { (value1, value2) -> Bool in
-                    return value1 < value2
-                })
-                
+                let result = numbers.map({ return Int($0)! }).sorted(by: { $0 < $1 })
                 let number = result[0] + Int(arc4random_uniform(UInt32(result[1] - result[0])))
                 replace(string: String(number), range: brackedValue.range)
-                
                 break
             case .anySet:
                 let words = text.components(separatedBy: CharacterSet(charactersIn: ","))
@@ -91,31 +82,22 @@ class TemplateFormatter {
     // MARK: - Private
     
     private class func detectType(value: String) -> TemplateType {
-        if value.contains(",") {
-            return .anySet
-        }
-        else if value.contains("-") {
+        guard value.contains(",") == false else { return .anySet }
+        
+        if value.contains("-") {
             let symbols = value.components(separatedBy: CharacterSet(charactersIn: "-"))
-            guard symbols.count == 2 else {
-                return .word
-            }
+            guard symbols.count == 2 else { return .word }
             for symbol in symbols {
-                if symbol.rangeOfCharacter(from: CharacterSet.decimalDigits) == nil {
-                    return .word
-                }
+                guard let _ = symbol.rangeOfCharacter(from: CharacterSet.decimalDigits) else { return .word }
             }
             return .numberRange
         }
-        else if value.rangeOfCharacter(from: CharacterSet.decimalDigits) == nil {
-            return .word
-        }
-        return .number
+        
+        return (value.rangeOfCharacter(from: CharacterSet.decimalDigits) != nil) ? .number : .word
     }
     
     private class func findValuesInBracket(template: String, pattern: String) -> [(text: String, range: NSRange)] {
-        guard let regExp = regularExpresion(pattern: pattern) else {
-            return []
-        }
+        guard let regExp = regularExpresion(pattern: pattern) else { return [] }
         
         var result = [(text: String, range: NSRange)]()
         var range = NSRange(location: 0, length: template.count)

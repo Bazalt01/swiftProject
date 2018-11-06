@@ -241,8 +241,7 @@ struct Appearance {
         else if view.isKind(of: SeparatorView.self) {
             let separator = view as! SeparatorView
             switch separator.type {
-            case .general:
-                return AppearanceSize.separatorHeight
+            case .general: return AppearanceSize.separatorHeight                
             }
         }
         return 0

@@ -61,7 +61,7 @@ class SettingsMainViewModel: SettingsViewModel {
         let englishValue = NSLocalizedString(languages[.english]!, comment: "")
         let englishOption = TableOption(value: englishValue, key: Language.english.rawValue, selected: speechManager.currentLanguage == .english)
         
-        router.openOptionListViewController(options: [russianOption, englishOption]) { [weak self](option) in
+        router.openOptionListViewController(options: [russianOption, englishOption]) { [weak self] option in
             self?.updateSpeechConfiguration(language: Language.init(rawValue: option.key)!)
         }
     }
@@ -71,7 +71,7 @@ class SettingsMainViewModel: SettingsViewModel {
         speechManager.configurator = SpeechConfigurator(language: language)
         sections.remove(at: 0)
         sections.insert(speechLanguageSection(), at: 0)
-        didReloadData.onNext(())
+        didReloadDataSubject.onNext(())
     }
     
     private func logout() {

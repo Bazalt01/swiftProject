@@ -8,10 +8,13 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
 class TemplateEditViewController: BaseCollectionViewController {
     private var viewModel: TemplateEditViewModel
     private var saveButton = UIButton()
+    
+    private let disposeBag = DisposeBag()
     
     // MARK: - Inits
     
@@ -41,43 +44,36 @@ class TemplateEditViewController: BaseCollectionViewController {
         viewModel.configure()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        viewModel.performAnimation()
-    }
-    
     override func configureViews() {
         super.configureViews()
         configureSaveButton()
-        let barBattonItem = configureBarButtonItem(button: saveButton)
-        navigationItem.rightBarButtonItem = barBattonItem
+        navigationItem.rightBarButtonItem = configureBarButtonItem(button: saveButton)
     }
     
     override func configureSubsciptions() {
         super.configureSubsciptions()
         
-        weak var weakSelf = self
-        saveButton.rx.tap.ca_subscribe(onNext: { () in
-            weakSelf?.viewModel.saveTemplate()
-        })
+        saveButton.rx.tap
+            .throttle(1.0, scheduler: MainScheduler.instance)
+            .bind(to: viewModel.saveSubject)
+            .disposed(by: disposeBag)
         
-        NotificationCenter.default.rx.notification(NSNotification.Name.UIKeyboardWillShow).ca_subscribe(onNext: { (notification) in
-            weakSelf?.updateInsetRatioKeyboard(notification: notification)
-        })
-        
-        NotificationCenter.default.rx.notification(NSNotification.Name.UIKeyboardWillHide).ca_subscribe(onNext: { (notification) in
-            weakSelf?.updateInsetRatioKeyboard(notification: notification)
-        })        
+        let keyboardWillShow = NotificationCenter.default.rx.notification(.UIKeyboardWillShow)
+        let keyboardWillHide = NotificationCenter.default.rx.notification(.UIKeyboardWillHide)
+        Observable.merge([keyboardWillHide, keyboardWillShow])
+            .ca_subscribe { [weak self] in
+                guard let `self` = self else { return }
+                self.updateInsetRatioKeyboard(notification: $0) }
+            .disposed(by: disposeBag)
     }
     
     func configureSaveButton() {
-        if let image = UIImage.ca_image(imageName: "ic_save", renderingMode: .alwaysTemplate) {
-            saveButton.setImage(image, for: .normal)
-        }
+        let image = UIImage.ca_image(imageName: "ic_save", renderingMode: .alwaysTemplate) ?? UIImage()
+        saveButton.setImage(image, for: .normal)
     }
     
     func configureBarButtonItem(button: UIButton) -> UIBarButtonItem {
-        let barButtonItem = UIBarButtonItem(customView: button)
-        return barButtonItem
+        return UIBarButtonItem(customView: button)
     }
     
     override func configureAppearance() {
@@ -85,16 +81,12 @@ class TemplateEditViewController: BaseCollectionViewController {
         view.backgroundColor = AppearanceColor.collectionBackground
         Appearance.applyFor(barButton: saveButton)
     }
-
+    
     // MARK: - Private
     
     private func updateInsetRatioKeyboard(notification: Notification) {
-        guard let userInfo = notification.userInfo else {
-            return
-        }
-        guard let cv = collectionView else {
-            return
-        }
+        guard let userInfo = notification.userInfo,
+              let cv = collectionView else { return }
         
         let keyboardRect = userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect;
         let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double
@@ -103,8 +95,7 @@ class TemplateEditViewController: BaseCollectionViewController {
             UIView.animate(withDuration: animationDuration) {
                 cv.contentInset = UIEdgeInsets.zero
             }
-        }
-        else {
+        } else {
             UIView.animate(withDuration: animationDuration) {
                 cv.contentInset.bottom += keyboardRect.height
             }
@@ -113,15 +104,13 @@ class TemplateEditViewController: BaseCollectionViewController {
 }
 
 extension TemplateEditViewController: RouterHandler {
-    func presentViewController(viewController: UIViewController) {
-        if let nc = navigationController {
-            nc.present(viewController, animated: true, completion: nil)
-        }
+    func present(viewController: UIViewController) {
+        guard let nc = navigationController else { return }
+        nc.present(viewController, animated: true, completion: nil)
     }
     
     func popViewController() {
-        if let nc = navigationController {
-            nc.popViewController(animated: true)
-        }
+        guard let nc = navigationController else { return }
+        nc.popViewController(animated: true)
     }        
 }

@@ -13,8 +13,7 @@ class SettingsBaseRouter: BaseRouter {
     // MARK: - Public
     
     func popViewController() {
-        if let rh = routeHandler {
-            rh.popViewController?()
-        }
+        guard let routeHandler = routeHandler else { return }
+        routeHandler.popViewController?()
     }
 }

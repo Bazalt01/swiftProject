@@ -12,7 +12,7 @@ class SettingOptionCell: SettingCellView {
     private let titleLabel = UILabel()
     override var viewModel: SettingCellModel? {
         didSet {
-            applyViewModel(viewModel: viewModel)
+            titleLabel.text = viewModel?.title
         }
     }
     
@@ -31,12 +31,7 @@ class SettingOptionCell: SettingCellView {
     
     // MARK: - Private
     
-    private func applyViewModel(viewModel: SettingCellModel?) {
-        titleLabel.text = viewModel?.title
-    }
-    
     private func configureTitleLabel() {
         titleLabel.textAlignment = .left
     }
 }
-

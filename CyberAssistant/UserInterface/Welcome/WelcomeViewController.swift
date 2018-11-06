@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import RxCocoa
 import RxSwift
+import RxGesture
 
 let kEnterViewWidth: CGFloat = 300.0
 let keyboardOffset: CGFloat = 20.0
@@ -20,6 +21,8 @@ class WelcomeViewController: BaseViewController {
     private var centerYConstraint: Constraint?
     private var bottomConstraint: Constraint?
     private let transitor = Transitor()
+    
+    private let disposeBag = DisposeBag()
     
     // MARK: - Inits
     
@@ -55,59 +58,53 @@ class WelcomeViewController: BaseViewController {
     }
     
     private func configureSubsciptions() {
-        enterView.signInObservable.ca_subscribe(onNext: { [weak self](result) in
-            self?.processSignIn(result: result)
-        })
+        let viewModel = self.viewModel
+        enterView.signIn
+            .flatMap { viewModel.signIn(result: $0) }
+            .subscribe(onNext: nil, onError: { [weak self] _ in
+                guard let `self` = self else { return }
+                self.view.endEditing(true)
+                self.enterView.clearPasswords()
+            }, onCompleted: nil, onDisposed: nil)
+            .disposed(by: disposeBag)
         
-        enterView.signUpObservable.ca_subscribe(onNext: { [weak self](result) in
-            self?.processSignUp(result: result)
-        })
+        enterView.signUp
+            .flatMap { viewModel.signUp(result: $0) }
+            .subscribe(onNext: nil, onError: { [weak self] _ in
+                guard let `self` = self else { return }
+                self.view.endEditing(true)
+                self.enterView.clearPasswords()
+            }, onCompleted: nil, onDisposed: nil)
+            .disposed(by: disposeBag)
         
-        enterView.errorObservable.ca_subscribe(onNext: { [weak self](error) in
-            self?.viewModel.showError(error: error)
-        })
+        enterView.errorMessage
+            .ca_subscribe { viewModel.showError(error: $0) }
+            .disposed(by: disposeBag)
         
-        NotificationCenter.default.rx.notification(NSNotification.Name.UIKeyboardWillShow).ca_subscribe(onNext: { [weak self](notification) in
-            self?.updateEnterViewPositionRatioKeyboard(notification: notification)
-        })
-        NotificationCenter.default.rx.notification(NSNotification.Name.UIKeyboardWillHide).ca_subscribe(onNext: { [weak self](notification) in
-            self?.updateEnterViewPositionRatioKeyboard(notification: notification)
-        })
+        let keyboardWillShow = NotificationCenter.default.rx.notification(.UIKeyboardWillShow)
+        let keyboardWillHide = NotificationCenter.default.rx.notification(.UIKeyboardWillHide)
+        Observable.merge([keyboardWillHide, keyboardWillShow])
+            .ca_subscribe { [weak self] in
+                guard let `self` = self else { return }
+                self.updateEnterViewPositionRatioKeyboard(notification: $0) }
+            .disposed(by: disposeBag)
         
-        let tap = UITapGestureRecognizer.init()
-        tap.rx.event.asObservable().ca_subscribe(onNext: { [weak self](gesture) in
-            self?.view.endEditing(true)
-        })
-        view.addGestureRecognizer(tap)
-    }
-    
-    private func processSignIn(result: AuthResult) {
-        viewModel.signIn(result: result, success: {
-        }, failure: { [weak self]() in
-            self?.view.endEditing(true)
-            self?.enterView.clearPasswords()
-        })
-    }
-    
-    private func processSignUp(result: AuthResult) {
-        viewModel.signUp(result: result, success: {
-        }, failure: { [weak self]() in
-            self?.view.endEditing(true)
-            self?.enterView.clearPasswords()
-        })
+        view.addGestureRecognizer(UITapGestureRecognizer())
+        view.rx.tapGesture()
+            .ca_subscribe { [weak self] _ in
+                guard let `self` = self else { return }
+                self.view.endEditing(true) }
+            .disposed(by: disposeBag)
     }
     
     private func updateEnterViewPositionRatioKeyboard(notification: Notification) {
-        guard let userInfo = notification.userInfo else {
-            return
-        }
+        guard let userInfo = notification.userInfo else { return }
         
         let keyboardRect = userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect;
         let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double
         
-        guard let centerY = centerYConstraint, let bottom = bottomConstraint else {
-            return
-        }
+        guard let centerY = centerYConstraint,
+              let bottom = bottomConstraint else { return }
         
         if keyboardRect.minY >= view.frame.height {
             bottom.deactivate()
@@ -115,12 +112,9 @@ class WelcomeViewController: BaseViewController {
             UIView.animate(withDuration: animationDuration) {
                 self.view.layoutIfNeeded()
             }
-        }
-        else {
+        } else {
             let diff = keyboardRect.minY - (keyboardOffset + enterView.frame.maxY)
-            guard diff <= 0 else {
-                return
-            }
+            guard diff <= 0 else { return }
             
             let offset = keyboardRect.height + keyboardOffset
             centerY.deactivate()
@@ -138,7 +132,7 @@ class WelcomeViewController: BaseViewController {
 }
 
 extension WelcomeViewController: RouterHandler {
-    func presentViewController(viewController: UIViewController) {
+    func present(viewController: UIViewController) {
         self.present(viewController, animated: true, completion: nil)
     }
     

@@ -36,19 +36,13 @@ class AnimatableLabel: UILabel {
     }
     
     func shouldAnimate() -> Bool {
-        guard let text = targetText else {
-            return false
-        }
-        guard text.length > 0 else {
-            return false
-        }
-        return true
+        guard let text = targetText else { return false }
+        return text.length > 0
     }
     
     func removeObserver() {
-        if let anim = animator, let animToken = token {
-            anim.removeStepObserver(token: animToken)
-        }
+        guard let anim = animator, let animToken = token else { return }
+        anim.removeStepObserver(token: animToken)
     }
 
     // MARK: - Private

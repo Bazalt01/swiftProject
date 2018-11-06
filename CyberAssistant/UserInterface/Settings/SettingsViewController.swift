@@ -11,8 +11,10 @@ import SnapKit
 import RxSwift
 
 class SettingsViewController: BaseViewController {
-    let viewModel: SettingsViewModel
-    let tableView = UITableView(frame: .zero, style: .grouped)
+    private let viewModel: SettingsViewModel
+    private let tableView = UITableView(frame: .zero, style: .grouped)
+    
+    private let disposeBag = DisposeBag()
     
     // MARK: - Inits
     
@@ -37,15 +39,15 @@ class SettingsViewController: BaseViewController {
         
         configureTableView()
         view.addSubview(tableView)
-        tableView.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview()
-        }
-        viewModel.didReloadData.ca_subscribe { [weak self] in
-            self?.tableView.reloadData()
-        }
+        tableView.snp.makeConstraints { $0.edges.equalToSuperview() }
+        
+        viewModel.didReloadData
+            .ca_subscribe { [weak self] in
+                guard let `self` = self else { return }
+                self.tableView.reloadData() }
+            .disposed(by: disposeBag)
         
         configureAppearance()
-        tableView.reloadData()        
     }
     
     // MARK: - Private
@@ -81,17 +83,18 @@ extension SettingsViewController: UITableViewDataSource {
 }
 
 extension SettingsViewController: RouterHandler {
-    func presentViewController(viewController: UIViewController) {
-        if let nc = navigationController {
-            nc.present(viewController, animated: true, completion: nil)            
-        }
+    func present(viewController: UIViewController) {
+        guard let nc = navigationController else { return }
+        nc.present(viewController, animated: true, completion: nil)
     }
     
-    func pushToViewController(viewController: UIViewController) {
-        navigationController!.pushViewController(viewController, animated: true)
+    func push(viewController: UIViewController) {
+        guard let nc = navigationController else { return }
+        nc.pushViewController(viewController, animated: true)
     }
     
     func popViewController() {
-        navigationController!.popViewController(animated: true)
+        guard let nc = navigationController else { return }
+        nc.popViewController(animated: true)
     }
 }

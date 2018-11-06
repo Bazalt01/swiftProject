@@ -8,25 +8,29 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 class TemplateShareCell: BaseCollectionViewCell {
     private let verStackView = UIStackView()
     private let horStackView = UIStackView()
-    private let saveButton = ButtonWithBlock()
+    private let saveButton = UIButton()
     private let templateLabel = UILabel()
     private let resultLabel = UILabel()
     private var localViewModel: TemplateShareCellModel? {
         return viewModel as? TemplateShareCellModel
     }
     
+    private var disposables: [Disposable] = []
+    
     override var viewModel: ViewModel? {
         didSet {
-            guard let vm = localViewModel else {
-                return
-            }
+            guard let vm = localViewModel else { return }
             templateLabel.attributedText = updatedTemplateTextAppearance(attr: vm.templateAttrText)
             resultLabel.text = vm.result
-            saveButton.setImage(vm.icon, for: .normal)
+            let imageDispose = vm.icon.bind(to: saveButton.rx.image())
+            let pressDispose = saveButton.rx.tap.ca_subscribe { vm.updateSaved() }
+            disposables = [imageDispose, pressDispose]
         }
     }
     
@@ -44,6 +48,13 @@ class TemplateShareCell: BaseCollectionViewCell {
     }
     
     // MARK: - Public
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposables.forEach { $0.dispose() }
+        templateLabel.attributedText = nil
+        resultLabel.text = nil
+    }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         var fittingSize = ca_configuredFittingSize(size: size)
@@ -63,26 +74,18 @@ class TemplateShareCell: BaseCollectionViewCell {
         configureVerStackView()
         configureHorStackView()
         contentView.addSubview(horStackView)
-        horStackView.snp.makeConstraints { (make) in
-            make.edges.equalTo(self.contentView.snp.margins)
-        }
+        horStackView.snp.makeConstraints { $0.edges.equalTo(self.contentView.snp.margins) }
         contentView.layoutMargins = UIEdgeInsets(ca_edge: LayoutConstants.spacing)
         
         horStackView.addArrangedSubview(verStackView)
         horStackView.addArrangedSubview(saveButton)
-        saveButton.snp.makeConstraints { (make) in
-            make.size.equalTo(CGSize(ca_size: 50))
-        }
+        saveButton.snp.makeConstraints { $0.size.equalTo(CGSize(ca_size: 50)) }
         
         configuredTemplateLabel()
         configuredResultLabel()
         
         verStackView.addArrangedSubview(templateLabel)
         verStackView.addArrangedSubview(resultLabel)
-        
-        saveButton.actionBlock = { [weak self] in
-            self?.handleSaved()
-        }
     }
     
     private func configureVerStackView() {
@@ -119,14 +122,6 @@ class TemplateShareCell: BaseCollectionViewCell {
         let range = NSRange(location: 0, length: attr.length)
         mAttr.addAttribute(NSAttributedStringKey.font, value: self.templateLabel.font!, range: range)
         return mAttr.copy() as! NSAttributedString
-    }
-    
-    private func handleSaved() {
-        guard let lvm = localViewModel else {
-            return
-        }
-        lvm.updateSaved()
-        saveButton.setImage(lvm.icon, for: .normal)
     }
 }
 

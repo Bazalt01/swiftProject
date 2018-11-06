@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import RxCocoa
 
 let kLimitForShowing = 3
 let delayTimeKey = "delay_time"
@@ -18,7 +19,7 @@ class MainViewModel: SpeechManagerDelegate {
     private var templateManager: TemplateManager
     private(set) var delayTime: Int
 
-    private var templateModels = [TemplateModel]() {
+    private var templateModels: [TemplateModel] = [] {
         didSet {
             updateModelResultList()
         }
@@ -26,10 +27,25 @@ class MainViewModel: SpeechManagerDelegate {
     
     private(set) var isPlaying = false
     
-    let canPlay = PublishSubject<Bool>()
-    let templateResults = PublishSubject<[String]>()
-    let needNewTemplate = PublishSubject<Bool>()
-    let didCompleteSpeech = PublishSubject<Void>()
+    private let canPlaySubject = PublishSubject<Bool>()
+    private let templatesSubject = BehaviorRelay<[String]>(value: [])
+    private let needNewTemplateSubject = PublishSubject<Bool>()
+    private let didCompleteSpeechSubject = PublishSubject<Void>()
+    
+    var canPlay: Observable<Bool> {
+        return canPlaySubject.share()
+    }
+    var templates: Observable<[String]> {
+        return templatesSubject.share()
+    }
+    var needNewTemplate: Observable<Bool> {
+        return needNewTemplateSubject.share()
+    }
+    var didCompleteSpeech: Observable<Void> {
+        return didCompleteSpeechSubject.share()
+    }
+    
+    private let disposeBag = DisposeBag()
     
     // MARK: - Inits
     
@@ -48,14 +64,11 @@ class MainViewModel: SpeechManagerDelegate {
         templateManager.configure()
         speechManager.delegate = self
         configureSubscriptions()
-        updateModels(models: templateManager.models)
     }
     
     func updateDelayTyme(time: Int) {
         assert(time > 0)
-        guard (time > 0) else {
-            return
-        }
+        guard (time > 0) else { return }
         
         delayTime = time
         UserDefaults.standard.setValue(time, forKey: delayTimeKey)
@@ -74,38 +87,36 @@ class MainViewModel: SpeechManagerDelegate {
     }
     
     func playNextSpeechModel() {
-        guard isPlaying == false, let model = templateModels.first else {
-            return
-        }
+        guard isPlaying == false, let model = templateModels.first else { return }
         isPlaying = true
         speechManager.syntesize(text: model.totalValue)
     }
     
     func updateTemplatePosition() {
-        guard let model = templateModels.first else {
-            return
-        }
+        guard let model = templateModels.first else { return }
         model.generateTemplate()
+        
         var models = templateModels
         models.removeFirst()
         models.append(model)
         templateModels = models
     }
     
-    func showHasntTemplatesNotification() {
-        router.openAlertController(title: NSLocalizedString("attention", comment: ""), message: NSLocalizedString("attention", comment: "do_you_want_create_new_template"), acceptHandler: { [weak self] in
-            self?.router.openNewTemplateController()
-        }) {
-            
-        }
+    func showHasntTemplatesMessage() {
+        router.openAlertController(title: NSLocalizedString("attention", comment: ""),
+                                   message: NSLocalizedString("attention", comment: "do_you_want_create_new_template"),
+                                   acceptHandler: { [weak self] in
+                                    guard let `self` = self else { return }
+                                    self.router.openNewTemplateController()
+            }, cancelHandler: nil)
     }
     
     // MARK: - Private
     
     private func updateModelResultList() {
         guard templateModels.count > 0 else {
-            needNewTemplate.onNext(true)
-            templateResults.onNext([])
+            needNewTemplateSubject.onNext(true)
+            templatesSubject.accept([])
             return
         }
         
@@ -114,37 +125,37 @@ class MainViewModel: SpeechManagerDelegate {
             models = Array(templateModels[0..<kLimitForShowing])
         }
         
-        let result = models.map { (model) -> String in
-            return model.totalValue
-        }
-        templateResults.onNext(result)
-        needNewTemplate.onNext(false)
+        let result = models.map { $0.totalValue }
+        templatesSubject.accept(result)
+        needNewTemplateSubject.onNext(false)
     }
     
     private func configureSubscriptions() {
-        templateManager.templateFetchResult.ca_subscribe(onNext: { [weak self](fetchResult) in
-            if let result = fetchResult {
-                self?.updateModels(models: result.models as! [TemplateModel])
-            }
-        })
+        templateManager.models
+            .ca_subscribe { [weak self] templates in
+                guard let `self` = self else { return }
+                self.updateModels(models: templates) }
+            .disposed(by: disposeBag)
+        
+        templateManager.fetchResult
+            .ca_subscribe { [weak self] fetchResult in
+                guard let `self` = self else { return }
+                self.updateModels(models: fetchResult.models as! [TemplateModel]) }
+            .disposed(by: disposeBag)
     }
     
     private func updateModels(models: [TemplateModel]) {
-        let models = models.filter({ (model) -> Bool in
-            return model.muted == false
-        })
-        for model in models {
-            model.generateTemplate()
-        }
+        let models = models.filter({ !$0.muted })
+        models.forEach { $0.generateTemplate() }
         templateModels = randomSortedModels(models: models)
-        canPlay.onNext(templateModels.count > 0)
+        canPlaySubject.onNext(templateModels.count > 0)
     }
     
     private func randomSortedModels(models: [TemplateModel]) -> [TemplateModel] {
-        var result = [TemplateModel]()
+        var result: [TemplateModel] = []
         var temp = models
         while temp.count > 0 {
-            let index: Int = Int(arc4random_uniform(UInt32(temp.count - 1)))
+            let index = Int(arc4random_uniform(UInt32(temp.count - 1)))
             result.append(temp[index])
             temp.remove(at: index)
         }
@@ -155,6 +166,6 @@ class MainViewModel: SpeechManagerDelegate {
 extension MainViewModel {
     func didFinishPlaying(sender:SpeechManager) {
         isPlaying = false
-        didCompleteSpeech.onNext(())
+        didCompleteSpeechSubject.onNext(())
     }
 }

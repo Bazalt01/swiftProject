@@ -13,23 +13,20 @@ class TemplateEditRouter: BaseRouter {
     // MARK: - Public
     
     func openAlertController(message: String) {
-        if let rh = routeHandler {
-            let ac = UIAlertController(title: NSLocalizedString("attention", comment: ""), message: message, preferredStyle: .alert)
-            let action = UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .default, handler: nil)
-            ac.addAction(action)
-            rh.presentViewController?(viewController: ac)
-        }
+        guard let routeHandler = routeHandler else { return }
+        let ac = UIAlertController(title: NSLocalizedString("attention", comment: ""), message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .default, handler: nil)
+        ac.addAction(action)
+        routeHandler.present?(viewController: ac)
     }
     
     func backFromEditing() {
-        if let rh = routeHandler {
-            rh.popViewController?()
-        }
+        guard let routeHandler = routeHandler else { return }
+        routeHandler.popViewController?()
     }
     
     func dismiss() {
-        if let rh = routeHandler {
-            rh.dismiss?()
-        }
+        guard let routeHandler = routeHandler else { return }
+        routeHandler.dismiss?()
     }
 }

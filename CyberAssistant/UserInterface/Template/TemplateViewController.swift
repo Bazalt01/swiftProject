@@ -8,12 +8,15 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
 class TemplateViewController: BaseCollectionViewController {
     private var viewModel: TemplateViewModel
     private let addButton = UIButton()
     private let shareButton = UIButton()
     private let emptyView = EmptyView()
+    
+    private let disposeBag = DisposeBag()
     
     // MARK: - Inits
     
@@ -63,17 +66,23 @@ class TemplateViewController: BaseCollectionViewController {
     
     override func configureSubsciptions() {
         super.configureSubsciptions()
-        addButton.rx.tap.ca_subscribe(onNext: { [weak self]() in
-            self?.viewModel.createNewTemplate()
-        })
-
-        shareButton.rx.tap.ca_subscribe(onNext: { [weak self]() in
-            self?.viewModel.openShareTemplates()
-        })
         
-        viewModel.hasTemplates.ca_subscribe(onNext: { [weak self](hasTemplates) in
-            self?.emptyView.isHidden = hasTemplates
-        })
+        let viewModel = self.viewModel
+        addButton.rx.tap
+            .throttle(1.0, scheduler: MainScheduler.instance)
+            .ca_subscribe { viewModel.createNewTemplate() }
+            .disposed(by: disposeBag)
+        
+        shareButton.rx.tap
+            .throttle(1.0, scheduler: MainScheduler.instance)
+            .ca_subscribe { viewModel.openShareTemplates() }
+            .disposed(by: disposeBag)
+        
+        viewModel.hasTemplates
+            .ca_subscribe { [weak self] in
+                guard let `self` = self else { return }
+                self.emptyView.isHidden = $0 }
+            .disposed(by: disposeBag)
     }
     
     override func configureAppearance() {
@@ -84,33 +93,28 @@ class TemplateViewController: BaseCollectionViewController {
     // MARK: - Private
     
     private func configureAddTemplateButton() {
-        if let image = UIImage.ca_image(imageName: "ic_add", renderingMode: .alwaysTemplate) {
-            addButton.setImage(image, for: .normal)
-        }
+        guard let image = UIImage.ca_image(imageName: "ic_add", renderingMode: .alwaysTemplate) else { return }
+        addButton.setImage(image, for: .normal)
     }
     
     private func configureShareTemplateButton() {
-        if let image = UIImage.ca_image(imageName: "ic_share", renderingMode: .alwaysTemplate) {
-            shareButton.setImage(image, for: .normal)
-        }
+        guard let image = UIImage.ca_image(imageName: "ic_share", renderingMode: .alwaysTemplate) else { return }
+        shareButton.setImage(image, for: .normal)
     }
     
     private func configureBarButtonItem(button: UIButton) -> UIBarButtonItem {
-        let barButtonItem = UIBarButtonItem(customView: button)
-        return barButtonItem
+        return UIBarButtonItem(customView: button)
     }
     
     private func configureEmptyView() {
-        if let image = UIImage.ca_image(imageName: "eye", renderingMode: .alwaysTemplate) {
-            emptyView.emptyModel = EmptyModel(message: NSLocalizedString("you_need_creating_template", comment: ""), image: image)
-        }
+        guard let image = UIImage.ca_image(imageName: "eye", renderingMode: .alwaysTemplate) else { return }
+        emptyView.emptyModel = EmptyModel(message: NSLocalizedString("you_need_creating_template", comment: ""), image: image)
     }
 }
 
 extension TemplateViewController: RouterHandler {
-    func pushToViewController(viewController: UIViewController) {
-        if let nc = navigationController {
-            nc.pushViewController(viewController, animated: true)
-        }
+    func push(viewController: UIViewController) {
+        guard let nc = navigationController else { return }
+        nc.pushViewController(viewController, animated: true)        
     }
 }

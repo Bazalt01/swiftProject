@@ -12,9 +12,21 @@ import RxSwift
 import RxCocoa
 
 class AuthManager {    
-    private(set) var authorizedAccount = BehaviorRelay<AccountModel?>(value: nil)
     private var authResult: AuthResult?
-    let logoutObservable = PublishSubject<Void>()
+    private let accountSubject = BehaviorRelay<AccountModel?>(value: nil)
+    private let didLogoutSubject = PublishSubject<Void>()
+    
+    var didLogout: Observable<Void> {
+        return didLogoutSubject.share()
+    }
+    var account: AccountModel? {
+        return accountSubject.value
+    }
+    var accountRelay: Observable<AccountModel?> {
+        return accountSubject.share()
+    }
+    
+    private let disposeBag = DisposeBag()
     
     // MARK: - Inits
     
@@ -24,71 +36,83 @@ class AuthManager {
         print("[AUTH] Start with login: \(authResult.login)")
         self.authResult = authResult
         let predicate = NSPredicate(format: "login = %@ AND password = %@", authResult.login, authResult.password)
-        let account = DatabaseManager.database.object(objectType: RealmAccount.self, predicate: predicate) as? AccountModel
-        authorizedAccount.accept(account)
-        logoutObservable.onNext(())
+        DatabaseManager.database.object(objectType: RealmAccount.self, predicate: predicate)
+            .map { $0 as? AccountModel }
+            .bind(to: accountSubject)
+            .disposed(by: disposeBag)
     }
     
     // MARK: - Public
     
-    func signIn(result: AuthResult, success: @escaping() -> Void, failure: @escaping(_ error: Error) -> Void) {
-        guard let account = localAccount(result: result) else {
-            failure(ErrorManager.error(code: .accountIsNotExist))
-            return            
-        }
-        
-        print("[AUTH] Sign in with login: \(account.login)")
-        authorizedAccount.accept(account)
-        let updatedAuthResult = AuthResult(login: account.login, password: account.password)
-        KeychainManager.saveAuthResult(result: updatedAuthResult)
-        authResult = updatedAuthResult
-        success()
+    func signIn(result: AuthResult) -> Observable<Void> {
+        return Observable<Void>.create({ observer in
+            _ = self.localAccount(result: result)
+                .ca_subscribe { account in
+                    guard let account = account else {
+                        observer.onError(ErrorCode.accountIsNotExist)
+                        return
+                    }
+                    self.signInSideEffect(account: account)
+                    observer.onCompleted() }
+            return Disposables.create()
+        })
     }
     
-    func signUp(result: AuthResult, success: @escaping() -> Void, failure: @escaping(_ error: Error) -> Void) {
-        guard localAccount(result: result) == nil else {
-            failure(ErrorManager.error(code: .accountIsExist))
-            return
-        }
-        
-        guard let password = CryptoConverter.convertSHA256(string: result.password) else {
-            failure(ErrorManager.error(code: .couldntCreateAccount))
-            return
-        }
-        
-        let account = RealmAccount(login: result.login, password: password, name: nil)
-        DatabaseManager.database.insert(model: account, processing: { [weak self](error) in
-            if let err = error {
-                failure(err)
-                return
+    func signUp(result: AuthResult) -> Observable<Void> {
+        return Observable<Void>.create({ observer in
+            guard let password = CryptoConverter.convertSHA256(string: result.password) else {
+                observer.onError(ErrorCode.couldntCreateAccount)
+                return Disposables.create()
             }
-            let updatedAuthResult = AuthResult(login: account.login, password: account.password)
-            KeychainManager.saveAuthResult(result: updatedAuthResult)
-            self?.authorizedAccount.accept(account)
-            success()
+            
+            _ = self.localAccount(result: result)
+                .ca_subscribe { account in
+                    guard let _ = account else {
+                        observer.onError(ErrorCode.accountIsExist)
+                        return
+                    }
+                    
+                    let account = RealmAccount(login: result.login, password: password, name: nil)
+                    _ = DatabaseManager.database.insert(model: account)
+                        .subscribe(onNext: nil, onError: { error in
+                            observer.onError(error)
+                        }, onCompleted: {
+                            KeychainManager.save(account: account)
+                            self.accountSubject.accept(account)
+                            observer.onCompleted()
+                        }, onDisposed: nil) }
+            return Disposables.create()
         })
     }
     
     func canSignInWithLocalUser() -> Bool {
-        return authorizedAccount.value != nil
+        return accountSubject.value != nil
     }
 
     func logout() {
-        KeychainManager.removeAuthResult(result: authResult!)
+        KeychainManager.remove(authResult: authResult!)
     }
 
     // MARK: - Private
     
-    private func localAccount(result: AuthResult) -> AccountModel? {
-        let accounts = DatabaseManager.database.objects(objectType: RealmAccount.self, predicate: nil, sortModes: nil) as! [RealmAccount]
-        for account in accounts {
-            if account.login == result.login {
-                let password = CryptoConverter.convertSHA256(string: result.password)
-                if account.password == password {
-                    return account
+    private func signInSideEffect(account: AccountModel) {
+        print("[AUTH] Sign in with login: \(account.login)")
+        
+        self.accountSubject.accept(account)
+        
+        let updatedAuthResult = AuthResult(login: account.login, password: account.password)
+        KeychainManager.save(authResult: updatedAuthResult)
+        self.authResult = updatedAuthResult
+    }
+    
+    private func localAccount(result: AuthResult) -> Observable<AccountModel?> {
+        return DatabaseManager.database.objects(objectType: RealmAccount.self, predicate: nil, sortModes: nil)
+            .flatMap { models -> Observable<AccountModel?> in
+                let accounts = (models as! [AccountModel]).filter {
+                    let password = CryptoConverter.convertSHA256(string: result.password)
+                    return $0.login == result.login && $0.password == password
                 }
+                return Observable<AccountModel?>.just(accounts.first ?? nil)
             }
-        }
-        return nil
     }
 }

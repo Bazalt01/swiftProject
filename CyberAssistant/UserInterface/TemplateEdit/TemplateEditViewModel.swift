@@ -7,19 +7,22 @@
 //
 
 import Foundation
+import RxSwift
 
 class TemplateEditViewModel: BaseCollectionViewModel {
     private var templateManager: TemplateManager
     private var authManager: AuthManager
 
     private(set) var template: TemplateModel?
-    private(set) var router: TemplateEditRouter
+    private var router: TemplateEditRouter
     
     private(set) var dataSource: CompositeDataSource
     private(set) var editDataSource: TemplateEditDataSource
     private(set) var ruleDataSource: TemplateEditRulesDataSource
     private(set) var collectionViewDelegate: TemplateEditCollectionDelegate
-    private var labelAnimator = LabelAnimator(stepDuration: 0.05)
+    
+    let saveSubject = PublishSubject<Void>()
+    let disposeBag = DisposeBag()
     
     // MARK: - Inits
     
@@ -37,45 +40,45 @@ class TemplateEditViewModel: BaseCollectionViewModel {
         self.collectionViewDelegate = TemplateEditCollectionDelegate(dataSource: self.dataSource)
     }
     
-    deinit {
-        labelAnimator.stop()
-    }
-    
     // MARK: - Public
     
     func configure() {
         let templateValue = template != nil ? template!.value : ""
         editDataSource.configureAndSetCellViewModel(template: templateValue)
-        ruleDataSource.configureAndSetCellViewModel(rules: self.templateManager.templateRules, labelAnimator: labelAnimator)
+        ruleDataSource.configureAndSetCellViewModel(rules: self.templateManager.templateRules)
+        saveSubject
+            .ca_subscribe { [weak self] in
+                guard let `self` = self else { return }
+                _ = self._saveTemplate()
+                    .catchError { [weak self] error in
+                        guard let `self` = self else { return Observable<Void>.never() }
+                        self.router.openAlertController(message: ErrorManager.errorMessage(code: error as! ErrorCode))
+                        return Observable<Void>.empty() }
+                    .subscribe(onNext: nil, onError: nil, onCompleted: { [weak self] in
+                        guard let `self` = self else { return }
+                        self.router.backFromEditing()
+                    }, onDisposed: nil) }
+            .disposed(by: disposeBag)
     }
     
-    func saveTemplate() {
-        if let error = _saveTemplate() {
-            router.openAlertController(message: error.localizedDescription)
-        }
-        router.backFromEditing()
-    }
-    
-    func _saveTemplate() -> Error? {
-        guard let value = editDataSource.templateString else {
-            return ErrorManager.error(code: .templateIsEmpty)
-        }
-        
-        if value.count == 0 {
-            return ErrorManager.error(code: .templateIsEmpty)
-        }
-        
-        guard var templ = template else {
-            templateManager.createTemplate(string: value, completion: nil)
-            return nil
-        }
-        templateManager.saveTemplate {
-            templ.value = value
-        }
-        return nil
-    }
-    
-    func performAnimation() {
-        labelAnimator.start()
+    func _saveTemplate() -> Observable<Void> {
+        return Observable<Void>.create({ [weak self] observer in
+            guard let `self` = self,
+                  let value = self.editDataSource.templateString,
+                  value.count > 0 else {
+                    observer.onError(ErrorCode.templateIsEmpty)
+                    return Disposables.create()
+            }
+            
+            if var template = self.template {
+                _ = self.templateManager.save(template: template).subscribe(onNext: nil, onError: nil, onCompleted: {
+                    template.value = value
+                }, onDisposed: nil)
+            } else {
+                _ = self.templateManager.createTemplate(string: value).subscribe(onNext: nil, onError: nil, onCompleted: nil, onDisposed: nil)
+            }
+            observer.onCompleted()
+            return Disposables.create()
+        })
     }
 }

@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import CoreGraphics
 
 enum EnterOption {
     case All
@@ -20,7 +21,12 @@ enum EnterOption {
 struct AuthResult {
     private(set) var login: String
     private(set) var password: String
+    
+    static func empty() -> AuthResult {
+        return AuthResult(login: "", password: "")
+    }
 }
+
 
 class EnterView: UIView {
     private var viewModel: EnterViewModel
@@ -43,9 +49,21 @@ class EnterView: UIView {
         }
     }
     
-    var signInObservable = PublishSubject<AuthResult>()
-    var signUpObservable = PublishSubject<AuthResult>()
-    var errorObservable = PublishSubject<Error>()
+    private let signInSubject = PublishSubject<AuthResult>()
+    private let signUpSubject = PublishSubject<AuthResult>()
+    private let errorMessageSubject = PublishSubject<String>()
+    
+    var signIn: Observable<AuthResult> {
+        return signInSubject.share()
+    }
+    var signUp: Observable<AuthResult> {
+        return signUpSubject.share()
+    }
+    var errorMessage: Observable<String> {
+        return errorMessageSubject.share()
+    }
+    
+    let disposeBag = DisposeBag()
     
     // MARK: - Inits
     
@@ -75,15 +93,13 @@ class EnterView: UIView {
             repeatPasswordTextField.text = nil
         }
     }
-
+    
     // MARK: - Private
-
+    
     private func configureViews() {
         configureStackView()
         addSubview(stackView)
-        stackView.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview()
-        }
+        stackView.snp.makeConstraints { $0.edges.equalToSuperview() }
         
         configureTitleLabel()
         stackView.addArrangedSubview(titleLabel)
@@ -122,15 +138,12 @@ class EnterView: UIView {
     }
     
     private func applyHeightConstraint(height: CGFloat, view: UIView) {
-        view.snp.makeConstraints { (make) in
-            make.height.equalTo(height)
-        }
+        view.snp.makeConstraints { $0.height.equalTo(height) }
     }
     
     private func setVisibleElements(visible: Bool, fromOption: EnterOption, toOption: EnterOption) {
-        guard let elementsFrom = visibleElementsSets[fromOption], let elementsTo = visibleElementsSets[toOption] else {
-            return
-        }
+        guard let elementsFrom = visibleElementsSets[fromOption], let elementsTo = visibleElementsSets[toOption] else { return }
+        
         let elementSetFrom = Set(elementsFrom)
         let elementSetTo = Set(elementsTo)
         
@@ -139,7 +152,7 @@ class EnterView: UIView {
         
         UIView.animate(withDuration: 0.3) {
             for view in intersection {
-                if view.isHidden != !visible {
+                if view.isHidden == visible {
                     view.isHidden = !visible
                     view.alpha = visible ? 1.0 : 0.0
                 }
@@ -189,18 +202,18 @@ class EnterView: UIView {
     }
     
     private func configureSubsciptions() {
-        enterButton.rx.tap.ca_subscribe(onNext: { [weak self]() in
-            self?.pressEnter()
-        })
+        enterButton.rx.tap
+            .ca_subscribe { [weak self] in self?.pressEnter() }
+            .disposed(by: disposeBag)
         
-        signInUpButton.rx.tap.ca_subscribe(onNext: { [weak self]() in
-            self?.signButtonPress()
-        })
+        signInUpButton.rx.tap
+            .ca_subscribe { [weak self] in self?.signButtonPress() }
+            .disposed(by: disposeBag)
     }
     
     private func signButtonPress() {
         self.clearPasswords()
-        self.currentOption = self.currentOption == .SignIn ? .SignUp : .SignIn
+        self.currentOption = (self.currentOption == .SignIn) ? .SignUp : .SignIn
     }
     
     private func updateTitle() {
@@ -226,26 +239,15 @@ class EnterView: UIView {
     }
     
     private func pressEnter() {
-        guard let login = loginTextField.text, let password = passwordTextField.text else {
-            return
-        }
+        guard let login = self.loginTextField.text, let password = self.passwordTextField.text else { return }
         
-        if let error = viewModel.check(login: login, password: password, repeatPassword: repeatPasswordTextField.text, option: currentOption) {
-            errorObservable.onNext(error)
-            return
-        }
-        
-        let authResult = AuthResult(login: login, password: password)
-        
-        switch currentOption {
-        case .SignIn:
-            signInObservable.onNext(authResult)
-            break
-        case .SignUp:
-            signUpObservable.onNext(authResult)
-            break
-        default: break
-        }
+        _ = self.viewModel.authResult(login: login, password: password, repeatPassword: self.repeatPasswordTextField.text, option: self.currentOption)
+            .catchError { error in
+                self.errorMessageSubject.onNext(ErrorManager.errorMessage(code: error as! ErrorCode))
+                return Observable<AuthResult>.just(AuthResult.empty()) }
+            .ca_subscribe { [unowned self] result in
+                let subject = self.currentOption == .SignIn ? self.signInSubject : self.signUpSubject
+                subject.onNext(result) }
     }
     
     
@@ -276,41 +278,40 @@ fileprivate let kLoginMin = 3
 fileprivate let kPasswordMin = 8
 
 fileprivate class EnterViewModel {
+    
     func shouldReturn(text: String?) -> Bool {
-        guard let value = text else {
-            return false
-        }
-        if value.count == 0 {
-            return false
-        }
+        guard let value = text, value.count == 0 else { return false }
         return value.last! == "\n"
     }
     
     func shouldChange(text: String?) -> Bool {
-        guard let value = text else {
-            return true
-        }
+        guard let value = text else { return true }
         return value.count <= kTextLimit
     }
     
-    func check(login: String, password: String, repeatPassword: String?, option: EnterOption) -> Error? {
-        if login.count < kLoginMin {
-            return ErrorManager.error(code: .loginIsTooShort)
-        }
-        else if password.count == 0 {
-            return ErrorManager.error(code: .passwordIsEmpty)
-        }
-        else if password.count < kPasswordMin {
-            return ErrorManager.error(code: .passwordIsTooShort)
-        }
-        else if option == .SignUp {
-            if repeatPassword == nil || repeatPassword!.count == 0 {
-                return ErrorManager.error(code: .repeatPasswordIsEmpty)
+    func authResult(login: String, password: String, repeatPassword: String?, option: EnterOption) -> Observable<AuthResult> {
+        return Observable<AuthResult>.create({ observer in
+            
+            if login.count < kLoginMin {
+                observer.onError(ErrorCode.loginIsTooShort)
+            } else if password.count == 0 {
+                observer.onError(ErrorCode.passwordIsEmpty)
+            } else if password.count < kPasswordMin {
+                observer.onError(ErrorCode.passwordIsTooShort)
+            } else if option == .SignUp {
+                if repeatPassword == nil || repeatPassword!.count == 0 {
+                    observer.onError(ErrorCode.repeatPasswordIsEmpty)
+                } else if password != repeatPassword {
+                    observer.onError(ErrorCode.repeatPasswordIsNotEqual)
+                } else {
+                    observer.onNext(AuthResult(login: login, password: password))
+                }
+                return Disposables.create()
             }
-            else if password != repeatPassword {
-                return ErrorManager.error(code: .repeatPasswordIsNotEqual)
-            }
-        }
-        return nil
+            
+            observer.onNext(AuthResult(login: login, password: password))
+            observer.onCompleted()
+            return Disposables.create()
+        })
     }
 }

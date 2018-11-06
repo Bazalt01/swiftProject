@@ -30,11 +30,7 @@ class BaseCellViewModel: Hashable, ViewModel {
     }
     
     func isEqual(viewModel: ViewModel) -> Bool {
-        guard viewModel is BaseCellViewModel else {
-            return false
-        }
-        
-        let vm = viewModel as! BaseCellViewModel
-        return self == vm
+        guard viewModel is BaseCellViewModel else { return false }
+        return self == viewModel as! BaseCellViewModel
     }
 }

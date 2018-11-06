@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 class TemplateEditCellModel: BaseCellViewModel {
     private(set) var template = ""
@@ -24,11 +25,8 @@ class TemplateEditCellModel: BaseCellViewModel {
     // MARK: - Public
     
     func update(template: String?) {
-        guard
-            template != nil,
-            template != self.template else {
-            return
-        }
+        guard template != nil,
+              template != self.template else { return }
         self.template = template!
     }
 }

@@ -21,13 +21,8 @@ class TemplateEditRulesDataSource: BaseCollectionDataSource {
     
     // MARK: - Public
     
-    func configureAndSetCellViewModel(rules: [TemplateRule], labelAnimator: LabelAnimator?) {
-        var viewModels = [TemplateEditRuleCellModel]()
-        for rule in rules {
-            let cellViewModel = TemplateEditRuleCellModel(rule: rule, labelAnimator: labelAnimator)
-            viewModels.append(cellViewModel)
-        }
-        cellViewModels = viewModels
-        notifyUpdate(batchUpdates: nil, completion: nil)
+    func configureAndSetCellViewModel(rules: [TemplateRule]) {
+        cellViewModels = rules.map { TemplateEditRuleCellModel(rule: $0) }
+        notify(batchUpdates: nil, completion: nil)
     }
 }

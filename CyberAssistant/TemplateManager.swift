@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import RxCocoa
 import RealmSwift
 
 struct TemplateRule {
@@ -19,8 +20,7 @@ struct TemplateRule {
 class TemplateManager: BackgroundWorker {
     private var authManager: AuthManager
     private var database: Database?
-    var models = [TemplateModel]()
-    var sharedModels = [TemplateModel]()
+    
     let templateRules = [TemplateRule(rule: NSLocalizedString("random_value_from_to", comment: ""),
                                       example: NSLocalizedString("random_value_from_to_example", comment: ""),
                                       result: NSLocalizedString("random_value_from_to_result", comment: "")),
@@ -32,7 +32,22 @@ class TemplateManager: BackgroundWorker {
                          TemplateRule(rule: NSLocalizedString("any_value_sequence", comment: ""),
                                       example: NSLocalizedString("any_value_sequence_example", comment: ""),
                                       result: NSLocalizedString("any_value_sequence_result", comment: ""))]
-    let templateFetchResult = PublishSubject<FetchResult?>()
+    
+    private let modelsSubject = BehaviorRelay<[TemplateModel]>(value: [])
+    private let sharedModelsSubject = BehaviorSubject<[TemplateModel]>(value: [])
+    private let fetchResultSubject = PublishSubject<FetchResult>()
+    
+    var models: Observable<[TemplateModel]> {
+        return modelsSubject.share()
+    }
+    var sharedModels: Observable<[TemplateModel]> {
+        return sharedModelsSubject.share()
+    }
+    var fetchResult: Observable<FetchResult> {
+        return fetchResultSubject.share()
+    }
+    
+    private let disposeBag = DisposeBag()
     
     // MARK: - Inits
     
@@ -43,57 +58,54 @@ class TemplateManager: BackgroundWorker {
     // MARK: - Public
     
     func configure() {
-        self.authManager.authorizedAccount.asObservable().ca_subscribe { [weak self](newAccount) in
-            guard let acc = newAccount else { return }
-            self?.models = []
-            self?.loadContent(account: acc)
-        }
+        self.authManager.accountRelay.ca_subscribe { [weak self] account in
+            guard let `self` = self, let account = account else { return }
+            self.loadContent(account: account)
+            }.disposed(by: disposeBag)
     }
     
-    func createTemplate(string: String, completion: ((_ template: TemplateModel) -> Void)?) {
-        let template = RealmTemplate(value: string, muted: false, author: authManager.authorizedAccount.value!)
-        DatabaseManager.database.insert(model: template) { (error) in
-            if let compl = completion {
-                compl(template)
-            }
-        }
+    func createTemplate(string: String) -> Observable<TemplateModel> {
+        let template = RealmTemplate(value: string, muted: false, author: authManager.account!)
+        return DatabaseManager.database.insert(model: template).flatMap { Observable<TemplateModel>.just(template) }
     }
     
-    func saveTemplate(save: @escaping() -> Void) {
-        DatabaseManager.database.update { (error) in
-            save()
-        }
+    func createTemplates(strings: [String]) -> Observable<[TemplateModel]> {
+        let templates = strings.map { RealmTemplate(value: $0, muted: false, author: authManager.account!) }
+        let operations: [(ExecuteOption, BaseModel?)] = templates.map { (ExecuteOption.insert, $0) }
+        return DatabaseManager.database.processing(operations: operations).flatMap { _ in Observable<[TemplateModel]>.from(optional: templates) }
     }
     
-    func deleteTemplate(template: TemplateModel) {
-        DatabaseManager.database.delete(model: template) { (error) in
-        }
+    func save(template: TemplateModel) -> Observable<Void> {
+        return DatabaseManager.database.update()
     }
     
-    func loadSharedContent(excludeAccount account: AccountModel, fetchResult: PublishSubject<FetchResult?>) {
-        let sortAuthor = SortModel.init(key: "internalAuthor.name", ascending: true)
-        let sortValue = SortModel.init(key: "value", ascending: true)
+    func delete(template: TemplateModel) -> Observable<Void> {
+        return DatabaseManager.database.delete(model: template)
+    }
+    
+    func loadSharedContent(excludeAccount account: AccountModel, fetchResult: PublishSubject<FetchResult>) {
+        let sortAuthor = SortModel(key: "internalAuthor.name", ascending: true)
+        let sortValue = SortModel(key: "value", ascending: true)
         
         let predicate = NSPredicate(format: "\(TemplateInternalAuthorPathKey) != %@ AND \(TemplateSharedKey) = 1", account.login as CVarArg)
         self.start({ [weak self] in
+            guard let `self` = self else { return }
             let database = DatabaseManager.createDatabase()
             database.configure()
-            
             database.objects(objectType: RealmTemplate.self, predicate: predicate, sortModes: [sortAuthor, sortValue], fetchResult: fetchResult, responseQueue: DispatchQueue.main)
-            self?.database = database
+            self.database = database
         })
     }
 
     // MARK: - Private
     
     private func loadContent(account: AccountModel) {
-        let sort = SortModel.init(key: "value", ascending: true)
-        let fetchResult = self.templateFetchResult
-        fetchResult.ca_subscribe(onNext: { [weak self](fetchResult) in
-            if let result = fetchResult {
-                self?.models = result.models as! [TemplateModel]
-            }
+        let fetchResult = self.fetchResultSubject
+        fetchResult.ca_subscribe(onNext: { [weak self] fetchResult in
+            guard let `self` = self else { return }
+            self.modelsSubject.accept(fetchResult.models as! [TemplateModel])
         })
+        .disposed(by: disposeBag)
         
         print("[TEMPLATE_MANAGER] Load content account: \(account.login)")
         
@@ -102,8 +114,10 @@ class TemplateManager: BackgroundWorker {
             let database = DatabaseManager.createDatabase()
             database.configure()
             
+            let sort = SortModel(key: "value", ascending: true)
             database.objects(objectType: RealmTemplate.self, predicate: predicate, sortModes: [sort], fetchResult: fetchResult, responseQueue: DispatchQueue.main)
-            self?.database = database
+            guard let `self` = self else { return }
+            self.database = database
         })
     }
 }

@@ -23,9 +23,7 @@ class CryptoConverter {
         guard
             let data = targetString.data(using: String.Encoding.utf8),
             let shaData = SHA256(data)
-            else {
-                return nil
-        }
+            else { return nil }
         let rc = shaData.base64EncodedString(options: [])
         return rc
     }

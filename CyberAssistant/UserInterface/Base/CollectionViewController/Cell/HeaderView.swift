@@ -16,9 +16,7 @@ class HeaderView: BaseSupplementaryView {
     }
     override var viewModel: ViewModel? {
         didSet {
-            guard let vm = localViewModel else {
-                return
-            }
+            guard let vm = localViewModel else { return }
             titleLabel.text = vm.title
         }
     }
@@ -55,9 +53,6 @@ class HeaderView: BaseSupplementaryView {
             make.right.equalToSuperview().offset(-LayoutConstants.spacing)
             make.bottom.equalToSuperview()
         }
-    }
-    
-    private func configureTitleLabel() {
     }
     
     private func configureAppearance() {

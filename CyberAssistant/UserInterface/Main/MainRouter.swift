@@ -13,45 +13,36 @@ class MainRouter: BaseRouter {
     // MARK: - Public
     
     func openTemplatesController() {
-        if let rh = routeHandler {
-            let vc = Assembly.shared.configuredTemplateViewController()
-            rh.pushToViewController?(viewController: vc)
-        }
+        guard let routeHandler = routeHandler else { return }
+        let vc = Assembly.shared.configuredTemplateViewController()
+        routeHandler.push?(viewController: vc)
     }
     
     func openNewTemplateController() {
-        if let rh = routeHandler {
-            let vc = Assembly.shared.configuredTemplateEditViewController(template: nil)
-            rh.pushToViewController?(viewController: vc)
-        }
+        guard let routeHandler = routeHandler else { return }
+        let vc = Assembly.shared.configuredTemplateEditViewController(template: nil)
+        routeHandler.push?(viewController: vc)
     }
     
     func openSettingsController() {
-        if let rh = routeHandler {
-            let vc = Assembly.shared.configuredSettingsViewController()
-            rh.pushToViewController?(viewController: vc)
-        }
+        guard let routeHandler = routeHandler else { return }
+        let vc = Assembly.shared.configuredSettingsViewController()
+        routeHandler.push?(viewController: vc)
     }
     
     func openAlertController(title: String, message: String, acceptHandler:(() -> Void)?, cancelHandler:(() -> Void)?) {
-        guard let rh = routeHandler else {
-            return
-        }
+        guard let routeHandler = routeHandler else { return }
         let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         if let accept = acceptHandler {
-            let action = UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .default) { (alert) in
-                accept()
-            }
+            let action = UIAlertAction(title: NSLocalizedString("ok", comment: ""), style: .default) { _ in accept() }
             ac.addAction(action)
         }
         
         if let cancel = cancelHandler {
-            let action = UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: .cancel) { (alert) in
-                cancel()
-            }
+            let action = UIAlertAction(title: NSLocalizedString("cancel", comment: ""), style: .cancel) { _ in cancel() }
             ac.addAction(action)
         }
-        rh.presentViewController?(viewController: ac)
+        routeHandler.present?(viewController: ac)
     }
 }

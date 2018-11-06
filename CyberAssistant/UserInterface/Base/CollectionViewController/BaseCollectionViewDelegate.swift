@@ -11,9 +11,13 @@ import RxSwift
 import RxCocoa
 
 class BaseCollectionViewDelegate: NSObject {
-    private(set) var didSelectTemplate = PublishSubject<ViewModel>()
+    private let didSelectSubject = PublishSubject<ViewModel>()
     private(set) var layoutManager: LayoutManager
     private var dataSource: BaseCollectionDataSource
+    
+    var didSelect: Observable<ViewModel> {
+        return didSelectSubject.share()
+    }
     
     // MARK: - Inits
     
@@ -39,7 +43,7 @@ extension BaseCollectionViewDelegate: UICollectionViewDelegate {
             assert(false, "nullable model")
             return
         }
-        didSelectTemplate.onNext(model)
+        didSelectSubject.onNext(model)
     }
 }
 
@@ -47,7 +51,7 @@ extension BaseCollectionViewDelegate: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard var model = dataSource.model(atIndexPath: indexPath) else {
             assert(false, "nullable model")
-            return CGSize.zero
+            return .zero
         }
         let size = maxVisibleContentSize(collectionView: collectionView)
         layoutManager.updateLayoutModel(viewModel: &model, size: size)

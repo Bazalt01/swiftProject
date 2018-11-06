@@ -51,13 +51,13 @@ extension TransitionAnimator: UIViewControllerAnimatedTransitioning {
         var pixels = processPixels(frame: view.bounds, pixelSize: AppearanceSize.pixelSize)
         var countPixelRest = pixels.count
         
-        _ = Timer.scheduledTimer(withTimeInterval: 0.005, repeats: true) { [weak self](timer) in
-            
+        _ = Timer.scheduledTimer(withTimeInterval: 0.005, repeats: true) { [weak self] timer in
+            guard let `self` = self else { return }
             for _ in 0..<kCountShowingPixels {
                 
                 let randomIndex = Int(arc4random_uniform(UInt32(countPixelRest - 1)))
                 let pixel = pixels[randomIndex]
-                path.append(self!.bezierPath(pixel: pixel))
+                path.append(self.bezierPath(pixel: pixel))
                 
                 pixels.remove(at: randomIndex)
                 
@@ -103,7 +103,7 @@ extension TransitionAnimator: UIViewControllerAnimatedTransitioning {
             countVer = fabs(countVer) + 1.0
         }
         
-        var pixels = [Pixel]()
+        var pixels: [Pixel] = []
         
         for indexV in 0..<Int(countVer) {
             for indexH in 0..<Int(countHor) {

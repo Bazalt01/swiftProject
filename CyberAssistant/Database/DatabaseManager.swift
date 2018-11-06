@@ -33,14 +33,17 @@ struct FetchResultChanges {
 protocol Database {
     func configure()
     
-    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes:[SortModel]?, fetchResult: PublishSubject<FetchResult?>, responseQueue: DispatchQueue)
-    func object(objectType: BaseModel.Type, predicate: NSPredicate?, fetchResult: PublishSubject<FetchResult?>, responseQueue: DispatchQueue)
+    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes:[SortModel]?, fetchResult: PublishSubject<FetchResult>, responseQueue: DispatchQueue)
+    func object(objectType: BaseModel.Type, predicate: NSPredicate?, fetchResult: PublishSubject<FetchResult>, responseQueue: DispatchQueue)
     
-    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes:[SortModel]?) -> [BaseModel]
-    func object(objectType: BaseModel.Type, predicate: NSPredicate?) -> BaseModel?
-    func update(processing: ((_ error: Error?) -> Void)?)
-    func insert(model: BaseModel, processing: ((_ error: Error?) -> Void)?)
-    func delete(model: BaseModel, processing: ((_ error: Error?) -> Void)?)
+    func objects(objectType: BaseModel.Type, predicate: NSPredicate?, sortModes:[SortModel]?) -> Observable<[BaseModel]>
+    func object(objectType: BaseModel.Type, predicate: NSPredicate?) -> Observable<BaseModel?>
+    
+    func processing(operations: [(ExecuteOption, BaseModel?)]) -> Observable<Void>
+    
+    func update() -> Observable<Void>
+    func insert(model: BaseModel) -> Observable<Void>
+    func delete(model: BaseModel) -> Observable<Void>
 }
 
 class DatabaseManager {

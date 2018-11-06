@@ -16,9 +16,10 @@ class TemplateShareViewModel: BaseCollectionViewModel {
     
     private(set) var dataSource: TemplateShareMainDataSource
     private(set) var collectionViewDelegate: TemplateShareCollectionDelegate
-    private var didChangedTemplates = PublishSubject<FetchResult?>()
+    private let didChangedSubject = PublishSubject<FetchResult>()
     
     private var savedTemplatesByKeys = [String : SharedTemplateModel]()
+    private let disposeBag = DisposeBag()
     
     init(templateManager: TemplateManager, authManager: AuthManager, router: TemplateShareRouter) {
         self.templateManager = templateManager
@@ -29,41 +30,40 @@ class TemplateShareViewModel: BaseCollectionViewModel {
     }
     
     deinit {
-        for template in savedTemplatesByKeys.values {
-            templateManager.createTemplate(string: template.value, completion: nil)
-        }
+        let strings = savedTemplatesByKeys.values.map { $0.value }
+        templateManager.createTemplates(strings: strings)
+            .ca_subscribe(onNext: nil)
+            .disposed(by: disposeBag)
     }
     
     // MARK: - Public
     
     func configure() {
         configureSubscriptions()
-        templateManager.loadSharedContent(excludeAccount: authManager.authorizedAccount.value!, fetchResult: didChangedTemplates)
+        templateManager.loadSharedContent(excludeAccount: authManager.account!, fetchResult: didChangedSubject)
     }
     
     // MARK: - Private
     
     private func configureSubscriptions() {
-        didChangedTemplates.ca_subscribe { [weak self](fetchResult) in
-            self?.updateTemplates(fetchResult: fetchResult)
-        }
+        didChangedSubject
+            .ca_subscribe { [weak self] fetchResult in
+                guard let `self` = self else { return }
+                fetchResult.changes.forEach { (changes) in
+                    self.processChange(changes: changes, templates: fetchResult.models as! [SharedTemplateModel])
+                }
+            }
+            .disposed(by: disposeBag)
         
-        dataSource.didSaveTemplate.ca_subscribe { [weak self](template) in
-            self?.share(template: template)
-        }
+        dataSource.didSaveTemplate
+            .ca_subscribe { [weak self] template in
+                guard let `self` = self else { return }
+                self.savedTemplatesByKeys[template.unicID] = template.saved ? template : nil }
+            .disposed(by: disposeBag)
     }
     
     private func share(template: SharedTemplateModel) {
-        savedTemplatesByKeys[template.unicID] = template.saved ? template : nil
-    }
-    
-    private func updateTemplates(fetchResult: FetchResult?) {
-        guard let fr = fetchResult else {
-            return
-        }
-        for changes in fr.changes {
-            processChange(changes: changes, templates: fr.models as! [SharedTemplateModel])
-        }
+        
     }
     
     private func processChange(changes: FetchResultChanges, templates: [SharedTemplateModel]) {

@@ -13,17 +13,15 @@ import RxSwift
 class TemplateEditCell: BaseCollectionViewCell {
     private var templateEditTextView = UITextView()
     private var localViewModel: TemplateEditCellModel? {
-        guard viewModel is TemplateEditCellModel else {
-            return nil
-        }
-        return viewModel as? TemplateEditCellModel        
+        return viewModel as? TemplateEditCellModel
     }
+    
+    private let disposeBag = DisposeBag()
     
     override var viewModel: ViewModel? {
         didSet {
-            if let vm = localViewModel {
-                templateEditTextView.text = vm.template
-            }
+            guard let vm = localViewModel else { return }
+            templateEditTextView.text = vm.template
         }
     }
     
@@ -45,33 +43,27 @@ class TemplateEditCell: BaseCollectionViewCell {
     // MARK: - Public
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        guard let _ = localViewModel else {
-            return super.sizeThatFits(size)
-        }
+        guard let _ = localViewModel else { return super.sizeThatFits(size) }
         var fittingSize = CGSize(width: size.width, height: CGFloat.greatestFiniteMagnitude)
         fittingSize.height = 150
         return fittingSize
     }
     
     func configureViews() {
-        configuredTemplateEditTextView()
         contentView.addSubview(templateEditTextView)
-        templateEditTextView.snp.makeConstraints { (make) in
-            make.edges.equalTo(self.contentView.layoutMargins)
-        }
+        templateEditTextView.snp.makeConstraints { $0.edges.equalTo(self.contentView.layoutMargins) }
         let margins = UIEdgeInsets(ca_edge: LayoutConstants.spacing)
         contentView.layoutMargins = margins
         
         configureSubsciptions()
     }
     
-    func configuredTemplateEditTextView() {        
-    }
-    
     func configureSubsciptions() {
-        templateEditTextView.rx.text.asObservable().ca_subscribe(onNext: { [weak self](text) in
-            self?.localViewModel?.update(template: text)
-        })
+        templateEditTextView.rx.text
+            .ca_subscribe { [weak self] in
+                guard let `self` = self, let localViewModel = self.localViewModel else { return }
+                localViewModel.update(template: $0) }
+            .disposed(by: disposeBag)
     }
     
     func configureAppearance() {

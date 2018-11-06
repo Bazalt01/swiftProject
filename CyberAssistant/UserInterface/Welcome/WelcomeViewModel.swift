@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 class WelcomeViewModel {
     private var authManager: AuthManager
@@ -20,26 +21,29 @@ class WelcomeViewModel {
     }
     
     // MARK: - Public
-    
-    func signIn(result: AuthResult, success: @escaping() -> Void, failure: @escaping() -> Void) {
-        authManager.signIn(result: result, success: { [weak self] () in
-            self?.router.dismiss()
-        }) { [weak self] (error) in
-            self?.router.openAlertController(message: error.localizedDescription)
-            failure()
-        }
+    func signIn(result: AuthResult) -> Observable<Void> {
+        return sign(result: result, isSignIn: true)
     }
     
-    func signUp(result: AuthResult, success: @escaping() -> Void, failure: @escaping() -> Void) {
-        authManager.signUp(result: result, success: { [weak self] () in
-            self?.router.dismiss()
-        }) { [weak self] (error) in
-            self?.router.openAlertController(message: error.localizedDescription)
-            failure()
-        }
+    func signUp(result: AuthResult) -> Observable<Void> {
+        return sign(result: result, isSignIn: false)
     }
     
-    func showError(error: Error) {
-        router.openAlertController(message: error.localizedDescription)
+    private func sign(result: AuthResult, isSignIn: Bool) -> Observable<Void> {
+        let observable = isSignIn ? authManager.signIn(result: result) : authManager.signUp(result: result)
+        return observable
+            .catchError { [weak self] error in
+                guard let `self` = self else { return Observable<Void>.empty() }
+                self.showError(error: ErrorManager.errorMessage(code: error as! ErrorCode))
+                return Observable<Void>.empty()
+            }
+            .do(onNext: nil, onError: nil, onCompleted: { [weak self] in
+                guard let `self` = self else { return }
+                self.router.dismiss()
+            }, onSubscribe: nil, onSubscribed: nil, onDispose: nil)
+    }
+    
+    func showError(error: String) {
+        router.openAlertController(message: error)
     }
 }

@@ -23,13 +23,9 @@ class LayoutManager {
     
     func updateLayoutModel(viewModel: inout ViewModel, size: CGSize) {
         let className = NSStringFromClass(viewModel.viewClass)
-        guard var view = viewsByClass[className] else {
-            return
-        }
+        guard var view = viewsByClass[className],
+              viewModel.layoutModel.size.width != size.width else { return }
         
-        if viewModel.layoutModel.size.width == size.width {
-            return
-        }
         viewModel.isCalculatingSize = true
         view.viewModel = viewModel
         viewModel.layoutModel = LayoutModel(size: view.sizeThatFits(size))

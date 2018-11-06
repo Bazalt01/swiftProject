@@ -34,13 +34,12 @@ class SettingsOptionViewModel: SettingsViewModel {
     
     private func optionsSection() -> TableSection {
         var section = TableSection()
-        var models = [SettingOptionCellModel]()
-        for option in options {
-            let model = SettingOptionCellModel(option: option) { [weak self](option) in
-                self?.selectOption(option)
-                self?.router.popViewController()
+        let models = options.map { [weak self] option in
+            return SettingOptionCellModel(option: option) { [weak self] option in
+                guard let `self` = self else { return }
+                self.selectOption(option)
+                self.router.popViewController()
             }
-            models.append(model)
         }
         section.cellModels = models
         return section

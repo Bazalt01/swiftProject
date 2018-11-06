@@ -8,15 +8,14 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 class CellActionView: UIView {
-    var actionButton = ButtonWithBlock()
+    var button = UIButton()
     var viewModel: CellActionViewModel
-    var selected: Bool = false {
-        didSet {
-            updateIcon()
-        }
-    }
+    
+    let disposeBag = DisposeBag()
     
     // MARK: - Inits
     
@@ -27,8 +26,6 @@ class CellActionView: UIView {
         configureViews()
         configureAppearance()
         configureSubscriptions()
-        self.selected = viewModel.selected
-        updateIcon()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -38,41 +35,30 @@ class CellActionView: UIView {
     // MARK: - Private
     
     private func configureViews() {
-        addSubview(actionButton)
-        actionButton.snp.makeConstraints { (make) in
-            make.edges.equalTo(self)
-        }
-        actionButton.actionBlock = viewModel.actionBlock
+        addSubview(button)
+        button.snp.makeConstraints { $0.edges.equalTo(self) }
     }
     
     private func configureAppearance() {
         switch viewModel.type {
         case .delete:
-            Appearance.applyFor(deleteButton: actionButton)
+            Appearance.applyFor(deleteButton: button)
             break
         case .mute:
-            Appearance.applyFor(muteButton: actionButton)
+            Appearance.applyFor(muteButton: button)
             break
         case .share:
-            Appearance.applyFor(shareButton: actionButton)
+            Appearance.applyFor(shareButton: button)
             break
         }
     }
     
     private func configureSubscriptions() {
-        _ = self.viewModel.select.subscribe(onNext: { [weak self](selected) in
-            self?.processSelected(selected: selected)
-        }, onError: nil, onCompleted: nil, onDisposed: nil)
-    }
-    
-    private func processSelected(selected: Bool) {
-        self.selected = selected        
-    }
-    
-    private func updateIcon() {    
-        let actionIcon = selected ? viewModel.selectedIcon : viewModel.deselectedIcon
-        if let icon = actionIcon {
-            actionButton.setImage(icon, for: .normal)
-        }
+        viewModel.icon
+            .bind(to: button.rx.image())
+            .disposed(by: disposeBag)
+        button.rx.tap
+            .bind(to: viewModel.actionSubject)
+            .disposed(by: disposeBag)
     }
 }

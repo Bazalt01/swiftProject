@@ -27,6 +27,6 @@ class TemplateEditDataSource: BaseCollectionDataSource {
         templateEditCellModel = TemplateEditCellModel()
         templateEditCellModel!.update(template: template)
         cellViewModels = [templateEditCellModel!]
-        notifyUpdate(batchUpdates: nil, completion: nil)
+        notify(batchUpdates: nil, completion: nil)
     }        
 }

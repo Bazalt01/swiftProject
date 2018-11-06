@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 class TemplateShareCellModel: BaseCellViewModel {
     var author: String {
@@ -23,11 +24,15 @@ class TemplateShareCellModel: BaseCellViewModel {
     
     private(set) var template: SharedTemplateModel
     
-    private let saveIcon = UIImage.ca_image(imageName: "ic_save", renderingMode: .alwaysTemplate)
-    private let trashIcon = UIImage.ca_image(imageName: "ic_trash", renderingMode: .alwaysTemplate)
-    var icon: UIImage? {
-        return template.saved ? trashIcon : saveIcon
+    private let saveIcon = UIImage.ca_image(imageName: "ic_save", renderingMode: .alwaysTemplate) ?? UIImage()
+    private let trashIcon = UIImage.ca_image(imageName: "ic_trash", renderingMode: .alwaysTemplate) ?? UIImage()
+    
+    private let iconSubject = BehaviorRelay<UIImage>(value: UIImage())
+    
+    var icon: Observable<UIImage> {
+        return iconSubject.share()
     }
+    
     private var didSave: PublishSubject<SharedTemplateModel>
     
     // MARK: - Inits
@@ -36,6 +41,7 @@ class TemplateShareCellModel: BaseCellViewModel {
         self.template = template
         self.didSave = didSave
         super.init(viewClass: TemplateShareCell.self)
+        self.iconSubject.accept(saveIcon)
         self.templateAttrText = attributedTemplate(template: template.value)
     }
     
@@ -49,6 +55,7 @@ class TemplateShareCellModel: BaseCellViewModel {
     func updateSaved() {
         template.saved = !template.saved
         didSave.onNext(template)
+        iconSubject.accept(template.saved ? trashIcon : saveIcon)
     }
     
     // MARK: - Private

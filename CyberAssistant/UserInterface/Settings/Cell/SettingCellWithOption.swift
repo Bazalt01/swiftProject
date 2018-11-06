@@ -13,9 +13,7 @@ class SettingCellWithOption: SettingCellView {
     private let valueLabel = UILabel()
     override var viewModel: SettingCellModel? {
         didSet {
-            guard let vm = localViewModel else {
-                return
-            }
+            guard let vm = localViewModel else { return }
             applyViewModel(viewModel: vm)
         }
     }

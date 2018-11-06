@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import RxCocoa
 
 class TemplateViewModel {
     private var router: TemplateRouter
@@ -15,14 +16,17 @@ class TemplateViewModel {
     private(set) var dataSource: TemplateCollectionDataSource
     private(set) var collectionViewDelegate: TemplateCollectionDelegate        
     
-    let hasTemplates = PublishSubject<Bool>()
+    private let hasTemplatesSubject = BehaviorRelay<Bool>(value: false)
+    
+    var hasTemplates: Observable<Bool> {
+        return hasTemplatesSubject.share()
+    }
+    
+    private let disposeBag = DisposeBag()
     
     // MARK: - Inits
     
-    init(templateManager: TemplateManager,
-         dataSource: TemplateCollectionDataSource,
-         collectionViewDelegate: TemplateCollectionDelegate,
-         router: TemplateRouter) {
+    init(templateManager: TemplateManager, dataSource: TemplateCollectionDataSource, collectionViewDelegate: TemplateCollectionDelegate, router: TemplateRouter) {
         self.templateManager = templateManager
         self.dataSource = dataSource
         self.collectionViewDelegate = collectionViewDelegate
@@ -35,9 +39,6 @@ class TemplateViewModel {
     
     func configure() {
         configureSubsciptions()
-        let models = self.templateManager.models
-        dataSource.configureAndSetCellViewModel(templateModels: self.templateManager.models, batchUpdates: nil)
-        hasTemplates.onNext(models.count > 0)
     }
     
     func createNewTemplate() {
@@ -51,48 +52,64 @@ class TemplateViewModel {
     // MARK: - Private
     
     private func configureSubsciptions() {
-        collectionViewDelegate.didSelectTemplate.ca_subscribe(onNext: { [weak self](cellViewModel) in
-            self?.findAndOpenTemplate(cellViewModel: cellViewModel)
-        })
+        templateManager.models
+            .take(1)
+            .ca_subscribe { [weak self] templates in
+                guard let `self` = self else { return }
+                self.dataSource.configureAndSetCellViewModel(templateModels: templates, batchUpdates: nil)
+                self.hasTemplatesSubject.accept(templates.count > 0)}
+            .disposed(by: disposeBag)
         
-        self.templateManager.templateFetchResult.ca_subscribe(onNext: { [weak self](fetchResult) in
-            self?.processModels(fetchResult: fetchResult)
-        })
+        templateManager.fetchResult
+            .ca_subscribe { [weak self] in
+                guard let `self` = self else { return }
+                self.processModels(fetchResult: $0) }
+            .disposed(by: disposeBag)
         
-        dataSource.didDeleteTemplate.ca_subscribe(onNext: { [weak self](template) in
-            self?.delete(template: template)
-        })
+        collectionViewDelegate.didSelect
+            .ca_subscribe { [weak self] in
+                guard let `self` = self else { return }
+                self.findAndOpenTemplate(cellViewModel: $0) }
+            .disposed(by: disposeBag)
         
-        dataSource.didMuteTemplate.ca_subscribe(onNext: { [weak self](template) in
-            self?.mute(template: template)
-        })
-        
-        dataSource.didShareTemplate.ca_subscribe(onNext: { [weak self](template) in
-            self?.share(template: template)
-        })
+        dataSource.didActionTemplate
+            .ca_subscribe { [weak self] (template, type) in
+                guard let `self` = self else { return }
+                var template = template
+                switch type {
+                case .delete:
+                    _ = self.templateManager.delete(template: template).subscribe(onNext: nil, onError: nil, onCompleted: nil, onDisposed: nil)
+                    break
+                case .mute:
+                    _ = self.templateManager.save(template: template).subscribe(onNext: nil, onError: nil, onCompleted: {
+                        template.muted = !template.muted
+                    }, onDisposed: nil)
+                    break
+                case .share:
+                    _ = self.templateManager.save(template: template).subscribe(onNext: nil, onError: nil, onCompleted: {
+                        template.shared = !template.shared
+                    }, onDisposed: nil)
+                    break
+                }}
+            .disposed(by: disposeBag)
     }
     
     private func findAndOpenTemplate(cellViewModel: ViewModel) {
-        if let template = self.dataSource.template(byCellModel: cellViewModel) {
-            self.openTemplateForEditing(template: template)
-        }
+        guard let template = dataSource.template(byCellModel: cellViewModel) else { return }
+        openTemplateForEditing(template: template)
     }
     
     private func processModels(fetchResult: FetchResult?) {
-        guard let result = fetchResult else {
-            return
-        }
+        guard let result = fetchResult else { return }
         let batchUpdates = configureBatchUpdates(fetchResultChanges: result.changes)
         dataSource.configureAndSetCellViewModel(templateModels: result.models as! [TemplateModel], batchUpdates: batchUpdates)
-        hasTemplates.onNext(result.models.count > 0)
+        hasTemplatesSubject.accept(result.models.count > 0)
     }
     
     private func configureBatchUpdates(fetchResultChanges: [FetchResultChanges]) -> [BatchUpdate] {
         var batchUpdates = [BatchUpdate]()
         for fetchResultChange in fetchResultChanges {
-            let indexPathes = fetchResultChange.indexes.map { (index) -> IndexPath in
-                return IndexPath(item: index, section: 0)
-            }
+            let indexPathes = fetchResultChange.indexes.map { IndexPath(item: $0, section: 0) }
             let batchUpdate = BatchUpdate(option: fetchResultChange.option, indexPathes: indexPathes, sections: IndexSet())
             batchUpdates.append(batchUpdate)
         }
@@ -101,23 +118,5 @@ class TemplateViewModel {
     
     private func openTemplateForEditing(template: TemplateModel) {
         router.openTemplateEditorController(template: template)
-    }
-    
-    private func delete(template: TemplateModel) {
-        templateManager.deleteTemplate(template: template)
-    }
-    
-    private func mute(template: TemplateModel) {
-        var templ = template
-        templateManager.saveTemplate {
-            templ.muted = !templ.muted
-        }
-    }
-    
-    private func share(template: TemplateModel) {
-        var templ = template
-        templateManager.saveTemplate {
-            templ.shared = !templ.shared
-        }
     }
 }

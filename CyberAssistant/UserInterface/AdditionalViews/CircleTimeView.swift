@@ -9,15 +9,16 @@
 import UIKit
 import Darwin
 import RxSwift
+import RxCocoa
 import SnapKit
 
 let kDefaultTime = 5
-let kMaxTime = 60
-let kShapeInset: CGFloat = 2.0
-let kDefaultAnimationDuration = 0.3
-let kCircleDegree = 360
-let kRegulatorDelayAnimation = 1.0
-let kRegulatorAnimationKey = "regulator_animation"
+private let kMaxTime = 60
+private let kShapeInset: CGFloat = 2.0
+private let kDefaultAnimationDuration = 0.3
+private let kCircleDegree = 360
+private let kRegulatorDelayAnimation = 1.0
+private let kRegulatorAnimationKey = "regulator_animation"
 
 class CircleTimeView: UIView {
     private let stackView = UIStackView()
@@ -36,11 +37,8 @@ class CircleTimeView: UIView {
     private let showingRegulatorAnimation = CABasicAnimation()
     private let hidingRegulatorAnimation = CABasicAnimation()
     
-    private(set) var isPlaying = false
-    
     private var timer: Timer?
     
-    private(set) var time: Int
     private var currentTime: Int = 0 {
         didSet {
             timeLabel.text = String(currentTime)
@@ -49,29 +47,42 @@ class CircleTimeView: UIView {
     private var timeLineForward = true
     
     var canPlay = false
-    let playObservable = PublishSubject<Bool>()
-    let cantPlayObservable = PublishSubject<Void>()
-    let timeObservable = PublishSubject<Int>()
-    let timeOverObservable = PublishSubject<Void>()
+    private let isPlayingSubject = BehaviorRelay<Bool>(value: false)
+    private let cantPlaySubject = PublishSubject<Void>()
+    private let timeSubject = BehaviorRelay<Int>(value: kDefaultTime)
+    private let timeOverSubject = PublishSubject<Void>()
+    
+    var isPlaying: Observable<Bool> {
+        return isPlayingSubject.share()
+    }
+    var cantPlay: Observable<Void> {
+        return cantPlaySubject.share()
+    }
+    var time: Observable<Int> {
+        return timeSubject.share()
+    }
+    var timeOver: Observable<Void> {
+        return timeOverSubject.share()
+    }
+    
+    let disposeBag = DisposeBag()
  
     // MARK: - Inits
     
     init(time: Int, frame: CGRect) {
-        self.time = time
+        self.timeSubject.accept(time)
         self.currentTime = time
         super.init(frame: frame)
         self.configure()
     }
     
     override init(frame: CGRect) {
-        self.time = kDefaultTime
         super.init(frame: frame)
         configure()
     }
     
     @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
-        self.time = kDefaultTime
         super.init(coder: aDecoder)
     }
     
@@ -81,7 +92,7 @@ class CircleTimeView: UIView {
         super.layoutSubviews()
         updateShapeLayer()
         
-        let degree = CGFloat(360 / 60 * time)
+        let degree = CGFloat(360 / 60 * timeSubject.value)
         let center = bounds.ca_center()
         updateTimeRegulatorPosition(degree: degree, center: center)
     }
@@ -89,34 +100,29 @@ class CircleTimeView: UIView {
     // MARK: - Public
     
     func fire() {
-        guard isPlaying else {
-            return
-        }
+        guard isPlayingSubject.value else { return }
         currentTime = 0
         self.dropTimeLine()
         
-        // Needs cuple milliseconds for droping the time line without an animation
+        // Needs cuple milliseconds for dropping the time line without an animation
         DispatchQueue.main.async { [weak self]() in
-            self?.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self!, selector: #selector(self?.handleTimer(sender:)), userInfo: nil, repeats: true)
-            self?.timer!.fire()
+            guard let `self` = self else { return }
+            self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.handleTimer(sender:)), userInfo: nil, repeats: true)
+            self.timer!.fire()
         }
     }
     
     func play() {
-        guard isPlaying == false else {
-            return
-        }
+        guard isPlayingSubject.value == false else { return }
         changeButtonPathAnimated()
-        isPlaying = true
+        isPlayingSubject.accept(true)
         startTimeLine()
     }
     
     func stop() {
-        guard isPlaying else {
-            return
-        }
+        guard isPlayingSubject.value else { return }
         changeButtonPathAnimated()
-        isPlaying = false
+        isPlayingSubject.accept(false)
         timer!.invalidate()
         finishTimeLine()
     }
@@ -128,30 +134,33 @@ class CircleTimeView: UIView {
         configureTimeLabel()
         configurePlayButton()
         configureShapeLayer()
-        configurePanGesture()
         configureTimeRegulator()
-        configureTapGesture()
         configureShowingResulatorAnimation()
         configureHiddingResulatorAnimation()
         
-        timeLabel.addGestureRecognizer(tapGesture)
         
         layer.addSublayer(circleLayer)
 
         addSubview(stackView)
-        stackView.snp.makeConstraints { (make) in
-            make.center.equalToSuperview()
-        }
+        stackView.snp.makeConstraints { $0.center.equalToSuperview() }
     
         stackView.addArrangedSubview(timeLabel)
         stackView.addArrangedSubview(playButton)
-        playButton.snp.makeConstraints { (make) in
-            make.size.equalTo(CGSize(ca_size: AppearanceSize.playButtonSize))
-        }
+        playButton.snp.makeConstraints { $0.size.equalTo(CGSize(ca_size: AppearanceSize.playButtonSize)) }
         
         addSubview(timeRegulator)
         
+        timeLabel.addGestureRecognizer(tapGesture)
         addGestureRecognizer(panGesture)
+        
+        timeLabel.rx.tapGesture()
+            .ca_subscribe { [weak self] gesture in self?.handleTap(sender: gesture) }
+            .disposed(by: disposeBag)
+        
+        rx.panGesture()            
+            .ca_subscribe { [weak self] gesture in self?.handlePan(sender: gesture) }
+            .disposed(by: disposeBag)
+        
         configureAppearance()
     }
 
@@ -162,7 +171,7 @@ class CircleTimeView: UIView {
     }
     
     private func configureTimeLabel() {
-        timeLabel.text = String(time)
+        timeLabel.text = String(timeSubject.value)
         timeLabel.isUserInteractionEnabled = true
     }
     
@@ -237,14 +246,6 @@ class CircleTimeView: UIView {
         hidingRegulatorAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
     }
     
-    private func configurePanGesture() {
-        panGesture.addTarget(self, action: #selector(handlePan(sender:)))
-    }
-    
-    private func configureTapGesture() {
-        tapGesture.addTarget(self, action: #selector(handleTap(sender:)))
-    }
-    
     private func updateShapeLayer() {
         var frame = self.bounds
         frame.origin.x = kShapeInset
@@ -263,8 +264,7 @@ class CircleTimeView: UIView {
         
         if (targetPoint.x == 0.0) {
             degree = targetPoint.y > 0.0 ? 180.0 : 0.0
-        }
-        else {
+        } else {
             degree += targetPoint.x > 0.0 ? 90.0 : 270.0
         }
         updateTime(degree: Int(ceil(degree)))
@@ -298,16 +298,14 @@ class CircleTimeView: UIView {
         if targetTime == 0 {
             targetTime = 1
         }
-        if time == targetTime {
-            return
-        }
-        time = targetTime
-        currentTime = time
+        guard timeSubject.value != targetTime else { return }
+        timeSubject.accept(targetTime)
+        currentTime = targetTime
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
     }
     
     private func updateTimeLine(animated: Bool, value: Int) {
-        let totalValue = 1.0 / CGFloat(time) * CGFloat(value)
+        let totalValue = 1.0 / CGFloat(timeSubject.value) * CGFloat(value)
         let strokeStart = timeLineForward ? 0.0 : totalValue
         let strokeEnd = timeLineForward ? totalValue : 1.0
         
@@ -331,8 +329,8 @@ class CircleTimeView: UIView {
     }
     
     private func changeButtonPathAnimated() {
-        let fromPath = isPlaying ? stopPath : playPath
-        let toPath = isPlaying ? playPath : stopPath
+        let fromPath = isPlayingSubject.value ? stopPath : playPath
+        let toPath = isPlayingSubject.value ? playPath : stopPath
         
         let animation = CABasicAnimation()
         animation.keyPath = "path"
@@ -364,7 +362,7 @@ class CircleTimeView: UIView {
     
     private func finishTimeLine() {
         timeLineForward = true
-        currentTime = time
+        currentTime = timeSubject.value
         
         updateTimeLine(animated: true, value: currentTime)
         showTimeRegulator()
@@ -374,53 +372,44 @@ class CircleTimeView: UIView {
     
     @objc private func handlePressPlay(sender: UIButton) {
         guard canPlay else {
-            cantPlayObservable.onNext(())
+            cantPlaySubject.onNext(())
             return
         }
         changeButtonPathAnimated()
         
-        if isPlaying {
+        if isPlayingSubject.value {
             timer?.invalidate()
             finishTimeLine()
-        }
-        else {
+        } else {
             startTimeLine()
         }
         
-        isPlaying = !isPlaying
-        playObservable.onNext(isPlaying)
+        isPlayingSubject.accept(!isPlayingSubject.value)
     }
     
     @objc private func handlePan(sender: UIPanGestureRecognizer) {
-        if isPlaying {
-            return
-        }
+        guard isPlayingSubject.value == false else { return }
         switch sender.state {
         case .changed:
             calculateTimeRegulatorPosition(point: sender.location(in: self))
-            break
-        case .ended:
-            timeObservable.onNext(time)
             break
         default:
             break
         }
     }
     
-    @objc private func handleTap(sender: UIPanGestureRecognizer) {
+    @objc private func handleTap(sender: UITapGestureRecognizer) {
         showTimeRegulator()
     }
     
     @objc private func handleTimer(sender: Timer) {
-        guard isPlaying else {
-            return
-        }
+        guard isPlayingSubject.value else { return }
         currentTime += 1
         updateTimeLine(animated: true, value: currentTime)
 
-        if currentTime >= time {
+        if currentTime >= timeSubject.value {
             timer?.invalidate()
-            self.timeOverObservable.onNext(())
+            timeOverSubject.onNext(())
         }
     }
 }

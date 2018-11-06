@@ -15,20 +15,16 @@ class TemplateCell: CollectionViewCellWithActions {
     private var templateLabel = UILabel()
     private var exampleLabel = UILabel()
     private var localViewModel: TemplateCellModel? {
-        guard viewModel is TemplateCellModel else {
-            return nil
-        }
         return viewModel as? TemplateCellModel
     }
-    private var disposables = [Disposable]()
+    
+    private var disposables: [Disposable] = []
     
     override var viewModel: ViewModel? {
         didSet {
-            if let vm = localViewModel {
-                updateMutedAppearance(muted: vm.muted)
-                install(viewModel: vm)
-                configureSubscriptions(viewModel: vm)
-            }
+            guard let vm = localViewModel else { return }
+            install(viewModel: vm)
+            configureSubscriptions(viewModel: vm)
         }
     }
     
@@ -52,9 +48,7 @@ class TemplateCell: CollectionViewCellWithActions {
         super.prepareForReuse()
         templateLabel.text = nil
         exampleLabel.text = nil
-        for disposable in disposables {
-            disposable.dispose()
-        }
+        disposables.forEach { $0.dispose()}
         disposables = []
         viewModel = nil
     }
@@ -75,17 +69,14 @@ class TemplateCell: CollectionViewCellWithActions {
     private func install(viewModel: TemplateCellModel) {
         templateLabel.attributedText = viewModel.templateAttrText
         exampleLabel.text = viewModel.templateExample
-        if let avm = viewModel.actionViewModels {
-            self.actionViewModels = avm
-        }
+        guard let avm = viewModel.actionViewModels else { return }
+        self.actionViewModels = avm
     }
     
     private func configureViews() {
         configureStackView()
         contentView.addSubview(stackView)
-        stackView.snp.makeConstraints { (make) in
-            make.edges.equalTo(self.contentView.snp.margins)
-        }
+        stackView.snp.makeConstraints { $0.edges.equalTo(self.contentView.snp.margins) }
         contentView.layoutMargins = UIEdgeInsets(ca_edge: LayoutConstants.spacing)
         
         configuredTemplateLabel()
@@ -96,14 +87,10 @@ class TemplateCell: CollectionViewCellWithActions {
     }
     
     private func configureSubscriptions(viewModel: TemplateCellModel) {
-        let pressDisposable = viewModel.didPressAction.subscribe(onNext: { [weak self]() in
-            self?.hideActions()
-            }, onError: nil, onCompleted: nil, onDisposed: nil)
+        let pressDisposable = viewModel.didPress.ca_subscribe { [weak self] in self?.hideActions() }
         disposables.append(pressDisposable)
         
-        let mutedDisposable = viewModel.didMutedChanged.subscribe(onNext: { [weak self](muted) in
-            self?.updateMutedAppearance(muted: muted)
-            }, onError: nil, onCompleted: nil, onDisposed: nil)
+        let mutedDisposable = viewModel.didMuted.ca_subscribe { [weak self] in self?.updateMutedAppearance(muted: $0) }
         disposables.append(mutedDisposable)
     }
     

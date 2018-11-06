@@ -13,17 +13,15 @@ class SettingsRouter: SettingsBaseRouter {
     // MARK: - Public
     
     func openWelcomeViewController() {
-        if let rh = routeHandler {
-            let vc = Assembly.shared.configuredWelcomeViewController()
-            vc.modalPresentationStyle = .overFullScreen
-            rh.presentViewController?(viewController: vc)
-        }
+        guard let routeHandler = routeHandler else { return }
+        let vc = Assembly.shared.configuredWelcomeViewController()
+        vc.modalPresentationStyle = .overFullScreen
+        routeHandler.present?(viewController: vc)
     }
     
     func openOptionListViewController(options: [TableOption], selectOption: @escaping (_ option: TableOption) -> Void) {
-        if let rh = routeHandler {
-            let vc = Assembly.shared.configuredSettingsViewController(options: options, selectOption: selectOption)
-            rh.pushToViewController?(viewController: vc)
-        }
+        guard let routeHandler = routeHandler else { return }
+        let vc = Assembly.shared.configuredSettingsViewController(options: options, selectOption: selectOption)
+        routeHandler.push?(viewController: vc)
     }        
 }

@@ -19,14 +19,13 @@ class Assembly {
     init() {
         var language = Language.russian
         let savedLanguage = UserDefaults.standard.string(forKey: UserDefaultsKeys.languageKey)
-        if savedLanguage != nil {
-            language = Language(rawValue: savedLanguage!)!
+        if let savedLanguage = savedLanguage {
+            language = Language(rawValue: savedLanguage)!
         }
         let conf = SpeechConfigurator(language: language)
         self.speechManager = BaseSpeechManager()
         self.speechManager.configurator = conf
     }
-    
     
     func configuredMainViewController() -> MainViewController {
         let tm = TemplateManager(authManager: authManager)

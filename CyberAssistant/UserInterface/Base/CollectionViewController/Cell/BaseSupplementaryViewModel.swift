@@ -30,11 +30,7 @@ class BaseSupplementaryViewModel: Hashable, ViewModel {
     }
     
     func isEqual(viewModel: ViewModel) -> Bool {
-        guard viewModel is BaseSupplementaryViewModel else {
-            return false
-        }
-        
-        let vm = viewModel as! BaseSupplementaryViewModel
-        return self == vm
+        guard viewModel is BaseSupplementaryViewModel else { return false }
+        return self == viewModel as! BaseSupplementaryViewModel
     }
 }

@@ -33,10 +33,7 @@ class SettingCellView: UITableViewCell {
     
     func configureViews() {
         contentView.addSubview(stackView)
-        stackView.snp.makeConstraints { (make) in
-            make.margins.equalToSuperview()
-        }
-        
+        stackView.snp.makeConstraints { $0.margins.equalToSuperview() }
         contentView.layoutMargins = UIEdgeInsets(ca_edge: LayoutConstants.spacing)
         selectionStyle = .none
         
@@ -54,9 +51,7 @@ class SettingCellView: UITableViewCell {
     // MARK: - Private
     
     @objc private func handleTap(sender: UITapGestureRecognizer) {
-        if let vm = viewModel {
-            vm.selectAction()
-        }
+        viewModel?.selectAction()
     }
     
     private func configureStackView() {

@@ -14,31 +14,20 @@ class TemplateEditRuleCellModel: BaseCellViewModel {
     private(set) var result: NSAttributedString
     
     private var templateRule: TemplateRule
-    private var animator: LabelAnimator?
-    var labelAnimator: LabelAnimator? {
-        get {
-            return isCalculatingSize ? nil : animator
-        }
-        set(value) {
-            self.animator = value
-        }
-    }
     
     // MARK: - Inits
     
-    required init(rule: TemplateRule, labelAnimator: LabelAnimator?) {
+    required init(rule: TemplateRule) {
         self.templateRule = rule
         self.rule = TemplateFormatter.format(template: rule.rule)
         self.example = TemplateFormatter.format(template: rule.example)
         self.result = TemplateFormatter.format(template: rule.result)
-        self.animator = labelAnimator
         super.init(viewClass: TemplateEditRuleCell.self)
     }
     
     required init(viewClass: (UIView & View).Type) {
         assert(false)
         self.templateRule = TemplateRule(rule: "", example: "", result: "")
-        self.animator = LabelAnimator(stepDuration: 1.0)
         self.rule = NSAttributedString(string: "")
         self.example = NSAttributedString(string: "")
         self.result = NSAttributedString(string: "")

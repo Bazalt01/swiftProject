@@ -7,15 +7,15 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
+import RxGesture
 
 class CollectionViewCellWithActions: BaseCollectionViewCell {
-    lazy var panGesture: UIPanGestureRecognizer = {
-        let gesture = UIPanGestureRecognizer.init(target: self, action: #selector(panHandler(sender:)))
-        gesture.delegate = self
-        return gesture
-    }()
-    var startPanPoint: CGPoint?
-    var startContentViewPosition: CGFloat = 0.0
+    private var panGesture = UIPanGestureRecognizer()
+    private var panGestureDispose: Disposable?
+    private var startPanPoint: CGPoint?
+    private var startContentViewPosition: CGFloat = 0.0
     
     var actionViewModels: [CellActionViewModel]? {
         didSet {
@@ -23,7 +23,7 @@ class CollectionViewCellWithActions: BaseCollectionViewCell {
             configurePanGesture()
         }
     }
-    private var actionViews = [UIView]()
+    private var actionViews: [UIView] = []
     
     // MARK: - Public
     
@@ -40,14 +40,12 @@ class CollectionViewCellWithActions: BaseCollectionViewCell {
     }
     
     func hideActions() {
-        guard let point = startPanPoint else {
-            return
-        }
+        guard let point = startPanPoint else { return }
         let shiftLimit: CGFloat = CGFloat(actionViews.count) * AppearanceSize.cellActionWidth
         let currentPoint = CGPoint(x: point.x + shiftLimit, y: point.y)
         UIView.animate(withDuration: kSwipeAnimationDuration, animations: {
             self.moveActionView(startPoint: point, currentPoint: currentPoint)
-        }) { (finish) in
+        }) { _ in
             self.startContentViewPosition = 0.0
             self.startPanPoint = nil
         }
@@ -56,44 +54,36 @@ class CollectionViewCellWithActions: BaseCollectionViewCell {
     // MARK: - Private
     
     private func configureActions() {
-        for view in actionViews {
-            view.removeFromSuperview()
-        }
+        actionViews.forEach { $0.removeFromSuperview() }
         actionViews = []
         
-        guard let acts = actionViewModels else {
+        guard let actionViewModels = actionViewModels else {
             self.clipsToBounds = false
             return
         }
         self.clipsToBounds = true
         
-        for actionVM in acts {
-            let view = CellActionView(viewModel: actionVM)
-            addSubview(view)
-            actionViews.append(view)
+        let views = actionViewModels.map { return CellActionView(viewModel: $0) }
+        views.forEach {
+            addSubview($0)
+            actionViews.append($0)
         }
     }
     
     private func layoutActionViews() {
-        guard actionViews.count > 0 && startPanPoint == nil else {
-            return
-        }
-        
-        let x = self.frame.maxX
-        let y: CGFloat = 0.0
-        let height = self.frame.height
-        let width = AppearanceSize.cellActionWidth
-        for view in actionViews {
-            view.frame = CGRect(x: x, y: y, width: width, height: height)
-        }
+        guard actionViews.count > 0 && startPanPoint == nil else { return }
+        let rect = CGRect(x: frame.maxX, y: 0.0, width: AppearanceSize.cellActionWidth, height: frame.height)
+        actionViews.forEach { $0.frame = rect }
     }
     
     private func configurePanGesture() {
         if actionViewModels == nil {
             self.removeGestureRecognizer(panGesture)
-        }
-        else {
+            panGestureDispose?.dispose()
+        } else {
             self.addGestureRecognizer(panGesture)
+            panGestureDispose = rx.panGesture()
+                .subscribe { [weak self] in self?.panHandler(sender: $0.element!) }
         }
     }
     
@@ -116,7 +106,7 @@ class CollectionViewCellWithActions: BaseCollectionViewCell {
             let currentPoint = calculatePointForEnd(startPoint: startPanPoint!, currentPoint: currentPoint)
             UIView.animate(withDuration: currentPoint.duration, animations: {
                 self.moveActionView(startPoint: self.startPanPoint!, currentPoint: currentPoint.point)
-            }) { (finish) in
+            }) { _ in
                 self.startContentViewPosition = self.contentView.frame.origin.x
             }
             break
@@ -150,14 +140,11 @@ class CollectionViewCellWithActions: BaseCollectionViewCell {
         let rest = shiftLimit - diff
         let duration = kSwipeAnimationDuration * Double(rest / shiftLimit)
         
-        if shiftLimit / fabs(diff) >= 2.0 {
-            return (point: startPoint, duration: duration)
-        }
-        else {
-            let direction: CGFloat = startPoint.x - currentPoint.x >= 0 ? -1.0 : 1.0
-            let point = CGPoint(x: currentPoint.x + rest * direction, y: currentPoint.y)
-            return (point: point, duration: duration)
-        }
+        guard shiftLimit / fabs(diff) < 2.0 else { return (point: startPoint, duration: duration) }
+        
+        let direction: CGFloat = startPoint.x - currentPoint.x >= 0 ? -1.0 : 1.0
+        let point = CGPoint(x: currentPoint.x + rest * direction, y: currentPoint.y)
+        return (point, duration)
     }
 }
 

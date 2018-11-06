@@ -9,8 +9,8 @@
 import UIKit
 
 @objc protocol RouterHandler {
-    @objc optional func pushToViewController(viewController: UIViewController)
+    @objc optional func push(viewController: UIViewController)
     @objc optional func popViewController()
-    @objc optional func presentViewController(viewController: UIViewController)
+    @objc optional func present(viewController: UIViewController)
     @objc optional func dismiss()
 }

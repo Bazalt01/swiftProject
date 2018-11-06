@@ -17,8 +17,10 @@ class MainViewController: BaseViewController {
     private var circleTimeView: CircleTimeView?
     private var templatesButton = UIButton()
     private var settingsButton = UIButton()
-    private var templateLabels = [UILabel]()
+    private var templateLabels: [UILabel] = []
     private var newTemplateButton = UIButton()
+    
+    private let disposeBag = DisposeBag()
     
     // MARK: - Inits
     
@@ -52,7 +54,7 @@ class MainViewController: BaseViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        circleTimeView!.stop()
+        circleTimeView?.stop()
     }
     
     // MARK: - Private
@@ -80,9 +82,7 @@ class MainViewController: BaseViewController {
         }
         
         configureTemplateLabels()
-        for label in templateLabels {
-            stackView.addArrangedSubview(label)
-        }
+        templateLabels.forEach { stackView.addArrangedSubview($0) }
         
         configureTemplatesButton()
         view.addSubview(templatesButton)
@@ -90,8 +90,7 @@ class MainViewController: BaseViewController {
             if #available(iOS 11.0, *) {
                 make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
                 make.right.equalTo(view.safeAreaLayoutGuide).inset(10)
-            }
-            else {
+            } else {
                 make.top.equalTo(topLayoutGuide.snp.bottom).inset(10)
                 make.right.equalTo(view).inset(10)
             }
@@ -123,19 +122,16 @@ class MainViewController: BaseViewController {
         return stackView
     }
     
-    private func configurePlayButton() {
-    }
+    private func configurePlayButton() {}
     
     private func configureTemplatesButton() {
-        if let image = UIImage.ca_image(imageName: "ic_templates", renderingMode: .alwaysTemplate) {
-            templatesButton.setImage(image, for: .normal)            
-        }
+        guard let image = UIImage.ca_image(imageName: "ic_templates", renderingMode: .alwaysTemplate) else { return }
+        templatesButton.setImage(image, for: .normal)
     }
     
     private func configureSettingsButton() {
-        if let image = UIImage.ca_image(imageName: "ic_settings", renderingMode: .alwaysTemplate) {
-            settingsButton.setImage(image, for: .normal)
-        }
+        guard let image = UIImage.ca_image(imageName: "ic_settings", renderingMode: .alwaysTemplate) else { return }
+        settingsButton.setImage(image, for: .normal)
     }
     
     private func configureTemplateLabels() {
@@ -152,72 +148,68 @@ class MainViewController: BaseViewController {
     }
     
     private func configureSubsciptions() {
-        circleTimeView?.playObservable.ca_subscribe(onNext: { [weak self](isPlaying) in
-            if isPlaying {
-                self?.viewModel.playNextSpeechModel()
-            }
-        })
+        let viewModel = self.viewModel
+        circleTimeView?.isPlaying
+            .filter { $0 }
+            .ca_subscribe { _ in viewModel.playNextSpeechModel() }
+            .disposed(by: disposeBag)
         
-        circleTimeView?.cantPlayObservable.ca_subscribe(onNext: { [weak self](isPlaying) in
-            self?.viewModel.showHasntTemplatesNotification()
-        })
+        circleTimeView?.cantPlay
+            .ca_subscribe { _ in viewModel.showHasntTemplatesMessage() }
+            .disposed(by: disposeBag)
         
-        circleTimeView?.timeOverObservable.ca_subscribe(onNext: { [weak self]() in
-            self?.viewModel.updateTemplatePosition()
-            self?.viewModel.playNextSpeechModel()
-        })
+        circleTimeView?.timeOver
+            .ca_subscribe {
+                viewModel.updateTemplatePosition()
+                viewModel.playNextSpeechModel() }
+            .disposed(by: disposeBag)
         
-        circleTimeView?.timeObservable.ca_subscribe(onNext: { [weak self](time) in
-            self?.viewModel.updateDelayTyme(time: time)
-        })
+        circleTimeView?.time
+            .ca_subscribe { viewModel.updateDelayTyme(time: $0) }
+            .disposed(by: disposeBag)
         
-        templatesButton.rx.tap.ca_subscribe(onNext: { [weak self]() in
-            self?.viewModel.openTemplates()
-        })
+        templatesButton.rx.tap
+            .throttle(1.0, scheduler: MainScheduler.instance)
+            .ca_subscribe { viewModel.openTemplates() }
+            .disposed(by: disposeBag)
         
-        settingsButton.rx.tap.ca_subscribe(onNext: { [weak self]() in
-            self?.viewModel.openSettings()
-        })
-
-        newTemplateButton.rx.tap.ca_subscribe(onNext: { [weak self]() in
-            self?.viewModel.openNewTemplate()
-        })
+        settingsButton.rx.tap
+            .throttle(1.0, scheduler: MainScheduler.instance)
+            .ca_subscribe { viewModel.openSettings() }
+            .disposed(by: disposeBag)
         
-        viewModel.templateResults.ca_subscribe(onNext: { [weak self](templateResults) in
-            self?.updateLabels(labelTexts: templateResults)
-        })
+        newTemplateButton.rx.tap
+            .throttle(1.0, scheduler: MainScheduler.instance)
+            .ca_subscribe { viewModel.openNewTemplate() }
+            .disposed(by: disposeBag)
         
-        viewModel.canPlay.ca_subscribe(onNext: { [weak self](canPlay) in
-            self?.circleTimeView?.canPlay = canPlay
-        })
+        viewModel.templates
+            .ca_subscribe { [weak self] templates in
+                guard let `self` = self else { return }
+                self.templateLabels.forEach { $0.isHidden = true }
+                templates.enumerated().forEach { (offset, template) in
+                    self.templateLabels[offset].text = template
+                    self.templateLabels[offset].isHidden = false
+                }}
+            .disposed(by: disposeBag)
         
-        viewModel.needNewTemplate.ca_subscribe(onNext: { [weak self](needNewTempalate) in
-            self?.newTemplateButton.isHidden = needNewTempalate == false
-        })
+        viewModel.canPlay
+            .ca_subscribe { [weak self] in
+                guard let `self` = self else { return }
+                self.circleTimeView?.canPlay = $0 }
+            .disposed(by: disposeBag)
         
-        viewModel.didCompleteSpeech.ca_subscribe { [weak self]() in
-            self?.circleTimeView?.fire()
-        }
-    }
-    
-    private func updateLabels(labelTexts:[String]) {
-        guard labelTexts.count > 0 else {
-            for label in templateLabels {
-                label.isHidden = true
-            }
-            return
-        }
+        viewModel.needNewTemplate
+            .ca_subscribe { [weak self] in
+                guard let `self` = self else { return }
+                self.newTemplateButton.isHidden = !$0 }
+            .disposed(by: disposeBag)
         
-        templateLabels.enumerated().forEach { (offset, element) in
-            if offset < labelTexts.count {
-                let text = labelTexts[offset]
-                element.text = text
-                element.isHidden = false
-            }
-            else {
-                element.isHidden = true
-            }
-        }
+        viewModel.didCompleteSpeech
+            .ca_subscribe { [weak self] in
+                guard let `self` = self else { return }
+                self.circleTimeView?.fire() }
+            .disposed(by: disposeBag)
     }
     
     private func configureAppearance() {
@@ -225,8 +217,7 @@ class MainViewController: BaseViewController {
         templateLabels.enumerated().forEach { (offset, element) in
             if offset == 0 {
                 Appearance.applyFor(baseLabel: element)
-            }
-            else {
+            } else {
                 Appearance.applyFor(muteLabel: element)
             }
         }
@@ -237,21 +228,18 @@ class MainViewController: BaseViewController {
 }
 
 extension MainViewController: RouterHandler {
-    func pushToViewController(viewController: UIViewController) {
-        if let nc = navigationController {
-            
-            nc.navigationBar.alpha = 0
-            nc.isNavigationBarHidden = false
-            UIView.animate(withDuration: TimeInterval(UINavigationControllerHideShowBarDuration)) {
-                nc.navigationBar.alpha = 1
-            }
-            nc.pushViewController(viewController, animated: true)
+    func push(viewController: UIViewController) {
+        guard let nc = navigationController else { return }
+        nc.navigationBar.alpha = 0
+        nc.isNavigationBarHidden = false
+        UIView.animate(withDuration: TimeInterval(UINavigationControllerHideShowBarDuration)) {
+            nc.navigationBar.alpha = 1
         }
+        nc.pushViewController(viewController, animated: true)
     }
     
-    func presentViewController(viewController: UIViewController) {
-        if let nc = navigationController {
-            nc.present(viewController, animated: true, completion: nil)
-        }
+    func present(viewController: UIViewController) {
+        guard let nc = navigationController else { return }
+        nc.present(viewController, animated: true, completion: nil)
     }
 }

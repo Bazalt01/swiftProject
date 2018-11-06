@@ -13,9 +13,7 @@ class SettingOptionCellModel: SettingCellModel {
     
     init(option: TableOption, selectOption: @escaping (_ option: TableOption) -> Void) {
         self.option = option
-        super.init(title: option.value) {
-            selectOption(option)
-        }
+        super.init(title: option.value) { selectOption(option) }
         self.cellClass = SettingOptionCell.self
     }
 }

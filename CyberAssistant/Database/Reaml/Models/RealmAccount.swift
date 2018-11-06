@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RealmSwift
 import Realm
 
 class RealmAccount: RealmModel, AccountModel {
@@ -19,10 +18,9 @@ class RealmAccount: RealmModel, AccountModel {
     required init(login: String, password: String, name: String?) {
         self.login = login
         self.password = password
-        if let _ = name {
-            self.name = name!
-        }
-        else {
+        if let name = name {
+            self.name = name
+        } else {
             self.name = login
         }
         super.init()

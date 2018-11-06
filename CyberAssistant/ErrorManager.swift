@@ -8,72 +8,42 @@
 
 import Foundation
 
-let errorDomain = "error.CasinoAssistant.domain"
+let errorDomain = "error.CyberAssistant.domain"
 
-enum ErrorCode: Int {
-    case loginIsTooShort = 10000
+enum ErrorCode: Error {
+    case loginIsTooShort
     case passwordIsEmpty
     case passwordIsTooShort
     case repeatPasswordIsEmpty
     case repeatPasswordIsNotEqual
     
-    case accountIsExist = 20000
+    case accountIsExist
     case accountIsNotExist
     case couldntCreateAccount
     
-    case cantGetDatabase = 30000
+    case cantGetDatabase
+    case templateIsEmpty
     
-    case templateIsEmpty = 40000
-    
-    case enternal = 50000
+    case enternal
 }
 
 class ErrorManager {
-    class func error(code: ErrorCode) -> Error {
+    class func errorMessage(code: ErrorCode) -> String {
         switch code {
+        case .loginIsTooShort:          return NSLocalizedString("login_is_too_short", comment: "")
+        case .passwordIsEmpty:          return NSLocalizedString("password_is_empty", comment: "")
+        case .passwordIsTooShort:       return NSLocalizedString("password_is_too_short", comment: "")
+        case .repeatPasswordIsEmpty:    return NSLocalizedString("repeat_password_is_empty", comment: "")
+        case .repeatPasswordIsNotEqual: return NSLocalizedString("passwords_arent_equal", comment: "")
             
-        // 10000
-        case .loginIsTooShort:
-            let userInfo = [NSLocalizedDescriptionKey : NSLocalizedString("login_is_too_short", comment: "")]
-            return NSError(domain: errorDomain, code: code.rawValue, userInfo: userInfo)
-        case .passwordIsEmpty:
-            let userInfo = [NSLocalizedDescriptionKey : NSLocalizedString("password_is_empty", comment: "")]
-            return NSError(domain: errorDomain, code: code.rawValue, userInfo: userInfo)
-        case .passwordIsTooShort:
-            let userInfo = [NSLocalizedDescriptionKey : NSLocalizedString("password_is_too_short", comment: "")]
-            return NSError(domain: errorDomain, code: code.rawValue, userInfo: userInfo)
-        case .repeatPasswordIsEmpty:
-            let userInfo = [NSLocalizedDescriptionKey : NSLocalizedString("repeat_password_is_empty", comment: "")]
-            return NSError(domain: errorDomain, code: code.rawValue, userInfo: userInfo)
-        case .repeatPasswordIsNotEqual:
-            let userInfo = [NSLocalizedDescriptionKey : NSLocalizedString("passwords_arent_equal", comment: "")]
-            return NSError(domain: errorDomain, code: code.rawValue, userInfo: userInfo)
+        case .accountIsExist:           return NSLocalizedString("login_is_existed", comment: "")
+        case .accountIsNotExist:        return NSLocalizedString("account_isnt_existed", comment: "")
+        case .couldntCreateAccount: 	return NSLocalizedString("did_fail_create_account", comment: "")
             
-        // 20000
-        case .accountIsExist:
-            let userInfo = [NSLocalizedDescriptionKey : NSLocalizedString("login_is_existed", comment: "")]
-            return NSError(domain: errorDomain, code: code.rawValue, userInfo: userInfo)
-        case .accountIsNotExist:
-            let userInfo = [NSLocalizedDescriptionKey : NSLocalizedString("account_isnt_existed", comment: "")]
-            return NSError(domain: errorDomain, code: code.rawValue, userInfo: userInfo)
-        case .couldntCreateAccount:
-            let userInfo = [NSLocalizedDescriptionKey : NSLocalizedString("did_fail_create_account", comment: "")]
-            return NSError(domain: errorDomain, code: code.rawValue, userInfo: userInfo)
+        case .cantGetDatabase:          return NSLocalizedString("database_isnt_existed", comment: "")
+        case .templateIsEmpty:          return NSLocalizedString("template_is_empty", comment: "")
             
-        // 30000
-        case .cantGetDatabase:
-            let userInfo = [NSLocalizedDescriptionKey : NSLocalizedString("database_isnt_existed", comment: "")]
-            return NSError(domain: errorDomain, code: code.rawValue, userInfo: userInfo)
-            
-        // 40000
-        case .templateIsEmpty:
-            let userInfo = [NSLocalizedDescriptionKey : NSLocalizedString("template_is_empty", comment: "")]
-            return NSError(domain: errorDomain, code: code.rawValue, userInfo: userInfo)
-            
-        // 50000
-        case .enternal:
-            let userInfo = [NSLocalizedDescriptionKey : NSLocalizedString("something_is_wrong", comment: "")]
-            return NSError(domain: errorDomain, code: code.rawValue, userInfo: userInfo)
+        case .enternal:                 return NSLocalizedString("something_is_wrong", comment: "")
         }
     }
 }

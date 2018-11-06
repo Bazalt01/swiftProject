@@ -18,34 +18,24 @@ class TemplateCollectionDataSource: BaseCollectionDataSource {
         self.cellClasses = [TemplateCell.self]
     }
     
-    let didDeleteTemplate = PublishSubject<TemplateModel>()
-    let didMuteTemplate = PublishSubject<TemplateModel>()
-    let didShareTemplate = PublishSubject<TemplateModel>()
+    private let didActionSubject = PublishSubject<(TemplateModel, CellActionType)>()
+    
+    var didActionTemplate: Observable<(TemplateModel, CellActionType)> {
+        return didActionSubject.share()
+    }
     
     // MARK: - Public
     
     func configureAndSetCellViewModel(templateModels: [TemplateModel], batchUpdates: [BatchUpdate]?) {
-        var viewModels = [TemplateCellModel]()
-        for template in templateModels {
-            let cellVM = configuredCellViewModel(template: template)
-            viewModels.append(cellVM)
-        }
-        
-        cellViewModels = viewModels
-        notifyUpdate(batchUpdates: batchUpdates, completion: nil)
+        cellViewModels = templateModels.map { configuredCellViewModel(template: $0) }
+        notify(batchUpdates: batchUpdates, completion: nil)
     }
     
     func configuredCellViewModel(template: TemplateModel) -> TemplateCellModel {
         let cellVM = TemplateCellModel(template: template)
-        cellVM.deleteBlock = { [weak self] in
-            self?.didDeleteTemplate.onNext(template)
-        }
-        cellVM.muteBlock = { [weak self] in
-            self?.didMuteTemplate.onNext(template)
-        }
-        cellVM.shareBlock = { [weak self] in
-            self?.didShareTemplate.onNext(template)
-        }
+        cellVM.actionBlock = { [weak self] in
+            guard let `self` = self else { return }
+            self.didActionSubject.onNext((template, $0)) }
         return cellVM
     }
     

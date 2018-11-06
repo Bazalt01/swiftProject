@@ -11,9 +11,9 @@ import UIKit
 typealias LabelAnimatorToken = Int
 
 class LabelAnimator {
-    private var index: Int = 0
+    private var index = 0
     private var timer: Timer?
-    private(set) var stepBlocks = [LabelAnimatorToken : () -> Void]()
+    private(set) var stepBlocks: [LabelAnimatorToken : () -> Void] = [:]
     
     // MARK: - Inits
     
@@ -24,15 +24,11 @@ class LabelAnimator {
     // MARK: - Public
         
     func start() {
-        if let timer = self.timer {
-            timer.fire()
-        }
+        timer?.fire()
     }
     
     func stop() {
-        if let timer = self.timer {
-            timer.invalidate()
-        }
+        timer?.invalidate()
     }
     
     func addStepObserver(block: @escaping () -> Void) -> LabelAnimatorToken {
@@ -49,8 +45,6 @@ class LabelAnimator {
     // MARK: - Private
     
     @objc private func handledTime(sender: Timer) {
-        for block in stepBlocks.values {
-            block()
-        }
+        stepBlocks.values.forEach { $0() }
     }
 }

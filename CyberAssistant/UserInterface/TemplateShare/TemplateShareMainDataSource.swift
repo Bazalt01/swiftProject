@@ -37,32 +37,27 @@ class TemplateShareMainDataSource: CompositeDataSource {
         super.remove(atIndex: index)
     }
     
-    override func notifyUpdate(batchUpdates: [BatchUpdate]?, completion: (() -> Void)?) {
+    override func notify(batchUpdates: [BatchUpdate]?, completion: (() -> Void)?) {
         updateSectionMaps()
-        super.notifyUpdate(batchUpdates: batchUpdates, completion: completion)
+        return super.notify(batchUpdates: batchUpdates, completion: completion)
     }
     
     func insert(indexes: [Int], templates: [SharedTemplateModel]) {
-        guard indexes.count > 0 else {
-            return
-        }
+        guard indexes.count > 0 else { return }
         
-        var sections = [Int]()
-        var indexPaths = [IndexPath]()
+        var sections: [Int] = []
+        var indexPaths: [IndexPath] = []
         let sectionByKey = updatedSectionsByKey(templates: templates)
         
         for index in indexes {
             let template = templates[index]
-            guard let author = template.author else {
-                continue
-            }
+            guard let author = template.author else { continue }
             if let dataSource = dataSourcesByKey[author.name] {
                 dataSource.insert(template: template, index: index, needNotify: false, observable: didSaveTemplate)
                 
                 let section = dataSources.firstIndex(of: dataSource)!
                 indexPaths.append(IndexPath(item: index, section: section))
-            }
-            else {
+            } else {
                 let dataSource = TemplateShareDataSource(title: author.name)
                 dataSource.add(template: template, needNotify: false, observable: didSaveTemplate)
                 
@@ -74,7 +69,7 @@ class TemplateShareMainDataSource: CompositeDataSource {
         }
         
         let batchUpdate = BatchUpdate(option: .insert, indexPathes: indexPaths, sections: IndexSet(sections))
-        notifyUpdate(batchUpdates: [batchUpdate], completion: nil)
+        notify(batchUpdates: [batchUpdate], completion: nil)
     }
     
     func remove(indexes: [Int]) {
@@ -113,7 +108,7 @@ class TemplateShareMainDataSource: CompositeDataSource {
         }
         
         let batchUpdate = BatchUpdate(option: .delete, indexPathes: indexPaths, sections: IndexSet(sections))
-        notifyUpdate(batchUpdates: [batchUpdate], completion: nil)
+        notify(batchUpdates: [batchUpdate], completion: nil)
     }
     
     func update(indexes: [Int], templates: [SharedTemplateModel]) {
@@ -141,7 +136,7 @@ class TemplateShareMainDataSource: CompositeDataSource {
         }
         
         let batchUpdate = BatchUpdate(option: .update, indexPathes: indexPaths, sections: IndexSet())
-        notifyUpdate(batchUpdates: [batchUpdate], completion: nil)
+        notify(batchUpdates: [batchUpdate], completion: nil)
     }
     
     // MARK: - Private

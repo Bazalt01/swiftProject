@@ -37,9 +37,7 @@ class BaseSpeechManager : NSObject, SpeechManager, AVSpeechSynthesizerDelegate {
     // MARK: - Public
     
     func syntesize(text: String) {
-        guard let conf = configurator else {
-            return
-        }
+        guard let conf = configurator else { return }
         let language = conf.language.rawValue
         let utterance = configuredUtterance(text: text, language: language)
         syntesizer.delegate = self
@@ -58,9 +56,7 @@ class BaseSpeechManager : NSObject, SpeechManager, AVSpeechSynthesizerDelegate {
 
 extension BaseSpeechManager {
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        guard let delegate = self.delegate else {
-            return
-        }
+        guard let delegate = self.delegate else { return }
         delegate.didFinishPlaying(sender: self)
     }
 }

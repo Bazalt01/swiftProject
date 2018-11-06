@@ -22,15 +22,17 @@ struct TableOption {
 
 class SettingsViewModel {
     var sections: [TableSection] = []
-    let didReloadData = PublishSubject<Void>()
     var title = ""
     
-    // MARK: - Inits        
+    let didReloadDataSubject = PublishSubject<Void>()
+    
+    var didReloadData: Observable<Void> {
+        return didReloadDataSubject.share()
+    }
     
     // MARK: - Public
     
-    func configure() {
-    }
+    func configure() {}
     
     func numberOfSections() -> Int {
         return sections.count
@@ -38,9 +40,7 @@ class SettingsViewModel {
     
     func numberOfCells(section: Int) -> Int {
         assert(sections.count > 0)
-        guard sections.count > 0 else {
-            return 0
-        }
+        guard sections.count > 0 else { return 0 }
         return sections[section].cellModels.count
     }
     

@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 enum CellActionType {
     case delete
@@ -17,24 +18,31 @@ enum CellActionType {
 
 class CellActionViewModel {
     private(set) var type: CellActionType
-    private(set) var selectedIcon: UIImage?
-    private(set) var deselectedIcon: UIImage?
-    private(set) var actionBlock: () -> Void
+    private var selectedIcon: UIImage
+    private var deselectedIcon: UIImage
+    
+    private let iconSubject = BehaviorRelay<UIImage>(value: UIImage())
+    let actionSubject = PublishSubject<Void>()
+    
+    var icon: Observable<UIImage> {
+       return iconSubject.share()
+    }
+    var didPress: Observable<Void> {
+        return actionSubject.asObserver()
+    }
     
     var selected: Bool = false {
         didSet {
-            self.select.onNext(selected)
+            iconSubject.accept(selected ? selectedIcon : deselectedIcon)
         }
     }
     
-    let select = PublishSubject<Bool>()
-    
     // MARK: - Inits
     
-    init(type: CellActionType, selectedIcon: UIImage?, deselectedIcon: UIImage?, actionBlock: @escaping () -> Void) {
+    init(type: CellActionType, selectedIcon: UIImage, deselectedIcon: UIImage) {
         self.type = type
         self.selectedIcon = selectedIcon
         self.deselectedIcon = deselectedIcon
-        self.actionBlock = actionBlock
+        self.iconSubject.accept(deselectedIcon)
     }
 }

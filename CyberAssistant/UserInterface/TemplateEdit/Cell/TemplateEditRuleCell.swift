@@ -17,22 +17,15 @@ class TemplateEditRuleCell: BaseCollectionViewCell {
     private let resultLabel = AnimatableLabel()
     
     private var localViewModel: TemplateEditRuleCellModel? {
-        guard viewModel is TemplateEditRuleCellModel else {
-            return nil
-        }
         return viewModel as? TemplateEditRuleCellModel
     }
     
     override var viewModel: ViewModel? {
         didSet {
-            if let vm = localViewModel {
-//                ruleLabel.setText(attributedText: vm.rule, animator: vm.labelAnimator)
-//                exampleLabel.setText(attributedText: vm.example, animator: vm.labelAnimator)
-//                resultLabel.setText(attributedText: vm.result, animator: vm.labelAnimator)
-                ruleLabel.attributedText = vm.rule
-                exampleLabel.attributedText = vm.example
-                resultLabel.attributedText = vm.result
-            }
+            guard let vm = localViewModel else { return }
+            ruleLabel.attributedText = vm.rule
+            exampleLabel.attributedText = vm.example
+            resultLabel.attributedText = vm.result
         }
     }
     
@@ -81,9 +74,7 @@ class TemplateEditRuleCell: BaseCollectionViewCell {
     private func configureViews() {
         configureStackView()
         contentView.addSubview(stackView)
-        stackView.snp.makeConstraints { (make) in
-            make.edges.equalTo(self.contentView.snp.margins)
-        }
+        stackView.snp.makeConstraints { $0.edges.equalTo(self.contentView.snp.margins) }
         contentView.layoutMargins = UIEdgeInsets(ca_edge: LayoutConstants.spacing)
         
         configuredRuleLabel()
