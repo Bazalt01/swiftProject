@@ -1,6 +1,6 @@
 //
 //  TemplateManager.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 11/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -11,10 +11,15 @@ import RxSwift
 import RxCocoa
 import RealmSwift
 
-struct TemplateRule {
-    private(set) var rule: String
-    private(set) var example: String
-    private(set) var result: String
+public struct TemplateRule {
+    let rule: String
+    let example: String
+    let result: String
+    init(rule: String, example: String, result: String) {
+        self.rule = rule
+        self.example = example
+        self.result = result
+    }
 }
 
 class TemplateManager: BackgroundWorker {
@@ -58,10 +63,12 @@ class TemplateManager: BackgroundWorker {
     // MARK: - Public
     
     func configure() {
-        self.authManager.accountRelay.ca_subscribe { [weak self] account in
-            guard let `self` = self, let account = account else { return }
-            self.loadContent(account: account)
-            }.disposed(by: disposeBag)
+        self.authManager.accountRelay
+            .ca_subscribe { [weak self] account in
+                guard let `self` = self, let account = account else { return }
+                self.loadContent(account: account)
+            }
+            .disposed(by: disposeBag)
     }
     
     func createTemplate(string: String) -> Observable<TemplateModel> {
@@ -88,24 +95,25 @@ class TemplateManager: BackgroundWorker {
         let sortValue = SortModel(key: "value", ascending: true)
         
         let predicate = NSPredicate(format: "\(TemplateInternalAuthorPathKey) != %@ AND \(TemplateSharedKey) = 1", account.login as CVarArg)
-        self.start({ [weak self] in
+        self.start { [weak self] in
             guard let `self` = self else { return }
             let database = DatabaseManager.createDatabase()
             database.configure()
             database.objects(objectType: RealmTemplate.self, predicate: predicate, sortModes: [sortAuthor, sortValue], fetchResult: fetchResult, responseQueue: DispatchQueue.main)
             self.database = database
-        })
+        }
     }
 
     // MARK: - Private
     
     private func loadContent(account: AccountModel) {
         let fetchResult = self.fetchResultSubject
-        fetchResult.ca_subscribe(onNext: { [weak self] fetchResult in
-            guard let `self` = self else { return }
-            self.modelsSubject.accept(fetchResult.models as! [TemplateModel])
-        })
-        .disposed(by: disposeBag)
+        fetchResult
+            .ca_subscribe { [weak self] fetchResult in
+                guard let `self` = self else { return }
+                self.modelsSubject.accept(fetchResult.models as! [TemplateModel])
+            }
+            .disposed(by: disposeBag)
         
         print("[TEMPLATE_MANAGER] Load content account: \(account.login)")
         

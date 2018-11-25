@@ -1,6 +1,6 @@
 //
 //  AuthManager.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 22/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -45,7 +45,7 @@ class AuthManager {
     // MARK: - Public
     
     func signIn(result: AuthResult) -> Observable<Void> {
-        return Observable<Void>.create({ observer in
+        return Observable<Void>.create { observer in
             _ = self.localAccount(result: result)
                 .ca_subscribe { account in
                     guard let account = account else {
@@ -55,7 +55,7 @@ class AuthManager {
                     self.signInSideEffect(account: account)
                     observer.onCompleted() }
             return Disposables.create()
-        })
+        }
     }
     
     func signUp(result: AuthResult) -> Observable<Void> {

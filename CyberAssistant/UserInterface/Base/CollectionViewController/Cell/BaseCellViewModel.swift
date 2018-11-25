@@ -1,6 +1,6 @@
 //
 //  BaseCellViewModel.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 13/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -9,7 +9,7 @@
 import UIKit
 
 class BaseCellViewModel: Hashable, ViewModel {
-    private(set) var viewClass: (UIView & View).Type
+    let viewClass: (UIView & View).Type
     var layoutModel = LayoutModel(size: CGSize.zero)
     var isCalculatingSize: Bool = false
     

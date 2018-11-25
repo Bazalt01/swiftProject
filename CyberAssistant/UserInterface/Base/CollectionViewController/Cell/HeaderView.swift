@@ -32,17 +32,7 @@ class HeaderView: BaseSupplementaryView {
     @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - Public
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let fittingSize = ca_configuredFittingSize(size: size)
-        
-        var totalSize = CGSize(width: size.width, height: layoutMargins.ca_verticalInset)
-        totalSize.height += ViewSizeProcessor.calculateSize(label: titleLabel, fittingSize: fittingSize).height + 1.0
-        return totalSize
-    }
+    }    
     
     // MARK: - Private
     

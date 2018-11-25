@@ -11,7 +11,7 @@ import Foundation
 class SettingCellWithOptionModel: SettingCellModel {
     private(set) var value: String
     
-    init(title: String, value: String, selectAction: @escaping () -> Void) {
+    init(title: String, value: String, selectAction: @escaping os_block_t) {
         self.value = value
         super.init(title: title, selectAction: selectAction)
         self.cellClass = SettingCellWithOption.self

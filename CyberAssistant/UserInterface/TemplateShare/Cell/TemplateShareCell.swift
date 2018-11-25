@@ -56,20 +56,6 @@ class TemplateShareCell: BaseCollectionViewCell {
         resultLabel.text = nil
     }
     
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        var fittingSize = ca_configuredFittingSize(size: size)
-        saveButton.sizeToFit()
-        fittingSize.width -= saveButton.bounds.size.width
-        var totalSize = CGSize(width: size.width, height: contentView.layoutMargins.ca_verticalInset)
-        
-        totalSize.height += CGFloat((verStackView.arrangedSubviews.count - 1)) * verStackView.spacing
-        for view in verStackView.arrangedSubviews {
-            totalSize.height += ViewSizeProcessor.calculateSize(label: view as! UILabel, fittingSize: fittingSize).height + 1.0
-        }
-        
-        return totalSize
-    }
-    
     func configureViews() {
         configureVerStackView()
         configureHorStackView()

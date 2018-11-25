@@ -9,6 +9,8 @@
 import UIKit
 
 class BaseSupplementaryViewModel: Hashable, ViewModel {
+    func createLayoutModel(fittingFrame frame: CGRect) {}
+    
     private(set) var viewClass: (UIView & View).Type
     var layoutModel = LayoutModel(size: CGSize.zero)
     var isCalculatingSize: Bool = false

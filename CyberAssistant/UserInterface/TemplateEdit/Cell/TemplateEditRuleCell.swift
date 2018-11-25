@@ -1,6 +1,6 @@
 //
 //  TemplateEditRuleCell.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 26/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -55,19 +55,7 @@ class TemplateEditRuleCell: BaseCollectionViewCell {
         exampleLabel.text = nil
         resultLabel.text = nil
         viewModel = nil
-    }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let fittingSize = ca_configuredFittingSize(size: size)
-        var totalSize = CGSize(width: size.width, height: contentView.layoutMargins.ca_verticalInset)
-        
-        totalSize.height += CGFloat((stackView.arrangedSubviews.count - 1)) * stackView.spacing
-        for view in stackView.arrangedSubviews {
-            totalSize.height += ViewSizeProcessor.calculateSize(label: view as! UILabel, fittingSize: fittingSize).height + 1.0
-        }
-        
-        return totalSize
-    }
+    }    
     
     // MARK: - Private
     

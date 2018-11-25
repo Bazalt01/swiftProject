@@ -20,7 +20,6 @@
 		EA57F01C2123FCBC00309919 /* BaseCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57F01B2123FCBC00309919 /* BaseCollectionViewController.swift */; };
 		EA57F026212400B500309919 /* BaseCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57F025212400B500309919 /* BaseCollectionViewModel.swift */; };
 		EA57F028212421BC00309919 /* BaseCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57F027212421BC00309919 /* BaseCollectionViewDelegate.swift */; };
-		EA57F02A212422FD00309919 /* TemplateCollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57F029212422FD00309919 /* TemplateCollectionDelegate.swift */; };
 		EA57F06521245E2600309919 /* UIStructExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57F06421245E2600309919 /* UIStructExtention.swift */; };
 		EA62B7AA211C3A0F007F5C16 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA62B7A9211C3A0F007F5C16 /* MainViewModel.swift */; };
 		EA68CB37215AB19400004AAB /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB36215AB19400004AAB /* SettingsViewController.swift */; };
@@ -35,7 +34,6 @@
 		EA68CB4F215CD70600004AAB /* TemplateShareRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB4E215CD70600004AAB /* TemplateShareRouter.swift */; };
 		EA68CB52215CD7ED00004AAB /* BaseRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB51215CD7ED00004AAB /* BaseRouter.swift */; };
 		EA68CB54215CE27000004AAB /* TemplateShareDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB53215CE27000004AAB /* TemplateShareDataSource.swift */; };
-		EA68CB56215CE2F000004AAB /* TemplateShareCollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB55215CE2F000004AAB /* TemplateShareCollectionDelegate.swift */; };
 		EA68CB59215CE3FB00004AAB /* TemplateShareCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB58215CE3FB00004AAB /* TemplateShareCell.swift */; };
 		EA68CB5B215CE4A300004AAB /* TemplateShareCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB5A215CE4A300004AAB /* TemplateShareCellModel.swift */; };
 		EA68CB5D215E145E00004AAB /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB5C215E145E00004AAB /* HeaderView.swift */; };
@@ -117,7 +115,8 @@
 		EAFE00B0213ABC5B00ECF793 /* CompositeDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFE00AF213ABC5B00ECF793 /* CompositeDataSource.swift */; };
 		EAFE00B2213ADF0A00ECF793 /* TemplateEditRulesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFE00B1213ADF0A00ECF793 /* TemplateEditRulesDataSource.swift */; };
 		EAFE00B6213B1DE000ECF793 /* CellActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFE00B5213B1DE000ECF793 /* CellActionView.swift */; };
-		EAFE00B8213BAB8B00ECF793 /* ViewSizeProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFE00B7213BAB8B00ECF793 /* ViewSizeProcessor.swift */; };
+		F321C34D21AAE85B00954629 /* TemplateShareCollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F321C34C21AAE85B00954629 /* TemplateShareCollectionDelegate.swift */; };
+		F321C34F21AAEDAF00954629 /* TemplateCollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F321C34E21AAEDAE00954629 /* TemplateCollectionDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -136,7 +135,6 @@
 		EA57F01B2123FCBC00309919 /* BaseCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewController.swift; sourceTree = "<group>"; };
 		EA57F025212400B500309919 /* BaseCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewModel.swift; sourceTree = "<group>"; };
 		EA57F027212421BC00309919 /* BaseCollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewDelegate.swift; sourceTree = "<group>"; };
-		EA57F029212422FD00309919 /* TemplateCollectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateCollectionDelegate.swift; sourceTree = "<group>"; };
 		EA57F06421245E2600309919 /* UIStructExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStructExtention.swift; sourceTree = "<group>"; };
 		EA62B7A9211C3A0F007F5C16 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		EA68CB36215AB19400004AAB /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -151,7 +149,6 @@
 		EA68CB4E215CD70600004AAB /* TemplateShareRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareRouter.swift; sourceTree = "<group>"; };
 		EA68CB51215CD7ED00004AAB /* BaseRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRouter.swift; sourceTree = "<group>"; };
 		EA68CB53215CE27000004AAB /* TemplateShareDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareDataSource.swift; sourceTree = "<group>"; };
-		EA68CB55215CE2F000004AAB /* TemplateShareCollectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareCollectionDelegate.swift; sourceTree = "<group>"; };
 		EA68CB58215CE3FB00004AAB /* TemplateShareCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareCell.swift; sourceTree = "<group>"; };
 		EA68CB5A215CE4A300004AAB /* TemplateShareCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateShareCellModel.swift; sourceTree = "<group>"; };
 		EA68CB5C215E145E00004AAB /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
@@ -239,7 +236,8 @@
 		EAFE00AF213ABC5B00ECF793 /* CompositeDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositeDataSource.swift; sourceTree = "<group>"; };
 		EAFE00B1213ADF0A00ECF793 /* TemplateEditRulesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEditRulesDataSource.swift; sourceTree = "<group>"; };
 		EAFE00B5213B1DE000ECF793 /* CellActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellActionView.swift; sourceTree = "<group>"; };
-		EAFE00B7213BAB8B00ECF793 /* ViewSizeProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewSizeProcessor.swift; sourceTree = "<group>"; };
+		F321C34C21AAE85B00954629 /* TemplateShareCollectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemplateShareCollectionDelegate.swift; sourceTree = "<group>"; };
+		F321C34E21AAEDAE00954629 /* TemplateCollectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemplateCollectionDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -340,11 +338,11 @@
 		EA68CB50215CD79100004AAB /* TemplateShare */ = {
 			isa = PBXGroup;
 			children = (
+				F321C34C21AAE85B00954629 /* TemplateShareCollectionDelegate.swift */,
 				EA68CB4A215CD6D100004AAB /* TemplateShareViewController.swift */,
 				EA68CB4C215CD6E800004AAB /* TemplateShareViewModel.swift */,
 				EA68CB6B215E941700004AAB /* TemplateShareMainDataSource.swift */,
 				EA68CB53215CE27000004AAB /* TemplateShareDataSource.swift */,
-				EA68CB55215CE2F000004AAB /* TemplateShareCollectionDelegate.swift */,
 				EA68CB4E215CD70600004AAB /* TemplateShareRouter.swift */,
 				EA68CB57215CE30C00004AAB /* Cell */,
 			);
@@ -450,7 +448,6 @@
 				EAE9EE31212807A7000A2220 /* LayoutConstants.swift */,
 				EAE9EE3521288682000A2220 /* Appearance.swift */,
 				EAC7801D21319C71000237D7 /* RouteHandler.swift */,
-				EAFE00B7213BAB8B00ECF793 /* ViewSizeProcessor.swift */,
 				EA68CB6F2160F4B800004AAB /* TransitionAnimations */,
 				EABA347E2121667900B2040B /* Assemblies */,
 				EABA347A212165F000B2040B /* Base */,
@@ -491,10 +488,10 @@
 		EABA3465212047E400B2040B /* Template */ = {
 			isa = PBXGroup;
 			children = (
+				F321C34E21AAEDAE00954629 /* TemplateCollectionDelegate.swift */,
 				EABA34662120484600B2040B /* TemplateViewController.swift */,
 				EABA34682120485000B2040B /* TemplateViewModel.swift */,
 				EABA34952121C89000B2040B /* TemplateCollectionDataSource.swift */,
-				EA57F029212422FD00309919 /* TemplateCollectionDelegate.swift */,
 				EAC7803F213318CB000237D7 /* TemplateRouter.swift */,
 				EABA346A212066A700B2040B /* Cell */,
 			);
@@ -734,6 +731,7 @@
 				EAB0699E211AA03D00EF6913 /* BaseNavigationController.swift in Sources */,
 				EA8983E521406BEC00F90A1C /* AttentionView.swift in Sources */,
 				EAC7803E2132DB78000237D7 /* TemplateEditRuleCellModel.swift in Sources */,
+				F321C34D21AAE85B00954629 /* TemplateShareCollectionDelegate.swift in Sources */,
 				EAE9EE2A2127ED1C000A2220 /* WelcomeViewController.swift in Sources */,
 				EAC7802A2132C0A8000237D7 /* TemplateEditViewModel.swift in Sources */,
 				EAC7801A2130939A000237D7 /* BaseModel.swift in Sources */,
@@ -765,7 +763,6 @@
 				EABA345A211F04F200B2040B /* ViewControllerAssembly.swift in Sources */,
 				EA68CB6C215E941700004AAB /* TemplateShareMainDataSource.swift in Sources */,
 				EA68CB3E215BBD5900004AAB /* BaseTableViewController.swift in Sources */,
-				EA57F02A212422FD00309919 /* TemplateCollectionDelegate.swift in Sources */,
 				EAC7801C21313DEF000237D7 /* RealmModel.swift in Sources */,
 				EA69D5C22157E26600F29DDD /* EmptyView.swift in Sources */,
 				EAA46C4E216B498700A7DF17 /* SettingsBaseRouter.swift in Sources */,
@@ -782,6 +779,7 @@
 				EA69D5C02156342A00F29DDD /* BackgroundWorker.swift in Sources */,
 				EA69D5C8215A76A100F29DDD /* CryptoConverter.swift in Sources */,
 				EA68CB54215CE27000004AAB /* TemplateShareDataSource.swift in Sources */,
+				F321C34F21AAEDAF00954629 /* TemplateCollectionDelegate.swift in Sources */,
 				EAC78040213318CB000237D7 /* TemplateRouter.swift in Sources */,
 				EA68CB732161047A00004AAB /* Transitor.swift in Sources */,
 				EA68CB4B215CD6D100004AAB /* TemplateShareViewController.swift in Sources */,
@@ -801,9 +799,7 @@
 				EA0209472153D0CB00DE9717 /* BaseViewController.swift in Sources */,
 				EA68CB4F215CD70600004AAB /* TemplateShareRouter.swift in Sources */,
 				EA6C9EAB21441C4D00CCC2F3 /* AnimatableLabel.swift in Sources */,
-				EA68CB56215CE2F000004AAB /* TemplateShareCollectionDelegate.swift in Sources */,
 				EABA3479212143DB00B2040B /* BaseCollectionViewCell.swift in Sources */,
-				EAFE00B8213BAB8B00ECF793 /* ViewSizeProcessor.swift in Sources */,
 				EABA347D2121662600B2040B /* BaseCellViewModel.swift in Sources */,
 				EA57F0182123478700309919 /* TemplateCellModel.swift in Sources */,
 				EAA46C40216A730C00A7DF17 /* SettingCellWithOption.swift in Sources */,

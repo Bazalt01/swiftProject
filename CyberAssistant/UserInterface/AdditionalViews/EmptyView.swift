@@ -10,8 +10,8 @@ import UIKit
 import SnapKit
 
 struct EmptyModel {
-    private(set) var message: String
-    private(set) var image: UIImage
+    let message: String
+    let image: UIImage    
 }
 
 class EmptyView: UIView {

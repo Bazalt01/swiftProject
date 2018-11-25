@@ -1,6 +1,6 @@
 //
 //  MainRouter.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 14/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -30,7 +30,7 @@ class MainRouter: BaseRouter {
         routeHandler.push?(viewController: vc)
     }
     
-    func openAlertController(title: String, message: String, acceptHandler:(() -> Void)?, cancelHandler:(() -> Void)?) {
+    func openAlertController(title: String, message: String, acceptHandler:os_block_t?, cancelHandler:os_block_t?) {
         guard let routeHandler = routeHandler else { return }
         let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
         

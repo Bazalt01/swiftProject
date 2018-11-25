@@ -1,6 +1,6 @@
 //
 //  BaseCollectionViewDelegate.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 15/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -11,10 +11,10 @@ import RxSwift
 import RxCocoa
 
 class BaseCollectionViewDelegate: NSObject {
-    private let didSelectSubject = PublishSubject<ViewModel>()
-    private(set) var layoutManager: LayoutManager
-    private var dataSource: BaseCollectionDataSource
+    private let dataSource: BaseCollectionDataSource
+    let layoutManager: LayoutManager
     
+    private let didSelectSubject = PublishSubject<ViewModel>()
     var didSelect: Observable<ViewModel> {
         return didSelectSubject.share()
     }

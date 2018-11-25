@@ -10,10 +10,10 @@ import Foundation
 
 class SettingCellModel {
     private(set) var title: String
-    private(set) var selectAction: () -> Void
+    private(set) var selectAction: os_block_t
     var cellClass = SettingCellView.self
     
-    init(title: String, selectAction: @escaping () -> Void) {
+    init(title: String, selectAction: @escaping os_block_t) {
         self.title = title
         self.selectAction = selectAction
     }

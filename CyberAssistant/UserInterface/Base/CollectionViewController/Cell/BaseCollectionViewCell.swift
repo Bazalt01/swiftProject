@@ -1,6 +1,6 @@
 //
 //  BaseCollectionViewCell.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 13/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -13,7 +13,6 @@ let kSwipeAnimationDuration = 0.25;
 
 class BaseCollectionViewCell: UICollectionViewCell, CollectionViewCell {
     var viewModel: ViewModel?
-    var viewModelForSize: ViewModel?    
 
     // MARK: - Inits
     

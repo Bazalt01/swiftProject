@@ -9,7 +9,7 @@
 import Foundation
 
 class SettingCellButtonModel: SettingCellModel {
-    override init(title: String, selectAction: @escaping () -> Void) {
+    override init(title: String, selectAction: @escaping os_block_t) {
         super.init(title: title, selectAction: selectAction)
         self.cellClass = SettingCellButton.self
     }

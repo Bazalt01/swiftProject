@@ -1,6 +1,6 @@
 //
 //  CompositeDataSource.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 01/09/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -8,16 +8,16 @@
 
 import Foundation
 
-class CompositeDataSource: BaseCollectionDataSource {
-    private(set) var dataSources = [BaseCollectionDataSource]()        
+class CompositeDataSource<T: BaseCollectionDataSource>: BaseCollectionDataSource {
+    private(set) var dataSources: [T] = []
     
     // MARK: - Public
     
-    func add(dataSource: BaseCollectionDataSource) {
+    func add(dataSource: T) {
         insert(dataSource: dataSource, index: dataSources.count)
     }
     
-    func insert(dataSource: BaseCollectionDataSource, index: Int) {
+    func insert(dataSource: T, index: Int) {
         dataSources.insert(dataSource, at: index)
         
         cellClasses.append(contentsOf: dataSource.cellClasses)

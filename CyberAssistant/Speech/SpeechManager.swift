@@ -1,6 +1,6 @@
 //
 //  SpeechManager.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 08/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -8,13 +8,13 @@
 
 import Foundation
 
-public enum Language: String {
+enum Language: String {
     case russian = "ru-RU"
     case english = "en-US"
 }
 
-class SpeechConfigurator {
-    private (set) var language: Language
+struct SpeechConfigurator {
+    let language: Language
     
     init(language: Language) {
         self.language = language

@@ -12,11 +12,11 @@ import Foundation
 
 class BackgroundWorker: NSObject {
     private var thread: Thread!
-    private var block: (()->Void)!
+    private var block: os_block_t!
     
     @objc internal func runBlock() { block() }
     
-    internal func start(_ block: @escaping () -> Void) {
+    internal func start(_ block: @escaping os_block_t) {
         self.block = block
         
         let threadName = String(describing: self)

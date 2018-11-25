@@ -1,6 +1,6 @@
 //
 //  RealmAccount.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 23/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.

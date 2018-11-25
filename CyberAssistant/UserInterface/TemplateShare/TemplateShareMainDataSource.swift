@@ -14,22 +14,22 @@ struct SectionMap {
     var indexes: [Int]
 }
 
-class TemplateShareMainDataSource: CompositeDataSource {
-    private(set) var dataSourcesByKey = [String : TemplateShareDataSource]()
-    private(set) var sectionMaps = [String : [Int]]()
+class TemplateShareMainDataSource: CompositeDataSource<TemplateShareDataSource> {
+    private(set) var dataSourcesByKey: [String : TemplateShareDataSource] = [:]
+    private(set) var sectionMaps: [String : [Int]] = [:]
     
     let didSaveTemplate = PublishSubject<SharedTemplateModel>()
     
     // MARK: - Public
     
-    override func add(dataSource: BaseCollectionDataSource) {
+    override func add(dataSource: TemplateShareDataSource) {
         super.add(dataSource: dataSource)
-        dataSourcesByKey[dataSource.key!] = dataSource as? TemplateShareDataSource
+        dataSourcesByKey[dataSource.key!] = dataSource
     }
     
-    override func insert(dataSource: BaseCollectionDataSource, index: Int) {
+    override func insert(dataSource: TemplateShareDataSource, index: Int) {
         super.insert(dataSource: dataSource, index: index)
-        dataSourcesByKey[dataSource.key!] = dataSource as? TemplateShareDataSource
+        dataSourcesByKey[dataSource.key!] = dataSource
     }
     
     override func remove(atIndex index: Int) {
@@ -37,7 +37,7 @@ class TemplateShareMainDataSource: CompositeDataSource {
         super.remove(atIndex: index)
     }
     
-    override func notify(batchUpdates: [BatchUpdate]?, completion: (() -> Void)?) {
+    override func notify(batchUpdates: [BatchUpdate]?, completion: os_block_t?) {
         updateSectionMaps()
         return super.notify(batchUpdates: batchUpdates, completion: completion)
     }
@@ -73,16 +73,12 @@ class TemplateShareMainDataSource: CompositeDataSource {
     }
     
     func remove(indexes: [Int]) {
-        guard indexes.count > 0 else {
-            return
-        }
+        guard indexes.count > 0 else { return }
         
-        let sortIndexes = indexes.sorted { (i1, i2) -> Bool in
-            return i1 > i2
-        }
+        let sortIndexes = indexes.sorted { $0 > $1 }
         
-        var sections = [Int]()
-        var indexPaths = [IndexPath]()
+        var sections: [Int] = []
+        var indexPaths: [IndexPath] = []
         
         var tempMaps = sectionMaps
         for index in sortIndexes {
@@ -112,17 +108,14 @@ class TemplateShareMainDataSource: CompositeDataSource {
     }
     
     func update(indexes: [Int], templates: [SharedTemplateModel]) {
-        guard indexes.count > 0 else {
-            return
-        }
+        guard indexes.count > 0 else { return }
         
-        var indexPaths = [IndexPath]()
+        var indexPaths: [IndexPath] = []
         for index in indexes {
             for key in sectionMaps.keys {
                 let globalIndexes = sectionMaps[key]!
-                guard globalIndexes.contains(index) else {
-                    continue
-                }
+                guard globalIndexes.contains(index) else { continue }
+                
                 let dataSource = dataSourcesByKey[key]!
                 
                 let localIndex = indexes.firstIndex(of: index)!
@@ -142,13 +135,11 @@ class TemplateShareMainDataSource: CompositeDataSource {
     // MARK: - Private
     
     private func updatedSectionsByKey(templates: [SharedTemplateModel]) -> [String : SectionMap] {
-        guard templates.count > 0 else {
-            return [:]
-        }
+        guard templates.count > 0 else { return [:] }
         
-        var sectionMaps = [String : SectionMap]()
+        var sectionMaps: [String : SectionMap] = [:]
         var lastKey = templates.first!.author!.name
-        var indexes = [Int]()
+        var indexes: [Int] = []
         templates.enumerated().forEach { (offset, template) in
             if lastKey != template.author!.name {
                 sectionMaps[lastKey] = SectionMap(section: sectionMaps.count, indexes: indexes)
@@ -166,13 +157,11 @@ class TemplateShareMainDataSource: CompositeDataSource {
     }
     
     private func updateSectionMaps() {
-        var sectionMaps = [String : [Int]]()
+        var sectionMaps: [String : [Int]] = [:]
         var globalIndex = 0
         dataSources.enumerated().forEach { (offset, dataSource) in
             let count = dataSource.cellViewModels.count
-            guard let key = dataSource.key, count > 0 else {
-                return
-            }
+            guard let key = dataSource.key, count > 0 else { return }
             
             let globalIndexes = Array(globalIndex..<dataSource.cellViewModels.count + globalIndex)
             sectionMaps[key] = globalIndexes

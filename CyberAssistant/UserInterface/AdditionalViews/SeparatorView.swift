@@ -1,6 +1,6 @@
 //
 //  SeparatorView.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 25/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -13,7 +13,7 @@ enum SeparatorType {
 }
 
 class SeparatorView: UIView {
-    private(set) var type: SeparatorType = .general
+    let type: SeparatorType
     
     init(type: SeparatorType) {
         self.type = type
@@ -21,10 +21,12 @@ class SeparatorView: UIView {
     }
     
     override init(frame: CGRect) {
+        self.type = .general
         super.init(frame: frame)
     }
     
     required init?(coder aDecoder: NSCoder) {
+        self.type = .general
         super.init(coder: aDecoder)
     }
 }

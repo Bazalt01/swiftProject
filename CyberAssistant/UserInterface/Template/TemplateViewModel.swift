@@ -1,6 +1,6 @@
 //
 //  TemplateViewModel.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 12/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -13,8 +13,8 @@ import RxCocoa
 class TemplateViewModel {
     private var router: TemplateRouter
     private var templateManager: TemplateManager
-    private(set) var dataSource: TemplateCollectionDataSource
-    private(set) var collectionViewDelegate: TemplateCollectionDelegate        
+    let dataSource: TemplateCollectionDataSource
+    let collectionViewDelegate: BaseCollectionViewDelegate
     
     private let hasTemplatesSubject = BehaviorRelay<Bool>(value: false)
     
@@ -26,7 +26,7 @@ class TemplateViewModel {
     
     // MARK: - Inits
     
-    init(templateManager: TemplateManager, dataSource: TemplateCollectionDataSource, collectionViewDelegate: TemplateCollectionDelegate, router: TemplateRouter) {
+    init(templateManager: TemplateManager, dataSource: TemplateCollectionDataSource, collectionViewDelegate: BaseCollectionViewDelegate, router: TemplateRouter) {
         self.templateManager = templateManager
         self.dataSource = dataSource
         self.collectionViewDelegate = collectionViewDelegate
@@ -55,21 +55,18 @@ class TemplateViewModel {
         templateManager.models
             .take(1)
             .ca_subscribe { [weak self] templates in
-                guard let `self` = self else { return }
-                self.dataSource.configureAndSetCellViewModel(templateModels: templates, batchUpdates: nil)
-                self.hasTemplatesSubject.accept(templates.count > 0)}
+                self?.dataSource.configureAndSetCellViewModel(templateModels: templates, batchUpdates: nil)
+                self?.hasTemplatesSubject.accept(templates.count > 0)}
             .disposed(by: disposeBag)
         
         templateManager.fetchResult
             .ca_subscribe { [weak self] in
-                guard let `self` = self else { return }
-                self.processModels(fetchResult: $0) }
+                self?.processModels(fetchResult: $0) }
             .disposed(by: disposeBag)
         
         collectionViewDelegate.didSelect
             .ca_subscribe { [weak self] in
-                guard let `self` = self else { return }
-                self.findAndOpenTemplate(cellViewModel: $0) }
+                self?.findAndOpenTemplate(cellViewModel: $0) }
             .disposed(by: disposeBag)
         
         dataSource.didActionTemplate

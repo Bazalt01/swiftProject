@@ -1,6 +1,6 @@
 //
 //  RealmDatabase.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 16/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -12,9 +12,14 @@ import Realm
 import RxSwift
 
 struct RealmObserveUpdate {
-    private(set) var deletions: [Int]
-    private(set) var insertions: [Int]
-    private(set) var modifications: [Int]
+    let deletions: [Int]
+    let insertions: [Int]
+    let modifications: [Int]
+    init(deletions: [Int], insertions: [Int], modifications: [Int]) {
+        self.deletions = deletions
+        self.insertions = insertions
+        self.modifications = modifications
+    }
 }
 
 enum ExecuteOption {
@@ -32,7 +37,7 @@ class RealmDatabase {
     
     // MARK: - Public
     func currentUser() -> Observable<SyncUser> {
-        return Observable<SyncUser>.create { (observer) -> Disposable in
+        return Observable<SyncUser>.create { observer in
             guard let currentUser = SyncUser.current else {
                 let creds = SyncCredentials.nickname(RealmConfiguration.AdminNickname, isAdmin: true)
                 SyncUser.logIn(with: creds, server: RealmConfiguration.AUTH_URL, onCompletion: { (user, err) in
@@ -86,9 +91,7 @@ class RealmDatabase {
     fileprivate func transferedObjects(objects: Results<Object>, queue: DispatchQueue) -> [BaseModel] {
         var result: [RealmModel] = []
         var objectRefs: [ThreadSafeReference<Object>] = []
-        for object in objects {
-            objectRefs.append(ThreadSafeReference(to: object))
-        }
+        objects.forEach { objectRefs.append(ThreadSafeReference(to: $0)) }
         
         queue.sync { [weak self] in
             guard let `self` = self, let user = self.user else { return }
@@ -136,19 +139,16 @@ extension RealmDatabase: Database {
                 responseQueue.async {
                     fetchResult.onNext(result)
                 }
-                break
             case .update(let changedObjects, let deletions, let insertions, let modifications):
                 let update = RealmObserveUpdate(deletions: deletions, insertions: insertions, modifications: modifications)
                 let result = self.processChanges(update: update, objects: changedObjects, queue: responseQueue)
                 responseQueue.async {
                     fetchResult.onNext(result)
                 }
-                break
             case .error( _):
                 responseQueue.async {
                     fetchResult.onError(ErrorCode.enternal)
                 }
-                break
             }
         }
         subscribedObjects[token] = objects
@@ -207,12 +207,10 @@ extension RealmDatabase: Database {
                         if let object = model {
                             rm.add(object as! Object)
                         }
-                        break
                     case .delete:
                         if let object = model {
                             rm.delete(object as! Object)
                         }
-                        break
                     case .update:
                         break
                     }

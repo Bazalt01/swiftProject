@@ -1,6 +1,6 @@
 //
 //  CircleTimeView.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 09/09/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.

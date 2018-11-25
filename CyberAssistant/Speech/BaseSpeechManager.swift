@@ -1,6 +1,6 @@
 //
 //  BaseSpeechManager.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 11/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -50,7 +50,7 @@ class BaseSpeechManager : NSObject, SpeechManager, AVSpeechSynthesizerDelegate {
         let utterance = AVSpeechUtterance(string: text)
         utterance.accessibilityLanguage = language
         utterance.voice = AVSpeechSynthesisVoice(language: language)
-        return utterance
+        return utterance        
     }
 }
 

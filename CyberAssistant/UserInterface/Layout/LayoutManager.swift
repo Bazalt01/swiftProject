@@ -1,6 +1,6 @@
 //
 //  CellLayoutManager.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 12/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -28,7 +28,12 @@ class LayoutManager {
         
         viewModel.isCalculatingSize = true
         view.viewModel = viewModel
-        viewModel.layoutModel = LayoutModel(size: view.sizeThatFits(size))
+        view.frame = CGRect(origin: .zero, size: size)
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+        let height = view.systemLayoutSizeFitting(CGSize(width: size.width, height: 0), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel).height
+        let newSize = CGSize(width: size.width, height: ceil(height))
+        viewModel.layoutModel = LayoutModel(size: newSize)
         viewModel.isCalculatingSize = false
     }
 }

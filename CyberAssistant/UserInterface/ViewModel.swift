@@ -1,6 +1,6 @@
 //
 //  ViewModel.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 12/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -16,6 +16,5 @@ protocol ViewModel {
     // MARK: - Inits
     
     init(viewClass: (UIView & View).Type)
-    
     func isEqual(viewModel: ViewModel) -> Bool
 }

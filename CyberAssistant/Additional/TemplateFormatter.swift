@@ -1,6 +1,6 @@
 //
 //  TemplateFormatter.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 27/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -58,22 +58,18 @@ class TemplateFormatter {
                 if let number = Int(text) {
                     replace(string: String(arc4random_uniform(UInt32(number))), range: brackedValue.range)
                 }
-                break
             case .word:
                 replace(string: text, range: brackedValue.range)
-                break
             case .numberRange:
                 let numbers = text.components(separatedBy: CharacterSet(charactersIn: "-"))
                 let result = numbers.map({ return Int($0)! }).sorted(by: { $0 < $1 })
                 let number = result[0] + Int(arc4random_uniform(UInt32(result[1] - result[0])))
                 replace(string: String(number), range: brackedValue.range)
-                break
             case .anySet:
                 let words = text.components(separatedBy: CharacterSet(charactersIn: ","))
                 let randomIndex = Int(arc4random_uniform(UInt32(words.count)))
                 let word = words[randomIndex].trimmingCharacters(in: CharacterSet.whitespaces)
                 replace(string: word, range: brackedValue.range)
-                break
             }
         }
         return result

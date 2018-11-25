@@ -1,6 +1,6 @@
 //
 //  LabelAnimator.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 08/09/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -13,7 +13,7 @@ typealias LabelAnimatorToken = Int
 class LabelAnimator {
     private var index = 0
     private var timer: Timer?
-    private(set) var stepBlocks: [LabelAnimatorToken : () -> Void] = [:]
+    private(set) var stepBlocks: [LabelAnimatorToken : os_block_t] = [:]
     
     // MARK: - Inits
     
@@ -31,7 +31,7 @@ class LabelAnimator {
         timer?.invalidate()
     }
     
-    func addStepObserver(block: @escaping () -> Void) -> LabelAnimatorToken {
+    func addStepObserver(block: @escaping os_block_t) -> LabelAnimatorToken {
         let token = index
         stepBlocks[token] = block
         index += 1

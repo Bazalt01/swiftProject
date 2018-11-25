@@ -10,12 +10,12 @@ import Foundation
 import RxSwift
 
 class TemplateShareViewModel: BaseCollectionViewModel {
-    private var router: TemplateShareRouter
-    private var templateManager: TemplateManager
-    private var authManager: AuthManager
+    private let router: TemplateShareRouter
+    private let templateManager: TemplateManager
+    private let authManager: AuthManager
     
-    private(set) var dataSource: TemplateShareMainDataSource
-    private(set) var collectionViewDelegate: TemplateShareCollectionDelegate
+    let dataSource: TemplateShareMainDataSource
+    let collectionViewDelegate: TemplateShareCollectionDelegate
     private let didChangedSubject = PublishSubject<FetchResult>()
     
     private var savedTemplatesByKeys = [String : SharedTemplateModel]()

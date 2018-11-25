@@ -1,6 +1,6 @@
 //
 //  EnterView.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 18/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -19,8 +19,8 @@ enum EnterOption {
 }
 
 struct AuthResult {
-    private(set) var login: String
-    private(set) var password: String
+    let login: String
+    let password: String
     
     static func empty() -> AuthResult {
         return AuthResult(login: "", password: "")
@@ -39,7 +39,7 @@ class EnterView: UIView {
     private let enterButton = UIButton()
     private let signInUpButton = UIButton()
     
-    private var visibleElementsSets = Dictionary<EnterOption, Array<UIView>>()
+    private var visibleElementsSets: [EnterOption : [UIView]] = [:]
     
     var currentOption: EnterOption = .All {
         didSet {

@@ -1,6 +1,6 @@
 //
 //  BaseCollectionDataSource.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 12/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -15,9 +15,9 @@ enum SupplementaryViewKind: String {
 }
 
 struct BatchUpdate {
-    private(set) var option: BatchOption
-    private(set) var indexPathes: [IndexPath]
-    private(set) var sections: IndexSet
+    let option: BatchOption
+    let indexPathes: [IndexPath]
+    let sections: IndexSet
     init(option: BatchOption, indexPathes: [IndexPath], sections: IndexSet) {
         self.option = option
         self.indexPathes = indexPathes
@@ -63,7 +63,7 @@ class BaseCollectionDataSource: NSObject {
         return IndexPath(item: index, section: 0)
     }
     
-    var cellViewModels = Array<ViewModel>()
+    var cellViewModels: [ViewModel] = []
     var supplementaryViewHeaderModel: ViewModel?
     var supplementaryViewFooterModel: ViewModel?
     
@@ -76,9 +76,7 @@ class BaseCollectionDataSource: NSObject {
     }
     
     func register(supplementaryViewClasses classes: [SupplementaryViewClassWithKind], collectionView: UICollectionView) {
-        for supplementaryViewClass in classes {
-            let classType = supplementaryViewClass.classType
-            let kind = supplementaryViewClass.kind
+        classes.forEach { (classType, kind) in
             collectionView.register(classType, forSupplementaryViewOfKind: kind.rawValue, withReuseIdentifier: classType.ca_reuseIdentifier())
         }
     }
@@ -92,11 +90,10 @@ class BaseCollectionDataSource: NSObject {
         return kind == .header ? supplementaryViewHeaderModel : supplementaryViewFooterModel
     }
     
-    func notify(batchUpdates: [BatchUpdate]?, completion: (() -> Void)?) {
-        guard let cv = collectionView,
-              let batchUpdates = batchUpdates else {
-                notifyUpdate()
-                return
+    func notify(batchUpdates: [BatchUpdate]?, completion: os_block_t?) {
+        guard let cv = collectionView, let batchUpdates = batchUpdates else {
+            notifyUpdate()
+            return
         }
         cv.performBatchUpdates({
             self.performBatchUpdates(collectionView: cv, batchUpdates: batchUpdates)
@@ -115,22 +112,18 @@ class BaseCollectionDataSource: NSObject {
     
     private func performBatchUpdates(collectionView: UICollectionView, batchUpdates: [BatchUpdate]) {
         let sortedBatchUpdates = batchUpdates.sorted { $0.option.rawValue < $1.option.rawValue }
-        collectionView.performBatchUpdates({
-            for batch in sortedBatchUpdates {
-                switch batch.option {
-                case .delete:
-                    collectionView.deleteItems(at: batch.indexPathes)
-                    collectionView.deleteSections(batch.sections)
-                    break
-                case .insert:
-                    collectionView.insertSections(batch.sections)
-                    collectionView.insertItems(at: batch.indexPathes)
-                    break
-                case .update:
-                    collectionView.reloadItems(at: batch.indexPathes)
-                }
+        for batch in sortedBatchUpdates {
+            switch batch.option {
+            case .delete:
+                collectionView.deleteItems(at: batch.indexPathes)
+                collectionView.deleteSections(batch.sections)
+            case .insert:
+                collectionView.insertSections(batch.sections)
+                collectionView.insertItems(at: batch.indexPathes)
+            case .update:
+                collectionView.reloadItems(at: batch.indexPathes)
             }
-        }, completion: nil)
+        }
     }
 }
 

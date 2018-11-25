@@ -1,6 +1,6 @@
 //
 //  TemplateEditCell.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 26/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -20,8 +20,7 @@ class TemplateEditCell: BaseCollectionViewCell {
     
     override var viewModel: ViewModel? {
         didSet {
-            guard let vm = localViewModel else { return }
-            templateEditTextView.text = vm.template
+            templateEditTextView.text = localViewModel?.template
         }
     }
     
@@ -42,16 +41,12 @@ class TemplateEditCell: BaseCollectionViewCell {
     
     // MARK: - Public
     
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        guard let _ = localViewModel else { return super.sizeThatFits(size) }
-        var fittingSize = CGSize(width: size.width, height: CGFloat.greatestFiniteMagnitude)
-        fittingSize.height = 150
-        return fittingSize
-    }
-    
     func configureViews() {
         contentView.addSubview(templateEditTextView)
-        templateEditTextView.snp.makeConstraints { $0.edges.equalTo(self.contentView.layoutMargins) }
+        templateEditTextView.snp.makeConstraints { make in
+            make.edges.equalTo(self.contentView.layoutMargins)
+            make.height.greaterThanOrEqualTo(150)
+        }
         let margins = UIEdgeInsets(ca_edge: LayoutConstants.spacing)
         contentView.layoutMargins = margins
         
@@ -61,9 +56,9 @@ class TemplateEditCell: BaseCollectionViewCell {
     func configureSubsciptions() {
         templateEditTextView.rx.text
             .ca_subscribe { [weak self] in
-                guard let `self` = self, let localViewModel = self.localViewModel else { return }
+                guard let localViewModel = self?.localViewModel else { return }
                 localViewModel.update(template: $0) }
-            .disposed(by: disposeBag)
+            .disposed(by: disposeBag)        
     }
     
     func configureAppearance() {

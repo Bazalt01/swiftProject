@@ -1,6 +1,6 @@
 //
 //  TemplateEditRulesDataSource.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 01/09/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.

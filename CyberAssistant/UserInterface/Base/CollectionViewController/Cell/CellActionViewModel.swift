@@ -1,6 +1,6 @@
 //
 //  CellActionViewModel.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 15/09/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.

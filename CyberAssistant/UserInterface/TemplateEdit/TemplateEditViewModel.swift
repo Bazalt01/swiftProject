@@ -1,6 +1,6 @@
 //
 //  TemplateEditViewModel.swift
-//  CasinoAssistant
+//  CyberAssistant
 //
 //  Created by g.tokmakov on 26/08/2018.
 //  Copyright © 2018 g.tokmakov. All rights reserved.
@@ -16,10 +16,10 @@ class TemplateEditViewModel: BaseCollectionViewModel {
     private(set) var template: TemplateModel?
     private var router: TemplateEditRouter
     
-    private(set) var dataSource: CompositeDataSource
-    private(set) var editDataSource: TemplateEditDataSource
-    private(set) var ruleDataSource: TemplateEditRulesDataSource
-    private(set) var collectionViewDelegate: TemplateEditCollectionDelegate
+    let dataSource: CompositeDataSource<BaseCollectionDataSource>
+    let editDataSource: TemplateEditDataSource
+    let ruleDataSource: TemplateEditRulesDataSource
+    let collectionViewDelegate: TemplateEditCollectionDelegate
     
     let saveSubject = PublishSubject<Void>()
     let disposeBag = DisposeBag()

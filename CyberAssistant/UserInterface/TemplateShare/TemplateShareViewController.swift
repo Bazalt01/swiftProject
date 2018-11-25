@@ -9,7 +9,7 @@
 import UIKit
 
 class TemplateShareViewController: BaseCollectionViewController {
-    private var viewModel: TemplateShareViewModel
+    private let viewModel: TemplateShareViewModel
     
     // MARK: Inits
     
