@@ -13,9 +13,10 @@ import RxGesture
 
 class CollectionViewCellWithActions: BaseCollectionViewCell {
     private var panGesture = UIPanGestureRecognizer()
-    private var panGestureDispose: Disposable?
     private var startPanPoint: CGPoint?
     private var startContentViewPosition: CGFloat = 0.0
+    
+    private let disposeBag = DisposeBag()
     
     var actionViewModels: [CellActionViewModel]? {
         didSet {
@@ -26,6 +27,18 @@ class CollectionViewCellWithActions: BaseCollectionViewCell {
     private var actionViews: [UIView] = []
     
     // MARK: - Public
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        panGesture.addTarget(self, action: #selector(panHandler(sender:)))
+        panGesture.delegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        panGesture.addTarget(self, action: #selector(panHandler(sender:)))
+        panGesture.delegate = self
+    }
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -79,11 +92,8 @@ class CollectionViewCellWithActions: BaseCollectionViewCell {
     private func configurePanGesture() {
         if actionViewModels == nil {
             self.removeGestureRecognizer(panGesture)
-            panGestureDispose?.dispose()
         } else {
             self.addGestureRecognizer(panGesture)
-            panGestureDispose = rx.panGesture()
-                .subscribe { [weak self] in self?.panHandler(sender: $0.element!) }
         }
     }
     
@@ -150,7 +160,7 @@ class CollectionViewCellWithActions: BaseCollectionViewCell {
 
 extension CollectionViewCellWithActions: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return false
+        return true
     }
     
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {

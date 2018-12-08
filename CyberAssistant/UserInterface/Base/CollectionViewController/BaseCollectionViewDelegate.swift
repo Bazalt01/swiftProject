@@ -59,18 +59,14 @@ extension BaseCollectionViewDelegate: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        guard var viewModel = dataSource.supplementaryModel(atSection: section, kind: .header) else {
-            return CGSize.zero
-        }
+        guard var viewModel = dataSource.supplementaryModel(atSection: section, kind: .header) else { return .zero }
         let size = maxVisibleContentSize(collectionView: collectionView)
         layoutManager.updateLayoutModel(viewModel: &viewModel, size: size)
         return viewModel.layoutModel.size
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        guard var viewModel = dataSource.supplementaryModel(atSection: section, kind: .footer) else {            
-            return CGSize.zero
-        }
+        guard var viewModel = dataSource.supplementaryModel(atSection: section, kind: .footer) else { return .zero }
         let size = maxVisibleContentSize(collectionView: collectionView)
         layoutManager.updateLayoutModel(viewModel: &viewModel, size: size)
         return viewModel.layoutModel.size

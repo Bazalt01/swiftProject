@@ -9,7 +9,7 @@
 import Foundation
 import AVFoundation
 
-class BaseSpeechManager : NSObject, SpeechManager, AVSpeechSynthesizerDelegate {    
+class BaseSpeechManager : NSObject, SpeechManager {
     fileprivate var syntesizer = AVSpeechSynthesizer()
     
     var configurator: SpeechConfigurator?
@@ -44,6 +44,10 @@ class BaseSpeechManager : NSObject, SpeechManager, AVSpeechSynthesizerDelegate {
         syntesizer.speak(utterance)
     }
     
+    func stopSyntesize() {
+        syntesizer.stopSpeaking(at: .immediate)
+    }
+    
     // MARK: - Private
     
     private func configuredUtterance(text: String, language: String) -> AVSpeechUtterance {
@@ -54,9 +58,8 @@ class BaseSpeechManager : NSObject, SpeechManager, AVSpeechSynthesizerDelegate {
     }
 }
 
-extension BaseSpeechManager {
+extension BaseSpeechManager: AVSpeechSynthesizerDelegate {
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        guard let delegate = self.delegate else { return }
-        delegate.didFinishPlaying(sender: self)
+        delegate?.didFinishPlaying(sender: self)
     }
 }

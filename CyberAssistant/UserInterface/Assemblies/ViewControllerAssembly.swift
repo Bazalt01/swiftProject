@@ -17,7 +17,7 @@ class Assembly {
     }()
 
     init() {
-        var language = Language.russian
+        var language: Language = Locale.current.languageCode == "ru" ? Language.russian : Language.english
         let savedLanguage = UserDefaults.standard.string(forKey: UserDefaultsKeys.languageKey)
         if let savedLanguage = savedLanguage {
             language = Language(rawValue: savedLanguage)!

@@ -23,8 +23,8 @@ class TemplateCell: CollectionViewCellWithActions {
     override var viewModel: ViewModel? {
         didSet {
             guard let vm = localViewModel else { return }
-            install(viewModel: vm)
             configureSubscriptions(viewModel: vm)
+            install(viewModel: vm)
         }
     }
     

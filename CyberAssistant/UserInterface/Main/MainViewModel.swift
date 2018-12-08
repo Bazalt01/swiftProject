@@ -28,12 +28,17 @@ class MainViewModel: SpeechManagerDelegate {
     private(set) var isPlaying = false
     
     private let canPlaySubject = PublishSubject<Bool>()
+    private let stopSubject = PublishSubject<()>()
     private let templatesSubject = BehaviorRelay<[String]>(value: [])
     private let needNewTemplateSubject = PublishSubject<Bool>()
     private let didCompleteSpeechSubject = PublishSubject<Void>()
     
+    
     var canPlay: Observable<Bool> {
         return canPlaySubject.share()
+    }
+    var stop: Observable<()> {
+        return stopSubject.share()
     }
     var templates: Observable<[String]> {
         return templatesSubject.share()
@@ -104,11 +109,13 @@ class MainViewModel: SpeechManagerDelegate {
     
     func showHasntTemplatesMessage() {
         router.openAlertController(title: NSLocalizedString("attention", comment: ""),
-                                   message: NSLocalizedString("attention", comment: "do_you_want_create_new_template"),
+                                   message: NSLocalizedString("do_you_want_create_new_template", comment: ""),
                                    acceptHandler: { [weak self] in
                                     guard let `self` = self else { return }
                                     self.router.openNewTemplateController()
-            }, cancelHandler: nil)
+            }, cancelHandler: {
+                
+        })
     }
     
     // MARK: - Private
@@ -133,14 +140,20 @@ class MainViewModel: SpeechManagerDelegate {
     private func configureSubscriptions() {
         templateManager.models
             .ca_subscribe { [weak self] templates in
-                guard let `self` = self else { return }
-                self.updateModels(models: templates) }
+                self?.updateModels(models: templates) }
             .disposed(by: disposeBag)
         
         templateManager.fetchResult
             .ca_subscribe { [weak self] fetchResult in
-                guard let `self` = self else { return }
-                self.updateModels(models: fetchResult.models as! [TemplateModel]) }
+                self?.updateModels(models: fetchResult.models as! [TemplateModel]) }
+            .disposed(by: disposeBag)
+        
+        NotificationCenter.default.rx.notification(.UIApplicationDidEnterBackground)
+            .ca_subscribe { [weak self] _ in
+                self?.isPlaying = false
+                self?.stopSubject.onNext(())
+                self?.speechManager.stopSyntesize()
+            }
             .disposed(by: disposeBag)
     }
     

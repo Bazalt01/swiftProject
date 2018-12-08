@@ -32,7 +32,17 @@ class HeaderView: BaseSupplementaryView {
     @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }    
+    }
+    
+    override func systemLayoutSizeFitting(_ targetSize: CGSize,
+                                          withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority,
+                                          verticalFittingPriority: UILayoutPriority) -> CGSize {
+        var size = titleLabel.systemLayoutSizeFitting(targetSize,
+                                                      withHorizontalFittingPriority: horizontalFittingPriority,
+                                                      verticalFittingPriority: verticalFittingPriority)
+        size.height += 10
+        return size
+    }
     
     // MARK: - Private
     

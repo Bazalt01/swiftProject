@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import RxCocoa
 
 class TemplateShareViewModel: BaseCollectionViewModel {
     private let router: TemplateShareRouter
@@ -16,9 +17,15 @@ class TemplateShareViewModel: BaseCollectionViewModel {
     
     let dataSource: TemplateShareMainDataSource
     let collectionViewDelegate: TemplateShareCollectionDelegate
-    private let didChangedSubject = PublishSubject<FetchResult>()
     
-    private var savedTemplatesByKeys = [String : SharedTemplateModel]()
+    private let didChangedSubject = PublishSubject<FetchResult>()
+    private let hasTemplatesSubject = BehaviorRelay<Bool>(value: false)
+    
+    var hasTemplates: Observable<Bool> {
+        return hasTemplatesSubject.share()
+    }
+    
+    private var savedTemplatesByKeys: [String : SharedTemplateModel] = [:]
     private let disposeBag = DisposeBag()
     
     init(templateManager: TemplateManager, authManager: AuthManager, router: TemplateShareRouter) {
@@ -48,35 +55,26 @@ class TemplateShareViewModel: BaseCollectionViewModel {
     private func configureSubscriptions() {
         didChangedSubject
             .ca_subscribe { [weak self] fetchResult in
-                guard let `self` = self else { return }
-                fetchResult.changes.forEach { (changes) in
-                    self.processChange(changes: changes, templates: fetchResult.models as! [SharedTemplateModel])
+                fetchResult.changes.forEach { changes in
+                    self?.processChange(changes: changes, templates: fetchResult.models as! [SharedTemplateModel])
                 }
             }
             .disposed(by: disposeBag)
         
         dataSource.didSaveTemplate
-            .ca_subscribe { [weak self] template in
-                guard let `self` = self else { return }
-                self.savedTemplatesByKeys[template.unicID] = template.saved ? template : nil }
+            .ca_subscribe { [weak self] template in self?.savedTemplatesByKeys[template.unicID] = template.saved ? template : nil }
             .disposed(by: disposeBag)
-    }
-    
-    private func share(template: SharedTemplateModel) {
-        
     }
     
     private func processChange(changes: FetchResultChanges, templates: [SharedTemplateModel]) {
         switch changes.option {
         case .delete:
             dataSource.remove(indexes: changes.indexes)
-            break
         case .insert:
             dataSource.insert(indexes: changes.indexes, templates: templates)
-            break
         case .update:
             dataSource.update(indexes: changes.indexes, templates: templates)
-            break
         }
+        hasTemplatesSubject.accept(templates.count > 0)
     }        
 }

@@ -45,7 +45,7 @@ class TemplateEditCell: BaseCollectionViewCell {
         contentView.addSubview(templateEditTextView)
         templateEditTextView.snp.makeConstraints { make in
             make.edges.equalTo(self.contentView.layoutMargins)
-            make.height.greaterThanOrEqualTo(150)
+            make.height.greaterThanOrEqualTo(scale * 150)
         }
         let margins = UIEdgeInsets(ca_edge: LayoutConstants.spacing)
         contentView.layoutMargins = margins

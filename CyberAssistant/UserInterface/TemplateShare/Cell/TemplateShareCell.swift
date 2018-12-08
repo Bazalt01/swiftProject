@@ -65,7 +65,7 @@ class TemplateShareCell: BaseCollectionViewCell {
         
         horStackView.addArrangedSubview(verStackView)
         horStackView.addArrangedSubview(saveButton)
-        saveButton.snp.makeConstraints { $0.size.equalTo(CGSize(ca_size: 50)) }
+        saveButton.snp.makeConstraints { $0.size.equalTo(CGSize(ca_size: scale * 50)) }
         
         configuredTemplateLabel()
         configuredResultLabel()

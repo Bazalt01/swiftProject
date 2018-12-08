@@ -108,7 +108,7 @@ class CircleTimeView: UIView {
         DispatchQueue.main.async { [weak self]() in
             guard let `self` = self else { return }
             self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.handleTimer(sender:)), userInfo: nil, repeats: true)
-            self.timer!.fire()
+            self.timer?.fire()
         }
     }
     
@@ -123,7 +123,7 @@ class CircleTimeView: UIView {
         guard isPlayingSubject.value else { return }
         changeButtonPathAnimated()
         isPlayingSubject.accept(false)
-        timer!.invalidate()
+        timer?.invalidate()
         finishTimeLine()
     }
     

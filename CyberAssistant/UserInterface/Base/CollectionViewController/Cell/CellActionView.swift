@@ -58,7 +58,7 @@ class CellActionView: UIView {
             .bind(to: button.rx.image())
             .disposed(by: disposeBag)
         button.rx.tap
-            .bind(to: viewModel.actionSubject)
+            .ca_subscribe { [weak self] in self?.viewModel.actionSubject.onNext(()) }            
             .disposed(by: disposeBag)
     }
 }

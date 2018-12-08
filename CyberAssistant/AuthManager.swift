@@ -67,7 +67,7 @@ class AuthManager {
             
             _ = self.localAccount(result: result)
                 .ca_subscribe { account in
-                    guard let _ = account else {
+                    guard account == nil else {
                         observer.onError(ErrorCode.accountIsExist)
                         return
                     }
@@ -112,7 +112,7 @@ class AuthManager {
                     let password = CryptoConverter.convertSHA256(string: result.password)
                     return $0.login == result.login && $0.password == password
                 }
-                return Observable<AccountModel?>.just(accounts.first ?? nil)
+                return Observable<AccountModel?>.just(accounts.first)
             }
     }
 }

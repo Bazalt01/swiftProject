@@ -67,7 +67,7 @@ class MainViewController: BaseViewController {
         
         view.addSubview(circleTimeView)
         circleTimeView.snp.makeConstraints { (make) in
-            make.centerY.equalToSuperview().offset(-40)
+            make.centerY.equalToSuperview().offset(scale * -40)
             make.centerX.equalToSuperview()
             make.size.equalTo(CGSize(ca_size: AppearanceSize.circleTimeViewSize))
         }
@@ -76,7 +76,7 @@ class MainViewController: BaseViewController {
         view.addSubview(stackView)
         stackView.snp.makeConstraints { (make) in
             make.centerX.equalToSuperview()
-            make.top.equalTo(circleTimeView.snp.bottom).offset(80)
+            make.top.equalTo(circleTimeView.snp.bottom).offset(scale * 80)
             make.right.equalTo(-LayoutConstants.spacing)
             make.left.equalTo(LayoutConstants.spacing)
         }
@@ -88,10 +88,10 @@ class MainViewController: BaseViewController {
         view.addSubview(templatesButton)
         templatesButton.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
-                make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
-                make.right.equalTo(view.safeAreaLayoutGuide).inset(10)
+                make.top.equalTo(view.safeAreaLayoutGuide).inset(scale * 10)
+                make.right.equalTo(view.safeAreaLayoutGuide).inset(scale * 10)
             } else {
-                make.top.equalTo(topLayoutGuide.snp.bottom).inset(10)
+                make.top.equalTo(topLayoutGuide.snp.bottom).inset(scale * 10)
                 make.right.equalTo(view).inset(10)
             }
         }
@@ -100,11 +100,11 @@ class MainViewController: BaseViewController {
         view.addSubview(settingsButton)
         settingsButton.snp.makeConstraints { (make) in
             if #available(iOS 11.0, *) {
-                make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
-                make.left.equalTo(view.safeAreaLayoutGuide).inset(10)
+                make.top.equalTo(view.safeAreaLayoutGuide).inset(scale * 10)
+                make.left.equalTo(view.safeAreaLayoutGuide).inset(scale * 10)
             }
             else {
-                make.top.equalTo(topLayoutGuide.snp.bottom).inset(10)
+                make.top.equalTo(topLayoutGuide.snp.bottom).inset(scale * 10)
                 make.left.equalTo(view).inset(10)
             }
         }
@@ -149,6 +149,7 @@ class MainViewController: BaseViewController {
     
     private func configureSubsciptions() {
         let viewModel = self.viewModel
+        let circleTimeView = self.circleTimeView
         circleTimeView?.isPlaying
             .filter { $0 }
             .ca_subscribe { _ in viewModel.playNextSpeechModel() }
@@ -185,30 +186,27 @@ class MainViewController: BaseViewController {
         
         viewModel.templates
             .ca_subscribe { [weak self] templates in
-                guard let `self` = self else { return }
-                self.templateLabels.forEach { $0.isHidden = true }
+                self?.templateLabels.forEach { $0.isHidden = true }
                 templates.enumerated().forEach { (offset, template) in
-                    self.templateLabels[offset].text = template
-                    self.templateLabels[offset].isHidden = false
+                    self?.templateLabels[offset].text = template
+                    self?.templateLabels[offset].isHidden = false
                 }}
             .disposed(by: disposeBag)
         
         viewModel.canPlay
-            .ca_subscribe { [weak self] in
-                guard let `self` = self else { return }
-                self.circleTimeView?.canPlay = $0 }
+            .ca_subscribe { circleTimeView?.canPlay = $0 }
             .disposed(by: disposeBag)
         
         viewModel.needNewTemplate
-            .ca_subscribe { [weak self] in
-                guard let `self` = self else { return }
-                self.newTemplateButton.isHidden = !$0 }
+            .ca_subscribe { [weak self] in self?.newTemplateButton.isHidden = !$0 }
             .disposed(by: disposeBag)
         
         viewModel.didCompleteSpeech
-            .ca_subscribe { [weak self] in
-                guard let `self` = self else { return }
-                self.circleTimeView?.fire() }
+            .ca_subscribe { circleTimeView?.fire() }
+            .disposed(by: disposeBag)
+        
+        viewModel.stop
+            .ca_subscribe { circleTimeView?.stop() }
             .disposed(by: disposeBag)
     }
     

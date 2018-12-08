@@ -25,6 +25,10 @@ struct AuthResult {
     static func empty() -> AuthResult {
         return AuthResult(login: "", password: "")
     }
+    
+    func isEmpty() -> Bool {
+        return login.count == 0 || password.count == 0
+    }
 }
 
 
@@ -219,11 +223,9 @@ class EnterView: UIView {
     private func updateTitle() {
         switch currentOption {
         case .All, .SignIn:
-            titleLabel.text = NSLocalizedString("sign_in", comment: "")
-            break
+            titleLabel.text = NSLocalizedString("sign_in", comment: "")            
         case .SignUp:
             titleLabel.text = NSLocalizedString("sign_up", comment: "")
-            break
         }
     }
     
@@ -231,10 +233,8 @@ class EnterView: UIView {
         switch currentOption {
         case .All, .SignIn:
             signInUpButton.setTitle(NSLocalizedString("sign_up", comment: ""), for: .normal)
-            break
         case .SignUp:
             signInUpButton.setTitle(NSLocalizedString("sign_in", comment: ""), for: .normal)
-            break
         }
     }
     
@@ -245,6 +245,7 @@ class EnterView: UIView {
             .catchError { error in
                 self.errorMessageSubject.onNext(ErrorManager.errorMessage(code: error as! ErrorCode))
                 return Observable<AuthResult>.just(AuthResult.empty()) }
+            .filter { !$0.isEmpty() }
             .ca_subscribe { [unowned self] result in
                 let subject = self.currentOption == .SignIn ? self.signInSubject : self.signUpSubject
                 subject.onNext(result) }

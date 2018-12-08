@@ -7,9 +7,13 @@
 //
 
 import UIKit
+import RxSwift
 
 class TemplateShareViewController: BaseCollectionViewController {
     private let viewModel: TemplateShareViewModel
+    private let emptyView = EmptyView()
+    
+    private let disposeBag = DisposeBag()
     
     // MARK: Inits
     
@@ -37,6 +41,14 @@ class TemplateShareViewController: BaseCollectionViewController {
         }
         
         viewModel.configure()
+        
+        configureEmptyView()
+        view.addSubview(emptyView)
+        emptyView.snp.makeConstraints { make in
+            make.right.equalTo(-LayoutConstants.spacing)
+            make.left.equalTo(LayoutConstants.spacing)
+            make.centerY.equalToSuperview()
+        }
     }
     
     // MARK: - Public
@@ -44,6 +56,20 @@ class TemplateShareViewController: BaseCollectionViewController {
     override func configureAppearance() {
         super.configureAppearance()
         view.backgroundColor = AppearanceColor.collectionBackground
+    }
+    
+    override func configureSubsciptions() {
+        super.configureSubsciptions()
+        self.viewModel.hasTemplates
+            .ca_subscribe { [weak self] in self?.emptyView.isHidden = $0 }
+            .disposed(by: disposeBag)
+    }
+    
+    // MARK: - Private
+    
+    private func configureEmptyView() {
+        guard let image = UIImage.ca_image(imageName: "eye", renderingMode: .alwaysTemplate) else { return }
+        emptyView.emptyModel = EmptyModel(message: NSLocalizedString("you_need_creating_template", comment: ""), image: image)
     }
 }
 

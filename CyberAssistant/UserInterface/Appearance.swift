@@ -8,30 +8,35 @@
 
 import UIKit
 
+let scale: CGFloat = isIPad ? 1.6 : 1
+let isIPad = UIDevice.current.userInterfaceIdiom == .pad
+
 struct AppearanceFont {
-    static let button = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.light)
-    static let addButton = UIFont.systemFont(ofSize: 24, weight: UIFont.Weight.light)
-    static let barButton = UIFont.systemFont(ofSize: 17)
-    static let textField = UIFont.systemFont(ofSize: 17)
-    static let textView = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.light)
-    static let titleLabel = UIFont.systemFont(ofSize: 17)
-    static let headerLabel = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.bold)
-    static let attentionLabel = UIFont.systemFont(ofSize: 24)
-    static let timeLabel = UIFont.systemFont(ofSize: 56, weight: UIFont.Weight.light)
-    static let baseLabel = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.light)
+    static let button = UIFont.systemFont(ofSize: scale * 17, weight: UIFont.Weight.light)
+    static let addButton = UIFont.systemFont(ofSize: scale * 24, weight: UIFont.Weight.light)
+    static let barButton = UIFont.systemFont(ofSize: scale * 17)
+    static let textField = UIFont.systemFont(ofSize: scale * 17)
+    static let textView = UIFont.systemFont(ofSize: scale * 17, weight: UIFont.Weight.light)
+    static let titleLabel = UIFont.systemFont(ofSize: scale * 17)
+    static let navigationLabel = UIFont.systemFont(ofSize: isIPad ? 22 : 17)
+    static let headerLabel = UIFont.systemFont(ofSize: scale * 17, weight: UIFont.Weight.bold)
+    static let attentionLabel = UIFont.systemFont(ofSize: scale * 24)
+    static let timeLabel = UIFont.systemFont(ofSize: scale * 56, weight: UIFont.Weight.light)
+    static let baseLabel = UIFont.systemFont(ofSize: scale * 17, weight: UIFont.Weight.light)
 }
 
 struct AppearanceSize {
-    static let buttonHeight: CGFloat = 44.0
-    static let playButtonSize: CGFloat = 32.0
-    static let labelHeight: CGFloat = 44.0
-    static let textFieldHeight: CGFloat = 44.0
-    static let textViewHeight: CGFloat = 44.0
-    static let separatorHeight: CGFloat = 20.0
-    static let cellActionWidth: CGFloat = 70.0
-    static let timeRegulatorSize: CGFloat = 20.0
-    static let circleTimeViewSize: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 240.0 : 160.0
-    static let pixelSize = CGSize(ca_size: UIDevice.current.userInterfaceIdiom == .pad ? 20.0 : 12.0)
+    static let buttonHeight: CGFloat = scale * 44.0
+    static let playButtonSize: CGFloat = scale * 32.0
+    static let labelHeight: CGFloat = scale * 44.0
+    static let textFieldHeight: CGFloat = scale * 44.0
+    static let textViewHeight: CGFloat = scale * 44.0
+    static let separatorHeight: CGFloat = scale * 20.0
+    static let cellActionWidth: CGFloat = scale * 70.0
+    static let timeRegulatorSize: CGFloat = scale * 20.0
+    static let circleTimeViewSize: CGFloat = isIPad ? 240.0 : 160.0
+    static let pixelSize = CGSize(ca_size: isIPad ? 24.0 : 12.0)
+    static let collectionInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: isIPad ? 200 : 0, bottom: 0, right: isIPad ? 100 : 0)
 }
 
 private let purple = UIColor(hue: 257.0/360.0, saturation: 0.6, brightness: 1.0, alpha: 1.0)
@@ -102,14 +107,15 @@ struct AppearanceColor {
 }
 
 struct AppearanceBorder {
-    static let textField: CGFloat = 0.0
-    static let textView: CGFloat = 0.5
-    static let circle: CGFloat = 3.5
+    static let textField: CGFloat = scale * 0.0
+    static let textView: CGFloat = scale * 0.5
+    static let circle: CGFloat = scale * 3.5
 }
 
 struct AppearanceCornerRadius {
-    static let textField: CGFloat = 0.0
-    static let textView: CGFloat = 0.0
+    static let textField: CGFloat = scale * 0.0
+    static let textView: CGFloat = scale * 0.0
+    static let image: CGFloat = 6.0
 }
 
 struct Appearance {
@@ -117,10 +123,10 @@ struct Appearance {
         button.titleLabel?.font = AppearanceFont.button
         button.setTitleColor(AppearanceColor.buttonTitle, for: .normal)
         button.setTitleColor(AppearanceColor.buttonTitleHighlited, for: .highlighted)
-        if let image = UIImage.ca_image(withFillColor: AppearanceColor.buttonBackground, radius: 6.0) {
+        if let image = UIImage.ca_image(withFillColor: AppearanceColor.buttonBackground, radius: AppearanceCornerRadius.image) {
             button.setBackgroundImage(image, for: .normal)
         }
-        if let image = UIImage.ca_image(withFillColor: AppearanceColor.buttonBackgroundHighlited, radius: 6.0) {
+        if let image = UIImage.ca_image(withFillColor: AppearanceColor.buttonBackgroundHighlited, radius: AppearanceCornerRadius.image) {
             button.setBackgroundImage(image, for: .highlighted)
         }    
     }        
@@ -216,8 +222,9 @@ struct Appearance {
         navigationBar.tintColor = AppearanceColor.navigationBarTintColor
         navigationBar.titleTextAttributes = [
             NSAttributedStringKey.foregroundColor : AppearanceColor.navigationBarTitleColor,
-            NSAttributedStringKey.font : AppearanceFont.titleLabel
+            NSAttributedStringKey.font : AppearanceFont.navigationLabel
         ]
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font : AppearanceFont.navigationLabel], for: .normal)
     }
     
     static func applyFor(timeLabel: UILabel) {

@@ -88,7 +88,7 @@ class TemplateEditViewController: BaseCollectionViewController {
         guard let userInfo = notification.userInfo,
               let cv = collectionView else { return }
         
-        let keyboardRect = userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect;
+        let keyboardRect = userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect
         let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double
         
         if keyboardRect.minY >= view.frame.height {

@@ -12,7 +12,7 @@ import RxCocoa
 import RxSwift
 import RxGesture
 
-let kEnterViewWidth: CGFloat = 300.0
+let kEnterViewWidth: CGFloat = scale * 300.0
 let keyboardOffset: CGFloat = 20.0
 
 class WelcomeViewController: BaseViewController {

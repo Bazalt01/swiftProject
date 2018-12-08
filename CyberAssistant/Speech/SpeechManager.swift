@@ -31,4 +31,5 @@ protocol SpeechManager {
     var currentLanguage: Language? { get }                
     
     func syntesize(text: String)
+    func stopSyntesize()
 }

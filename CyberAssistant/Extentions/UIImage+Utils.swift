@@ -14,20 +14,23 @@ extension UIImage {
         let rect = CGRect(origin: .zero, size: CGSize(width: diameter, height: diameter))
         
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
-        let context = UIGraphicsGetCurrentContext()
-        context!.saveGState()
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
         
-        context!.setFillColor(color.cgColor)
+        context.saveGState()
+        
+        context.setFillColor(color.cgColor)
         
         let path = UIBezierPath(roundedRect: rect, cornerRadius: radius)
-        context!.addPath(path.cgPath)
-        context!.fillPath()
-        context!.clip()
+        context.addPath(path.cgPath)
+        context.fillPath()
+        if !context.isPathEmpty {
+            context.clip()
+        }
         
-        var image = UIGraphicsGetImageFromCurrentImageContext()
+        guard var image = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
         UIGraphicsEndImageContext()
     
-        image = image!.resizableImage(withCapInsets: UIEdgeInsets(ca_edge: radius), resizingMode: .stretch)
+        image = image.resizableImage(withCapInsets: UIEdgeInsets(ca_edge: radius), resizingMode: .stretch)
         return image
     }
     
