@@ -15,11 +15,11 @@ class KeychainManager {
     
     class func save(authResult: AuthResult) {
         let password = authResult.password.data(using: String.Encoding.utf8)!
-        let query: [String : Any] = [kSecClass as String : kSecClassInternetPassword,
+        let query: [String : Any] = [kSecClass as String : kSecClassKey,
                      kSecAttrAccount as String : authResult.login,
                      kSecAttrServer as String : KeyChain.server,
                      kSecValueData as String : password]
-        SecItemAdd(query as CFDictionary, nil)
+        print(SecItemAdd(query as CFDictionary, nil))
     }
     
     class func currentAuthResult() -> AuthResult? {

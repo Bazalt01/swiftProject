@@ -6,10 +6,15 @@
 //  Copyright © 2018 g.tokmakov. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 class CompositeDataSource<T: BaseCollectionDataSource>: BaseCollectionDataSource {
     private(set) var dataSources: [T] = []
+    override weak var collectionView: UICollectionView? {
+        didSet {
+            dataSources.forEach { $0.collectionView = collectionView }
+        }
+    }
     
     // MARK: - Public
     
@@ -18,10 +23,8 @@ class CompositeDataSource<T: BaseCollectionDataSource>: BaseCollectionDataSource
     }
     
     func insert(dataSource: T, index: Int) {
+        dataSource.collectionView = collectionView
         dataSources.insert(dataSource, at: index)
-        
-        cellClasses.append(contentsOf: dataSource.cellClasses)
-        supplementaryViewClasses.append(contentsOf: dataSource.supplementaryViewClasses)
     }
     
     func remove(atIndex index: Int) {
@@ -29,31 +32,64 @@ class CompositeDataSource<T: BaseCollectionDataSource>: BaseCollectionDataSource
     }
     
     override func numberOfSections() -> Int {
-        return dataSources.count
+        var numberOfSections = 0
+        for dataSource in dataSources {
+            numberOfSections += dataSource.numberOfSections()
+        }
+        return numberOfSections
     }
     
     override func numberOfItems(inSection section: Int) -> Int {
-        return dataSources[section].cellViewModels.count
+        let map = sectionMap()
+        guard section < map.count else {
+            print("[CompositeDataSource] Error: Attempt get numberOfItems for invalid section")
+            assertionFailure()
+            return 0
+        }
+        let globalIndex = map[section]
+        let dataSource = dataSources[globalIndex]
+        let localSection = dataSource.numberOfSections() > 1 ? section - globalIndex : 0
+        return dataSource.numberOfItems(inSection: localSection)
     }
 
     override func model(atIndexPath indexPath: IndexPath) -> ViewModel? {
-        return dataSources[indexPath.section].cellViewModels[indexPath.item]
+        let map = sectionMap()
+        guard indexPath.section < map.count else {
+            print("[CompositeDataSource] Error: Attempt get model for invalid section number")
+            assertionFailure()
+            return nil
+        }
+        let globalIndex = map[indexPath.section]
+        let dataSource = dataSources[globalIndex]
+        let localSection = dataSource.numberOfSections() > 1 ? indexPath.section - globalIndex : 0
+        let indexPath = IndexPath(item: indexPath.item, section: localSection)
+        return dataSource.model(atIndexPath: indexPath)
     }
     
-    override func index(forItem item: ViewModel) -> IndexPath? {
-        for section in 0..<dataSources.count {
-            let dataSource = dataSources[section]
-            if let indexPath = dataSource.index(forItem: item) {
-                return IndexPath(item: indexPath.item, section: section)
-            }
+    override func supplementaryModel(atSection section: Int, kind: SupplementaryViewKind) -> ViewModel? {
+        let map = sectionMap()
+        guard section < map.count else {
+            print("[CompositeDataSource] Error: Attempt get supplementaryModel for invalid section")
+            assertionFailure()
+            return nil
         }
-        return nil
+        let globalIndex = map[section]
+        let dataSource = dataSources[globalIndex]
+        let localSection = dataSource.numberOfSections() > 1 ? section - globalIndex : 0
+        return dataSource.supplementaryModel(atSection: localSection, kind: kind)
     }
     
     // MARK: - Private
     
-    override func supplementaryModel(atSection section: Int, kind: SupplementaryViewKind) -> ViewModel? {
-        let dataSource = dataSources[section]
-        return kind == .header ? dataSource.supplementaryViewHeaderModel : dataSource.supplementaryViewFooterModel
+    private func sectionMap() -> [Int] {
+        var localForGlobalSections: [Int] = []
+        for globalIndex in 0..<dataSources.count {
+            let dataSource = dataSources[globalIndex]
+            let innerSectionCount = dataSource.numberOfSections()
+            for _ in 0..<innerSectionCount {
+                localForGlobalSections.append(globalIndex)
+            }
+        }
+        return localForGlobalSections
     }
 }

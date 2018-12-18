@@ -217,14 +217,14 @@ struct Appearance {
         textView.layer.cornerRadius = AppearanceCornerRadius.textView
     }
     
-    static func applyFor(navigationBar: UINavigationBar) {
+    static func applyFor(navigationBar: UINavigationBar) {        
         navigationBar.barTintColor = AppearanceColor.navigationBarColor
         navigationBar.tintColor = AppearanceColor.navigationBarTintColor
         navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.foregroundColor : AppearanceColor.navigationBarTitleColor,
-            NSAttributedStringKey.font : AppearanceFont.navigationLabel
+            NSAttributedString.Key.foregroundColor : AppearanceColor.navigationBarTitleColor,
+            NSAttributedString.Key.font : AppearanceFont.navigationLabel
         ]
-        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font : AppearanceFont.navigationLabel], for: .normal)
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font : AppearanceFont.navigationLabel], for: .normal)
     }
     
     static func applyFor(timeLabel: UILabel) {
