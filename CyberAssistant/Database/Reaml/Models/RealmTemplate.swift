@@ -16,6 +16,7 @@ class RealmTemplate: RealmModel, TemplateModel, SharedTemplateModel {
     @objc dynamic var muted: Bool = false
     @objc dynamic var shared: Bool = false
     @objc dynamic var internalAuthor: RealmAccount?
+    var array: List<RealmModel>?
     var author: AccountModel? {
         return internalAuthor
     }

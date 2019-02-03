@@ -14,7 +14,7 @@ class TemplateViewModel {
     private var router: TemplateRouter
     private var templateManager: TemplateManager
     let dataSource: TemplateCollectionDataSource
-    let collectionViewDelegate: BaseCollectionViewDelegate
+    let collectionViewDelegate: CollectionViewDelegate
     
     private let hasTemplatesSubject = BehaviorRelay<Bool>(value: false)
     
@@ -26,7 +26,7 @@ class TemplateViewModel {
     
     // MARK: - Inits
     
-    init(templateManager: TemplateManager, dataSource: TemplateCollectionDataSource, collectionViewDelegate: BaseCollectionViewDelegate, router: TemplateRouter) {
+    init(templateManager: TemplateManager, dataSource: TemplateCollectionDataSource, collectionViewDelegate: CollectionViewDelegate, router: TemplateRouter) {
         self.templateManager = templateManager
         self.dataSource = dataSource
         self.collectionViewDelegate = collectionViewDelegate

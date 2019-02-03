@@ -8,11 +8,11 @@
 
 import Foundation
 
-class TemplateCollectionDelegate: BaseCollectionViewDelegate {
+class TemplateCollectionDelegate: CollectionViewDelegate {
     
     // MARK: - Inits
     
-    init(dataSource: BaseCollectionDataSource) {
+    init(dataSource: DataSource) {
         let lm = LayoutManager(viewsByClass: [TemplateCell.ca_reuseIdentifier(): TemplateCell()])
         super.init(layoutManager: lm, dataSource: dataSource)
     }

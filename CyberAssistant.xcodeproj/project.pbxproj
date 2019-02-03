@@ -19,7 +19,7 @@
 		EA57F01A2123521B00309919 /* MainRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57F0192123521B00309919 /* MainRouter.swift */; };
 		EA57F01C2123FCBC00309919 /* BaseCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57F01B2123FCBC00309919 /* BaseCollectionViewController.swift */; };
 		EA57F026212400B500309919 /* BaseCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57F025212400B500309919 /* BaseCollectionViewModel.swift */; };
-		EA57F028212421BC00309919 /* BaseCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57F027212421BC00309919 /* BaseCollectionViewDelegate.swift */; };
+		EA57F028212421BC00309919 /* CollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57F027212421BC00309919 /* CollectionViewDelegate.swift */; };
 		EA57F06521245E2600309919 /* UIStructExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57F06421245E2600309919 /* UIStructExtention.swift */; };
 		EA62B7AA211C3A0F007F5C16 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA62B7A9211C3A0F007F5C16 /* MainViewModel.swift */; };
 		EA68CB37215AB19400004AAB /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68CB36215AB19400004AAB /* SettingsViewController.swift */; };
@@ -76,7 +76,7 @@
 		EABA34672120484600B2040B /* TemplateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABA34662120484600B2040B /* TemplateViewController.swift */; };
 		EABA34692120485000B2040B /* TemplateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABA34682120485000B2040B /* TemplateViewModel.swift */; };
 		EABA346C212066CB00B2040B /* TemplateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABA346B212066CB00B2040B /* TemplateCell.swift */; };
-		EABA346E2120679C00B2040B /* BaseCollectionDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABA346D2120679C00B2040B /* BaseCollectionDataSource.swift */; };
+		EABA346E2120679C00B2040B /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABA346D2120679C00B2040B /* DataSource.swift */; };
 		EABA3470212080D700B2040B /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABA346F212080D700B2040B /* ViewModel.swift */; };
 		EABA34722120811000B2040B /* LayoutModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABA34712120811000B2040B /* LayoutModel.swift */; };
 		EABA34752120881900B2040B /* LayoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABA34742120881900B2040B /* LayoutManager.swift */; };
@@ -134,7 +134,7 @@
 		EA57F0192123521B00309919 /* MainRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRouter.swift; sourceTree = "<group>"; };
 		EA57F01B2123FCBC00309919 /* BaseCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewController.swift; sourceTree = "<group>"; };
 		EA57F025212400B500309919 /* BaseCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewModel.swift; sourceTree = "<group>"; };
-		EA57F027212421BC00309919 /* BaseCollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewDelegate.swift; sourceTree = "<group>"; };
+		EA57F027212421BC00309919 /* CollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewDelegate.swift; sourceTree = "<group>"; };
 		EA57F06421245E2600309919 /* UIStructExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStructExtention.swift; sourceTree = "<group>"; };
 		EA62B7A9211C3A0F007F5C16 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		EA68CB36215AB19400004AAB /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -194,7 +194,7 @@
 		EABA34662120484600B2040B /* TemplateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateViewController.swift; sourceTree = "<group>"; };
 		EABA34682120485000B2040B /* TemplateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateViewModel.swift; sourceTree = "<group>"; };
 		EABA346B212066CB00B2040B /* TemplateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateCell.swift; sourceTree = "<group>"; };
-		EABA346D2120679C00B2040B /* BaseCollectionDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionDataSource.swift; sourceTree = "<group>"; };
+		EABA346D2120679C00B2040B /* DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
 		EABA346F212080D700B2040B /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		EABA34712120811000B2040B /* LayoutModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutModel.swift; sourceTree = "<group>"; };
 		EABA34742120881900B2040B /* LayoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutManager.swift; sourceTree = "<group>"; };
@@ -305,8 +305,8 @@
 			children = (
 				EA57F01B2123FCBC00309919 /* BaseCollectionViewController.swift */,
 				EA57F025212400B500309919 /* BaseCollectionViewModel.swift */,
-				EABA346D2120679C00B2040B /* BaseCollectionDataSource.swift */,
-				EA57F027212421BC00309919 /* BaseCollectionViewDelegate.swift */,
+				EABA346D2120679C00B2040B /* DataSource.swift */,
+				EA57F027212421BC00309919 /* CollectionViewDelegate.swift */,
 				EA57F0672124608400309919 /* Cell */,
 			);
 			path = CollectionViewController;
@@ -735,7 +735,7 @@
 				EAE9EE2A2127ED1C000A2220 /* WelcomeViewController.swift in Sources */,
 				EAC7802A2132C0A8000237D7 /* TemplateEditViewModel.swift in Sources */,
 				EAC7801A2130939A000237D7 /* BaseModel.swift in Sources */,
-				EA57F028212421BC00309919 /* BaseCollectionViewDelegate.swift in Sources */,
+				EA57F028212421BC00309919 /* CollectionViewDelegate.swift in Sources */,
 				EA82E95F214D94AC002BA8EA /* CellActionViewModel.swift in Sources */,
 				EA68CB3A215AB1AE00004AAB /* SettingsViewModel.swift in Sources */,
 				EAC7802F2132C108000237D7 /* TemplateEditDataSource.swift in Sources */,
@@ -791,7 +791,7 @@
 				EA68CB37215AB19400004AAB /* SettingsViewController.swift in Sources */,
 				EA9D2CB1216B78CE00B811CB /* SettingCellButtonModel.swift in Sources */,
 				EAFE00B0213ABC5B00ECF793 /* CompositeDataSource.swift in Sources */,
-				EABA346E2120679C00B2040B /* BaseCollectionDataSource.swift in Sources */,
+				EABA346E2120679C00B2040B /* DataSource.swift in Sources */,
 				EAD1A5E0212EED6C002C4410 /* TemplateModel.swift in Sources */,
 				EA68CB5D215E145E00004AAB /* HeaderView.swift in Sources */,
 				EAE9EE27212725BD000A2220 /* RealmTemplate.swift in Sources */,

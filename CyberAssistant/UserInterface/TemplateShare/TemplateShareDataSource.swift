@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 
-class TemplateShareDataSource: BaseCollectionDataSource {
+class TemplateShareDataSource: DataSource {
     private var shareCellViewModels: [TemplateShareCellModel] = []
     override var cellViewModels: [ViewModel] {
         didSet {

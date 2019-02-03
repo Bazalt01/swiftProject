@@ -1,5 +1,5 @@
 //
-//  BaseCollectionDataSource.swift
+//  DataSource.swift
 //  CyberAssistant
 //
 //  Created by g.tokmakov on 12/08/2018.
@@ -27,7 +27,7 @@ struct BatchUpdate {
 
 typealias SupplementaryViewClassWithKind = (classType: BaseSupplementaryView.Type, kind: SupplementaryViewKind)
 
-class BaseCollectionDataSource: NSObject {
+class DataSource: NSObject {
     var key: String?
     var title: String?
     var cellClasses: [BaseCollectionViewCell.Type] = [] {
@@ -127,7 +127,7 @@ class BaseCollectionDataSource: NSObject {
     }
 }
 
-extension BaseCollectionDataSource: UICollectionViewDataSource {
+extension DataSource: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return numberOfSections()
     }

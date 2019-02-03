@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        DatabaseManager.database.configure()
+        DatabaseManager.database.configure()            
         
         let assembly = Assembly.shared
         guard let window = application.windows.first else { return true }

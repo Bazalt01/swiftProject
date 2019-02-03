@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CompositeDataSource<T: BaseCollectionDataSource>: BaseCollectionDataSource {
+class CompositeDataSource<T: DataSource>: DataSource {
     private(set) var dataSources: [T] = []
     override weak var collectionView: UICollectionView? {
         didSet {

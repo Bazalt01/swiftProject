@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TemplateEditDataSource: BaseCollectionDataSource {
+class TemplateEditDataSource: DataSource {
     var templateString: String? {
         return templateEditCellModel?.template
     }

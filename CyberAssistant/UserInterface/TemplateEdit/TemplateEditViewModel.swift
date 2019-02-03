@@ -16,7 +16,7 @@ class TemplateEditViewModel: BaseCollectionViewModel {
     private(set) var template: TemplateModel?
     private var router: TemplateEditRouter
     
-    let dataSource: CompositeDataSource<BaseCollectionDataSource>
+    let dataSource: CompositeDataSource<DataSource>
     let editDataSource: TemplateEditDataSource
     let ruleDataSource: TemplateEditRulesDataSource
     let collectionViewDelegate: TemplateEditCollectionDelegate

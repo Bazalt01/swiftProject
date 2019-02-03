@@ -1,5 +1,5 @@
 //
-//  BaseCollectionViewDelegate.swift
+//  CollectionViewDelegate.swift
 //  CyberAssistant
 //
 //  Created by g.tokmakov on 15/08/2018.
@@ -10,8 +10,8 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class BaseCollectionViewDelegate: NSObject {
-    private let dataSource: BaseCollectionDataSource
+class CollectionViewDelegate: NSObject {
+    private let dataSource: DataSource
     let layoutManager: LayoutManager
     
     private let didSelectSubject = PublishSubject<ViewModel>()
@@ -21,7 +21,7 @@ class BaseCollectionViewDelegate: NSObject {
     
     // MARK: - Inits
     
-    init(layoutManager: LayoutManager, dataSource: BaseCollectionDataSource) {
+    init(layoutManager: LayoutManager, dataSource: DataSource) {
         self.layoutManager = layoutManager
         self.dataSource = dataSource
     }
@@ -37,7 +37,7 @@ class BaseCollectionViewDelegate: NSObject {
     }
 }
 
-extension BaseCollectionViewDelegate: UICollectionViewDelegate {
+extension CollectionViewDelegate: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let model = dataSource.model(atIndexPath: indexPath) else {
             assert(false, "nullable model")
@@ -47,7 +47,7 @@ extension BaseCollectionViewDelegate: UICollectionViewDelegate {
     }
 }
 
-extension BaseCollectionViewDelegate: UICollectionViewDelegateFlowLayout {
+extension CollectionViewDelegate: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         guard var model = dataSource.model(atIndexPath: indexPath) else {
             assert(false, "nullable model")

@@ -8,11 +8,11 @@
 
 import UIKit
 
-class TemplateEditCollectionDelegate: BaseCollectionViewDelegate {
+class TemplateEditCollectionDelegate: CollectionViewDelegate {
     
     // MARK: - Inits
     
-    init(dataSource: BaseCollectionDataSource) {
+    init(dataSource: DataSource) {
         let lm = LayoutManager(viewsByClass: [TemplateEditCell.ca_reuseIdentifier(): TemplateEditCell(),
                                               HeaderView.ca_reuseIdentifier(): HeaderView(),
                                               TemplateEditRuleCell.ca_reuseIdentifier(): TemplateEditRuleCell()])
