@@ -37,7 +37,7 @@ class TemplateShareMainDataSource: CompositeDataSource<TemplateShareDataSource> 
         super.remove(atIndex: index)
     }
     
-    override func notify(batchUpdates: [BatchUpdate]?, completion: os_block_t?) {
+    override func notify(batchUpdates: [BatchUpdate]?, applyBlock: os_block_t? = nil, completion: os_block_t?) {
         updateSectionMaps()
         return super.notify(batchUpdates: batchUpdates, completion: completion)
     }

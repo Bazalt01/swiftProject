@@ -117,6 +117,10 @@
 		EAFE00B6213B1DE000ECF793 /* CellActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFE00B5213B1DE000ECF793 /* CellActionView.swift */; };
 		F321C34D21AAE85B00954629 /* TemplateShareCollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F321C34C21AAE85B00954629 /* TemplateShareCollectionDelegate.swift */; };
 		F321C34F21AAEDAF00954629 /* TemplateCollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F321C34E21AAEDAE00954629 /* TemplateCollectionDelegate.swift */; };
+		F3494DE422078F2700C2D584 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3494DE322078F2700C2D584 /* TableViewCell.swift */; };
+		F3494DE6220790C700C2D584 /* FetchResultDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3494DE5220790C700C2D584 /* FetchResultDataSource.swift */; };
+		F3494DE82207912100C2D584 /* Throttler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3494DE72207912100C2D584 /* Throttler.swift */; };
+		F3494DEA2207925C00C2D584 /* SegmentedDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3494DE92207925C00C2D584 /* SegmentedDataSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -238,6 +242,10 @@
 		EAFE00B5213B1DE000ECF793 /* CellActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellActionView.swift; sourceTree = "<group>"; };
 		F321C34C21AAE85B00954629 /* TemplateShareCollectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemplateShareCollectionDelegate.swift; sourceTree = "<group>"; };
 		F321C34E21AAEDAE00954629 /* TemplateCollectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemplateCollectionDelegate.swift; sourceTree = "<group>"; };
+		F3494DE322078F2700C2D584 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		F3494DE5220790C700C2D584 /* FetchResultDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchResultDataSource.swift; sourceTree = "<group>"; };
+		F3494DE72207912100C2D584 /* Throttler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Throttler.swift; sourceTree = "<group>"; };
+		F3494DE92207925C00C2D584 /* SegmentedDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedDataSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -282,6 +290,7 @@
 				EA82E95E214D94AC002BA8EA /* CellActionViewModel.swift */,
 				EA68CB5C215E145E00004AAB /* HeaderView.swift */,
 				EA68CB69215E348D00004AAB /* HeaderViewModel.swift */,
+				F3494DE322078F2700C2D584 /* TableViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -307,6 +316,7 @@
 				EA57F025212400B500309919 /* BaseCollectionViewModel.swift */,
 				EABA346D2120679C00B2040B /* DataSource.swift */,
 				EA57F027212421BC00309919 /* CollectionViewDelegate.swift */,
+				F3494DE5220790C700C2D584 /* FetchResultDataSource.swift */,
 				EA57F0672124608400309919 /* Cell */,
 			);
 			path = CollectionViewController;
@@ -428,6 +438,7 @@
 				EAA32EE4211B08090031DA08 /* CyberAssistant-Bridging-Header.h */,
 				EAB06984211A0BD200EF6913 /* AppDelegate.swift */,
 				EA471C952125889D00452B5C /* Configuration.swift */,
+				F3494DE72207912100C2D584 /* Throttler.swift */,
 				EAD1A5DB212EEC77002C4410 /* Database */,
 				EA68CB63215E1A0800004AAB /* Managers */,
 				EA68CB62215E19EA00004AAB /* Additional */,
@@ -523,6 +534,7 @@
 				EA68CB40215BBD6A00004AAB /* TableViewController */,
 				EA68CB3F215BBD6200004AAB /* CollectionViewController */,
 				EAFE00AF213ABC5B00ECF793 /* CompositeDataSource.swift */,
+				F3494DE92207925C00C2D584 /* SegmentedDataSource.swift */,
 				EA68CB51215CD7ED00004AAB /* BaseRouter.swift */,
 			);
 			path = Base;
@@ -772,10 +784,13 @@
 				EA57F026212400B500309919 /* BaseCollectionViewModel.swift in Sources */,
 				EA57F06521245E2600309919 /* UIStructExtention.swift in Sources */,
 				EAB06985211A0BD200EF6913 /* AppDelegate.swift in Sources */,
+				F3494DE82207912100C2D584 /* Throttler.swift in Sources */,
 				EABA3464211F3A3C00B2040B /* TemplateManager.swift in Sources */,
 				EABA345F211F0D1300B2040B /* SpeechModel.swift in Sources */,
 				EA02094921541BC100DE9717 /* RxSwift+Utils.swift in Sources */,
 				EA17CF99212DCD13002757E5 /* AuthManager.swift in Sources */,
+				F3494DEA2207925C00C2D584 /* SegmentedDataSource.swift in Sources */,
+				F3494DE6220790C700C2D584 /* FetchResultDataSource.swift in Sources */,
 				EA69D5C02156342A00F29DDD /* BackgroundWorker.swift in Sources */,
 				EA69D5C8215A76A100F29DDD /* CryptoConverter.swift in Sources */,
 				EA68CB54215CE27000004AAB /* TemplateShareDataSource.swift in Sources */,
@@ -794,6 +809,7 @@
 				EABA346E2120679C00B2040B /* DataSource.swift in Sources */,
 				EAD1A5E0212EED6C002C4410 /* TemplateModel.swift in Sources */,
 				EA68CB5D215E145E00004AAB /* HeaderView.swift in Sources */,
+				F3494DE422078F2700C2D584 /* TableViewCell.swift in Sources */,
 				EAE9EE27212725BD000A2220 /* RealmTemplate.swift in Sources */,
 				EABA3470212080D700B2040B /* ViewModel.swift in Sources */,
 				EA0209472153D0CB00DE9717 /* BaseViewController.swift in Sources */,

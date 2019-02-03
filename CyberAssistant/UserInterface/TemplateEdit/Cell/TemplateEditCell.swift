@@ -10,7 +10,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-class TemplateEditCell: BaseCollectionViewCell {
+class TemplateEditCell: CollectionViewCell {
     private var templateEditTextView = UITextView()
     private var localViewModel: TemplateEditCellModel? {
         return viewModel as? TemplateEditCellModel

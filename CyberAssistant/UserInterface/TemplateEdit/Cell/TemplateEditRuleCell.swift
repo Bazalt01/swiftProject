@@ -10,7 +10,7 @@ import UIKit
 
 let fittingOptions: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
 
-class TemplateEditRuleCell: BaseCollectionViewCell {
+class TemplateEditRuleCell: CollectionViewCell {
     private let stackView = UIStackView()
     private let ruleLabel = AnimatableLabel()
     private let exampleLabel = AnimatableLabel()

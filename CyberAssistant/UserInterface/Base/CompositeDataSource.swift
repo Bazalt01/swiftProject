@@ -10,9 +10,16 @@ import UIKit
 
 class CompositeDataSource<T: DataSource>: DataSource {
     private(set) var dataSources: [T] = []
+    
     override weak var collectionView: UICollectionView? {
         didSet {
             dataSources.forEach { $0.collectionView = collectionView }
+        }
+    }
+    
+    override weak var tableView: UITableView? {
+        didSet {
+            dataSources.forEach { $0.tableView = tableView }
         }
     }
     
@@ -24,11 +31,16 @@ class CompositeDataSource<T: DataSource>: DataSource {
     
     func insert(dataSource: T, index: Int) {
         dataSource.collectionView = collectionView
+        dataSource.tableView = tableView
         dataSources.insert(dataSource, at: index)
+        updateSectionNumber()
     }
     
     func remove(atIndex index: Int) {
+        let dataSource = dataSources[index]
+        dataSource.collectionView = nil
         dataSources.remove(at: index)
+        updateSectionNumber()
     }
     
     override func numberOfSections() -> Int {
@@ -79,7 +91,37 @@ class CompositeDataSource<T: DataSource>: DataSource {
         return dataSource.supplementaryModel(atSection: localSection, kind: kind)
     }
     
+    override func index(forItem item: ViewModel) -> IndexPath? {
+        for section in 0..<dataSources.count {
+            let dataSource = dataSources[section]
+            if let indexPath = dataSource.index(forItem: item) {
+                return IndexPath(item: indexPath.item, section: section)
+            }
+        }
+        return nil
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let map = sectionMap()
+        guard section < map.count else {            
+            assertionFailure()
+            return nil
+        }
+        let globalIndex = map[section]
+        let dataSource = dataSources[globalIndex]
+        let localSection = dataSource.numberOfSections() > 1 ? section - globalIndex : 0
+        return dataSource.tableView(tableView, titleForHeaderInSection: localSection)
+    }
+    
     // MARK: - Private
+    
+    private func updateSectionNumber() {
+        var sectionIndex = section
+        for dataSource in dataSources {
+            dataSource.section = sectionIndex
+            sectionIndex += dataSource.numberOfSections()
+        }
+    }
     
     private func sectionMap() -> [Int] {
         var localForGlobalSections: [Int] = []

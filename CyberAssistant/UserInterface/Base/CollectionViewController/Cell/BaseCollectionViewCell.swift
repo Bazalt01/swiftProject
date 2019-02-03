@@ -1,5 +1,5 @@
 //
-//  BaseCollectionViewCell.swift
+//  CollectionViewCell.swift
 //  CyberAssistant
 //
 //  Created by g.tokmakov on 13/08/2018.
@@ -11,7 +11,7 @@ import SnapKit
 
 let kSwipeAnimationDuration = 0.25;
 
-class BaseCollectionViewCell: UICollectionViewCell, CollectionViewCell {
+class CollectionViewCell: UICollectionViewCell, View {
     var viewModel: ViewModel?
 
     // MARK: - Inits

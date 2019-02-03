@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import RxGesture
 
-class CollectionViewCellWithActions: BaseCollectionViewCell {
+class CollectionViewCellWithActions: CollectionViewCell {
     private var panGesture = UIPanGestureRecognizer()
     private var startPanPoint: CGPoint?
     private var startContentViewPosition: CGFloat = 0.0

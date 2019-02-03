@@ -11,7 +11,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-class TemplateShareCell: BaseCollectionViewCell {
+class TemplateShareCell: CollectionViewCell {
     private let verStackView = UIStackView()
     private let horStackView = UIStackView()
     private let saveButton = UIButton()

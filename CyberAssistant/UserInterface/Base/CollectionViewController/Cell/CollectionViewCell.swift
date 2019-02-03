@@ -19,6 +19,3 @@ extension UIView {
 
 protocol CollectionSupplementaryView: View {    
 }
-
-protocol CollectionViewCell: View {
-}
