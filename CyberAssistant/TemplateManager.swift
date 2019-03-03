@@ -110,8 +110,7 @@ class TemplateManager: BackgroundWorker {
         let fetchResult = self.fetchResultSubject
         fetchResult
             .ca_subscribe { [weak self] fetchResult in
-                guard let `self` = self else { return }
-                self.modelsSubject.accept(fetchResult.models as! [TemplateModel])
+                self?.modelsSubject.accept(fetchResult.models as! [TemplateModel])
             }
             .disposed(by: disposeBag)
         
@@ -119,12 +118,12 @@ class TemplateManager: BackgroundWorker {
         
         let predicate = NSPredicate(format: "\(TemplateInternalAuthorPathKey) = %@", account.unicID as CVarArg)
         self.start({ [weak self] in
+            guard let `self` = self else { return }
             let database = DatabaseManager.createDatabase()
             database.configure()
             
             let sort = SortModel(key: "value", ascending: true)
             database.objects(objectType: RealmTemplate.self, predicate: predicate, sortModes: [sort], fetchResult: fetchResult, responseQueue: DispatchQueue.main)
-            guard let `self` = self else { return }
             self.database = database
         })
     }

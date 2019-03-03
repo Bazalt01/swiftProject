@@ -14,13 +14,13 @@ class TemplateRouter: BaseRouter {
     
     func openTemplateEditorController(template: TemplateModel?) {
         guard let routeHandler = routeHandler else { return }
-        let tc = Assembly.shared.configuredTemplateEditViewController(template: template)
+        let tc = Assembly.shared.templateEditViewController(template: template)
         routeHandler.push?(viewController: tc)
     }
     
     func openTemplateShareController() {
         guard let routeHandler = routeHandler else { return }
-        let tc = Assembly.shared.configuredTemplateShareViewController()
+        let tc = Assembly.shared.templateShareViewController()
         routeHandler.push?(viewController: tc)
     }
 }

@@ -14,19 +14,19 @@ class MainRouter: BaseRouter {
     
     func openTemplatesController() {
         guard let routeHandler = routeHandler else { return }
-        let vc = Assembly.shared.configuredTemplateViewController()
+        let vc = Assembly.shared.templateViewController()
         routeHandler.push?(viewController: vc)
     }
     
     func openNewTemplateController() {
         guard let routeHandler = routeHandler else { return }
-        let vc = Assembly.shared.configuredTemplateEditViewController(template: nil)
+        let vc = Assembly.shared.templateEditViewController(template: nil)
         routeHandler.push?(viewController: vc)
     }
     
     func openSettingsController() {
         guard let routeHandler = routeHandler else { return }
-        let vc = Assembly.shared.configuredSettingsViewController()
+        let vc = Assembly.shared.settingsViewController()
         routeHandler.push?(viewController: vc)
     }
     

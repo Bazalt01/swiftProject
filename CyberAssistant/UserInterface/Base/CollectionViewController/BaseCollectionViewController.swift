@@ -9,7 +9,7 @@
 import UIKit
 
 class BaseCollectionViewController: BaseViewController {
-    var collectionView: UICollectionView?
+    var collectionView: UICollectionView!
     
     // MARK: - Lifecycle
     
@@ -27,19 +27,15 @@ class BaseCollectionViewController: BaseViewController {
     
     func configureViews() {
         collectionView = configuredCollectionView()
-        view.addSubview(collectionView!)
-        collectionView!.snp.makeConstraints { (make) in
-            make.edges.equalTo(view)
-        }
+        view.addSubview(collectionView)
+        collectionView.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
     
     func configureSubsciptions() {
     }
     
     func configureAppearance() {
-        if let cv = collectionView {
-            cv.backgroundColor = AppearanceColor.collectionBackground
-        }
+        collectionView.backgroundColor = AppearanceColor.collectionBackground
     }
     
     // MARK: - Private
@@ -51,5 +47,4 @@ class BaseCollectionViewController: BaseViewController {
         collectionView.alwaysBounceVertical = true
         return collectionView
     }
-    
 }

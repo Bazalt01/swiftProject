@@ -14,14 +14,14 @@ class SettingsRouter: SettingsBaseRouter {
     
     func openWelcomeViewController() {
         guard let routeHandler = routeHandler else { return }
-        let vc = Assembly.shared.configuredWelcomeViewController()
+        let vc = Assembly.shared.welcomeViewController()
         vc.modalPresentationStyle = .overFullScreen
         routeHandler.present?(viewController: vc)
     }
     
     func openOptionListViewController(options: [TableOption], selectOption: @escaping (_ option: TableOption) -> Void) {
         guard let routeHandler = routeHandler else { return }
-        let vc = Assembly.shared.configuredSettingsViewController(options: options, selectOption: selectOption)
+        let vc = Assembly.shared.settingsViewController(options: options, selectOption: selectOption)
         routeHandler.push?(viewController: vc)
     }        
 }

@@ -15,7 +15,7 @@ class RealmAccount: RealmModel, AccountModel {
     @objc dynamic private(set) var name: String = ""
     @objc dynamic var authorized: Bool = false
     
-    required init(login: String, password: String, name: String?) {
+    required init(login: String, password: String, name: String? = nil) {
         self.login = login
         self.password = password
         if let name = name {

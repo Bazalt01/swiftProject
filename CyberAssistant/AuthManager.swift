@@ -72,7 +72,7 @@ class AuthManager {
                         return
                     }
                     
-                    let account = RealmAccount(login: result.login, password: password, name: nil)
+                    let account = RealmAccount(login: result.login, password: password)
                     _ = DatabaseManager.database.insert(model: account)
                         .subscribe(onNext: nil, onError: { error in
                             observer.onError(error)

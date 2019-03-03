@@ -27,7 +27,7 @@ class Assembly {
         self.speechManager.configurator = conf
     }
     
-    func configuredMainViewController() -> MainViewController {
+    func mainViewController() -> MainViewController {
         let tm = TemplateManager(authManager: authManager)
         let router = MainRouter()
         let vm = MainViewModel(speechManager: speechManager, templateManager: tm, router: router)
@@ -36,7 +36,7 @@ class Assembly {
         return vc
     }
     
-    func configuredTemplateViewController() -> TemplateViewController {
+    func templateViewController() -> TemplateViewController {
         let tm = TemplateManager(authManager: authManager)
         let ds = TemplateCollectionDataSource()
         let cd = TemplateCollectionDelegate(dataSource: ds)
@@ -47,7 +47,7 @@ class Assembly {
         return vc
     }
     
-    func configuredTemplateEditViewController(template: TemplateModel?) -> TemplateEditViewController {
+    func templateEditViewController(template: TemplateModel?) -> TemplateEditViewController {
         let tm = TemplateManager(authManager: authManager)
         let router = TemplateEditRouter()
         let vm = TemplateEditViewModel(templateManager: tm, authManager: authManager, template: template, router: router)
@@ -56,7 +56,7 @@ class Assembly {
         return vc
     }
     
-    func configuredWelcomeViewController() -> WelcomeViewController {
+    func welcomeViewController() -> WelcomeViewController {
         let router = WelcomeRouter()
         let vm = WelcomeViewModel(authManager: authManager, router: router)
         let vc = WelcomeViewController(viewModel: vm)
@@ -64,7 +64,7 @@ class Assembly {
         return vc
     }
     
-    func configuredSettingsViewController() -> SettingsViewController {
+    func settingsViewController() -> SettingsViewController {
         let router = SettingsRouter()
         let vm = SettingsMainViewModel(authManager: authManager, speechManager: speechManager, router: router)
         let vc = SettingsViewController(viewModel: vm)
@@ -72,7 +72,7 @@ class Assembly {
         return vc
     }
     
-    func configuredSettingsViewController(options: [TableOption],
+    func settingsViewController(options: [TableOption],
                                           selectOption: @escaping (_ option: TableOption) -> Void) -> SettingsViewController {
         let router = SettingsBaseRouter()
         let vm = SettingsOptionViewModel(options: options, selectOption: selectOption, router: router)
@@ -81,7 +81,7 @@ class Assembly {
         return vc
     }
     
-    func configuredTemplateShareViewController() -> TemplateShareViewController {
+    func templateShareViewController() -> TemplateShareViewController {
         let tm = TemplateManager(authManager: authManager)
         let router = TemplateShareRouter()
         let vm = TemplateShareViewModel(templateManager: tm, authManager: authManager, router: router)

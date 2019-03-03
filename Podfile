@@ -8,7 +8,8 @@ target 'CyberAssistant' do
     pod 'RxCocoa', '~> 4.0'
     pod "RxGesture"
     pod 'RealmSwift'
-    pod 'Realm'    
+    pod 'Realm'
+    pod 'SwiftKeychainWrapper'
     use_modular_headers!
     
 end

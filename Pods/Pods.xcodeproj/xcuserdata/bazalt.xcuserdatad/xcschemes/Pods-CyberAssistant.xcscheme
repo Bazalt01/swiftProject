@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EDF1B44E140F3FBA45A9E469FD1627E5"
+               BlueprintIdentifier = "8E12098D34595551F8F0AC9C3B4206D6"
                BlueprintName = "Pods-CyberAssistant"
                ReferencedContainer = "container:Pods.xcodeproj"
                BuildableName = "libPods-CyberAssistant.a">

@@ -20,13 +20,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let assembly = Assembly.shared
         guard let window = application.windows.first else { return true }
         
-        let vc = assembly.configuredMainViewController()
+        let vc = assembly.mainViewController()
         let navigationController = BaseNavigationController(rootViewController: vc)
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
         
         if assembly.authManager.account == nil {
-            let wc = assembly.configuredWelcomeViewController()
+            let wc = assembly.welcomeViewController()
             navigationController.present(wc, animated: false, completion: nil)
         }
         

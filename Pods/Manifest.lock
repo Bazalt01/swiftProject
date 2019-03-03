@@ -1,16 +1,19 @@
 PODS:
-  - Realm (3.10.0):
-    - Realm/Headers (= 3.10.0)
-  - Realm/Headers (3.10.0)
-  - RealmSwift (3.10.0):
-    - Realm (= 3.10.0)
-  - RxCocoa (4.3.1):
+  - Realm (3.13.1):
+    - Realm/Headers (= 3.13.1)
+  - Realm/Headers (3.13.1)
+  - RealmSwift (3.13.1):
+    - Realm (= 3.13.1)
+  - RxAtomic (4.4.1)
+  - RxCocoa (4.4.1):
     - RxSwift (~> 4.0)
-  - RxGesture (2.0.1):
-    - RxCocoa (~> 4.3.1)
-    - RxSwift (~> 4.3.1)
-  - RxSwift (4.3.1)
-  - SnapKit (4.0.1)
+  - RxGesture (2.1.0):
+    - RxCocoa (~> 4.4.0)
+    - RxSwift (~> 4.4.0)
+  - RxSwift (4.4.1):
+    - RxAtomic (~> 4.4)
+  - SnapKit (4.2.0)
+  - SwiftKeychainWrapper (3.2.0)
 
 DEPENDENCIES:
   - Realm
@@ -19,24 +22,29 @@ DEPENDENCIES:
   - RxGesture
   - RxSwift (~> 4.0)
   - SnapKit (~> 4.0)
+  - SwiftKeychainWrapper
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Realm
     - RealmSwift
+    - RxAtomic
     - RxCocoa
     - RxGesture
     - RxSwift
     - SnapKit
+    - SwiftKeychainWrapper
 
 SPEC CHECKSUMS:
-  Realm: 85ab9e4f779d66f6e9ffeb118dc25b7f130c96ac
-  RealmSwift: 69121c8b86d0ae005fb779efdb10e606732e1c74
-  RxCocoa: 78763c7b07d02455598d9fc3c1ad091a28b73635
-  RxGesture: 26ede4ed13ffc6336d29dbd9a8dff229bdb72de7
-  RxSwift: fe0fd770a43acdb7d0a53da411c9b892e69bb6e4
-  SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
+  Realm: 50071da38fe079e0735e47c9f2eae738c68c5996
+  RealmSwift: 8a1e6a02b7a08cd17a31e3115143fb69fe5f3fb9
+  RxAtomic: f8d6adc1ccb87a767811269e4875887bc74dbf19
+  RxCocoa: 2f35a76bf8887872e28a1914112395b11b8e0e64
+  RxGesture: 7f6dfb45dbde06e618c24442d38493e3144f2c95
+  RxSwift: 92fcf68dfef21f3e2ab1965363d9e7b3d787597e
+  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
+  SwiftKeychainWrapper: 82c4c02cdc36f9a24f7edfcaab3e336401caa1a1
 
-PODFILE CHECKSUM: d1767080c54f2238e59896b182df4fd5bf35421c
+PODFILE CHECKSUM: 6f0b1d344617ad5a585745c3c8dea5445c132bea
 
 COCOAPODS: 1.5.3

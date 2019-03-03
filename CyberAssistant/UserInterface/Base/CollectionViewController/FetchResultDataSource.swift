@@ -22,9 +22,7 @@ class FetchResultDataSource<T: DataSource, U>: DataSource {
     }
     
     func filter(value: U?) {
-        guard isFiltered || value != nil else {
-            return
-        }
+        guard isFiltered || value != nil else { return }
         
         if originalCellViewModels.count == 0 {
             originalCellViewModels = cellViewModels
